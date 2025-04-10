@@ -1,0 +1,511 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{第四章作业}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\lhead{\sffamily\bfseries{范潇 2254298}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+
+\maketitle
+
+\begin{problem}{4.1.1}
+    判断下列映射是否是线性变换：
+    \begin{enumerate}
+        \item 设 $V$ 是 Descartes 平面，$\varphi$ 把平面上任一向量伸长 $n$ 倍（$n$ 是固定的自然数）。
+        \item 设 $V$ 是 Descartes 平面，$\varphi$ 把平面上任一向量逆时针旋转 $60^\circ$，但其长度保持不变。
+        \item 设 $V$ 是 $[0,1]$ 区间上所有连续函数组成的实线性空间，$\varphi$ 是 $V$ 上的变换，对于任意的 $f(x) \in V$，定义
+        \[
+            \varphi(f(x)) = \int_0^x f(t) \, dt;
+        \]
+        \item 设 $V$ 是 Descartes 平面，$\varphi$ 为 $V$ 上的变换：
+        \[
+            \varphi(x, y) = (2x^2, y), \quad (x, y) \in V;
+        \]
+        \item 设 $V$ 是 Descartes 平面，$(a,b)$ 是平面上固定的一点，$\varphi$ 是 $V$ 上的变换：
+        \[
+            \varphi(x, y) = (x + a, y + b);
+        \]
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+\begin{enumerate}
+    \item 是，相当于$(x,y)\longmapsto (nx,ny)$
+    \item 是
+    \item 是
+    \item 不是，因为$\varphi(1,0)+\varphi(-1,0)=(4,0)\neq \varphi(0,0)=(0,0)$
+    \item 若$(a,b)=(0,0)$，则显然是线性变换，否则，因为$2\varphi(-a,-b)=(0,0)\neq\varphi(-2a,-2b)=(-a,-b)$，不是线性变换。
+\end{enumerate}
+\end{solution}
+
+\begin{problem}{4.1.4}
+    设 $V$ 是由几乎处处为零的无穷实数数列 $(a_0, a_1, a_2, \dots, a_n, \dots)$，其中只有有限多个 $a_i$ 不为零，组成的实向量空间，$\mathbb{R}[x]$ 是所有实系数多项式组成的实向量空间，定义$\varphi$如下：
+    \[
+        \varphi(a_0, a_1, a_2, \dots, a_n, \dots) = a_0 + a_1 x + a_2 x^2 + \dots + a_n x^n
+    \]
+    其中 $a_n \neq 0$，而 $a_s = 0,s>n$，求证：$\varphi$ 是线性同构。
+\end{problem}
+\begin{solution}
+显然$V,\mathbb{R}[x]$是线性空间。
+
+记数列$\alpha\in V$的第$i$项为$\alpha[i]$，多项式$f$的第$i$项系数为$f[i]$，则
+$\forall \alpha_1,\alpha_2\in V,\forall t_1,t_2\in \mathbb{R}$。$\forall i,\varphi(t_1\alpha_1+t_2\alpha_2)[i]=(t_1\alpha_1+t_2\alpha_2)[i]=t_1\alpha_1[i]+t_2\alpha_2[i]=\varphi(t_1\alpha_1)[i]+\varphi(t_2\alpha_2)[i]$，即
+\[\varphi(t_1\alpha_1+t_2\alpha_2)=t_1\alpha_1+t_2\alpha_2\]
+所以$\varphi$是线性同构。
+\end{solution}
+\begin{problem}{4.2.1}
+    设 $V$ 是实系数多项式全体构成的实线性空间，定义 $V$ 上的变换 $D, S$ 如下：
+    \[
+        D(f(x)) = \frac{d}{dx}f(x), \quad S(f(x)) = \int_0^x f(t)\, dt.
+    \]
+    证明：$D, S$ 均为 $V$ 上的线性变换且 $DS = I_V$，但 $SD \neq I_V$。
+\end{problem}
+\begin{solution}
+    由求导和积分的线性性可知，变换$D,S$都是$V$上的线性变换。因为
+    \[DS(f(x))=\frac{d}{dx}\int^x_0f(x)dx=f(x),\forall f\in V\]
+    而
+    \[SD(1)=\int^x_0\frac{d}{dx}1dx=0\neq 1\]
+    所以$DS = I_V$，但 $SD \neq I_V$。
+\end{solution}
+
+\begin{problem}{4.2.5}
+    设 $\varphi$ 是 $n$ 维线性空间 $V$ 上的线性变换，证明：$\varphi$ 是可逆变换的充分必要条件是 $\varphi$ 将 $V$ 的基变为基。
+\end{problem}
+\begin{solution}
+任取$V$的一组基${\alpha_1,\cdots,\alpha_n}$，$\forall \alpha\in V,\exists \text{唯一一组}k_1,\cdots,k_n,s.t.\sum_ik_i\alpha_i=\alpha$:
+\begin{align*}
+   & \varphi \text{是可逆变换}\\
+  \Leftrightarrow & \varphi \text{是一一对应}\\
+  \Leftrightarrow &\forall \alpha\in V,\exists\text{唯一一组} k_1,\cdots,k_n,s.t. \alpha=\sum_i{k_i}\varphi(\alpha_i)\\
+  \Leftrightarrow&\varphi(\alpha_i),i=1,\cdots,n\text{是一组基}\\
+\end{align*}
+即$\varphi$ 是可逆变换的充分必要条件是 $\varphi$ 将 $V$ 的基变为基。
+\end{solution}
+\begin{problem}{4.3.1}
+    设 $V$ 是实数域上次数小于 4 的一元多项式全体组成的线性空间，$\varphi$ 为多项式的求导运算。$\{1, x, x^2, x^3\}$ 是 $V$ 的基，试求 $\varphi$ 在这组基下的表示矩阵。
+\end{problem}
+\begin{solution}
+    表示矩阵为：
+    \[\begin{pmatrix}
+        0&1&0&0\\
+        0&0&2&0\\
+        0&0&0&3\\
+        0&0&0&0\\
+    \end{pmatrix}\]
+\end{solution}
+
+\begin{problem}{4.3.3}
+    设 $V$ 是 Descartes 平面，求绕原点转动 $\theta$ 角的旋转在基 $\{(1,0), (0,1)\}$ 下的表示矩阵。
+\end{problem}
+\begin{solution}
+    表示矩阵为：
+    \[\begin{pmatrix}
+        \cos(\theta)&-\sin(\theta)\\
+        \sin(\theta)&\cos(\theta)\\
+    \end{pmatrix}\]
+\end{solution}
+
+\begin{problem}{4.3.5}
+    设 $V, U$ 是域 $\mathbb{K}$ 上的线性空间，维数分别为 $n$ 与 $m$，求证：$\mathcal{L}(V, U)$ 是 $nm$ 维线性空间。
+\end{problem}
+\begin{solution}
+因为$\mathcal{L}(V,U)$与$M_{m\times n}(\mathbb{K})$同构，而显然$\dim M_{m\times n}(\mathbb{K})=nm$，所以$\dim \mathcal{L}(V,U)=nm$，即$\mathcal{V,U}$是$nm$维空间。
+\end{solution}
+
+\begin{problem}{4.3.12}
+    设 $\varphi$ 是线性空间$V\rightarrow U$的线性映射，$\{e_1, e_2, \ldots, e_n\}$ 及 $\{f_1, f_2, \ldots, f_n\}$ 是 $V$ 的两组基，$\{e'_1, e'_2, \ldots, e'_m\}$ 及 $\{f'_1, f'_2, \ldots, f'_m\}$ 是 $U$ 的两组基。设在 $\{e_1, e_2, \ldots, e_n\}$ 及 $\{e'_1, e'_2, \ldots, e'_m\}$ 下，$\varphi$ 的表示矩阵为 $A$，在 $\{f_1, f_2, \ldots, f_n\}$ 及 $\{f'_1, f'_2, \ldots, f'_m\}$ 下，$\varphi$ 的表示矩阵为 $B$，
+    ，又$\{e_1, e_2, \ldots, e_n\}$ 到$\{f_1, f_2, \ldots, f_n\}$ 的过渡矩阵为$P$，$\{e'_1, e'_2, \ldots, e'_m\}$ 到 $\{f'_1, f'_2, \ldots, f'_m\}$ 的过渡矩阵为$Q$，试证：
+    \[
+    B = Q^{-1} A P.
+    \]
+\end{problem}
+\begin{solution}
+$\forall\alpha\in V$，记$\alpha$在$\{e_1, e_2, \ldots, e_n\}$和$\{f_1, f_2, \ldots, f_n\}$下的坐标向量分别为$\xi_e,\xi_f$，
+记$\varphi(\alpha)$在$\{e'_1, e'_2, \ldots, e'_m\}$和$\{f'_1, f'_2, \ldots, f'_m\}$下的坐标向量分别为$\zeta_e,\zeta_f$
+由题意得：
+\begin{align*}
+    \zeta_e&=A\xi_e\\
+    \zeta_f&=B\xi_f\\
+    \xi_e&=P\xi_f\\
+    \zeta_e&=Q\zeta_f\\
+\end{align*}
+从而有：
+\begin{align*}
+    \zeta_e&=AP\xi_f\\
+    \zeta_e&=QB\xi_f\\
+\end{align*}
+即
+\[
+QB\xi_e=AP\xi_e
+\]
+由于$\zeta_e$的任意性，有
+\[
+QB=AP
+\]
+又因为$Q$为过渡矩阵，所以
+\[B=Q^{-1}AP\]
+\end{solution}
+\begin{problem}{4.4.1}
+    设 $\varphi$ 是实四维空间 $V$ 上的线性变换，$\varphi$ 在 $V$ 的一组基 $\{e_1, e_2, e_3, e_4\}$ 下的表示矩阵为：
+    \[
+    \begin{pmatrix}
+    1 & 0 & 2 & 1 \\
+    -1 & 2 & 1 & 3 \\
+    1 & 2 & 5 & 5 \\
+    2 & -2 & 1 & -2
+    \end{pmatrix}
+    \]
+    求 $\varphi$ 的核空间与像空间（用基的线性组合来表示）。
+\end{problem}
+\begin{solution}
+题中矩阵经过初等行变换后可得：
+    \[
+    \begin{pmatrix}
+    1 & 0 & 2 & 1 \\
+    0 & 2 & 3 & 4 \\
+    0&0&0&0\\
+    0&0&0&0\\
+    \end{pmatrix}
+    \]
+   所以像空间为$k_1(e_1-e_2+e_3+2e_4)+k_2(2e_2+2e_3-2e_4),k_1,k_2\in\mathbb{R}$。
+   核空间为$k_1(-4e_1-3e_2+2e_3)+k_2(-e_1-2e_2+e_4),k_1,k_2\in\mathbb{R}$。
+
+\end{solution}
+
+\begin{problem}{4.4.5}
+    设 $V = M_n(\mathbb{K})$，若 $A \in V$，令 $\varphi(A) = \text{tr} A$，求证：$\varphi$ 是 $V \rightarrow \mathbb{K}$ 的线性映射，并求 $\dim \ker \varphi$ 以及 $\ker \varphi$ 的一组基。
+\end{problem}
+\begin{solution}
+$\forall A,B\in V,l\forall t_1,t_2\in \mathbb{K}$，有
+\begin{align*}
+\varphi(t_1A+t_2B)&=\sum_i(t_1A+t_2B)(i,i)\\
+                 &=\sum_i(t_1A(i,i)+t_2B(i,i))\\
+                 &=\sum_it_1A(i,i)+\sum_it_2B(i,i)\\
+                 &=t_1\sum_iA(i,i)+t_2\sum_iB(i,i)\\
+                 &=t_1\varphi(A)+t_2\varphi(B)\\
+\end{align*}
+所以$\varphi$ 是 $V \rightarrow \mathbb{K}$ 的线性映射。记$E_{ij}$为
+只有$(i,j)$元为1，其余都为0的$n$阶矩阵。下面证明$E_{ij},i=1,\cdots,n,j=1,\cdots,n,i\neq j$和$E_{ii}-E_{nn},i=1,\cdots,n-1$构成
+$ker\varphi$的一组基。显然它们都属于$ker\varphi$，且线性无关。
+
+$\forall A\in ker\varphi,$因为$trA=0$，所以$\sum_iA(i,i)=0$，即$A(n,n)=-\sum_{i\neq n}A(i,i)$。
+从而有：
+\begin{align*}
+A &= \sum_{i\neq j}A(i,j)E_{i,j}+\sum_{i}A(i,i)E_{ii}\\
+&=\sum_{i\neq j}A(i,j)E_{i,j}+\sum_{i\neq n}A(i,i)E_{ii}-\sum_{i\neq n}A(i,i)E_{nn}\\
+&=\sum_{i\neq j}A(i,j)E_{i,j}+\sum_{i\neq n}A(i,i)(E_{ii}-E_{nn})\\
+\end{align*}
+从而$E_{ij},i=1,\cdots,n,j=1,\cdots,n,i\neq j$和$E_{ii}-E_{nn},i=1,\cdots,n-1$构成
+$ker\varphi$的一组基。因此$\dim ker\varphi=n^2-1$。
+\end{solution}
+
+\begin{problem}{4.4.6}
+    设 $U$ 是有限维线性空间 $V$ 的子空间，$\varphi$ 是 $V$ 上线性变换，求证：
+    \begin{itemize}
+        \item[(1)] $\dim U - \dim \ker \varphi \leq \dim \varphi(U) \leq \dim U$;
+        \item[(2)] $\dim \varphi^{-1}(U) \leq \dim U + \dim \ker \varphi$。
+    \end{itemize}
+\end{problem}
+\begin{solution}
+\begin{enumerate}
+    \item 因为$\forall n> \dim U,\forall k_i\in\mathbb{K},\alpha_i\in V,i=1,\cdots,n:\sum_{i=1}^{n}k_i\alpha_i=0$，即$\sum_{i=1}^{n}k_i\varphi(\alpha_i)=0$，所以$\dim\varphi(U)\leq\dim U$。
+
+    因为$\dim U=\dim Im\varphi|_U+\dim\ker\varphi|_U=\dim \varphi(U)+\dim\ker\varphi|_U\leq \dim \varphi(U)+\dim\ker\varphi$，从而$\dim U-\dim\ker\varphi\leq\dim\varphi(U)$。
+    \item \[
+    \dim\varphi^{-1}(U) = \dim Im\varphi|_{\varphi^{-1}(U)}+\dim\ker\varphi|_{\varphi^{-1}(U)}\leq \dim U+\dim\ker\varphi
+    \]
+\end{enumerate}
+
+\end{solution}
+
+\begin{problem}{4.4.7}
+    利用上题，证明关于两个 $n$ 阶方阵 $A$ 与 $B$ 之积秩的 Sylvester（西尔维斯特）不等式：
+    \[
+    r(A) + r(B) - n \leq r(AB) \leq \min\{r(A), r(B)\}。
+    \]
+\end{problem}
+\begin{solution}
+不等式右侧显然成立，下面证明不等式左侧。
+
+设$V$是$n$维欧氏空间，记$A=(a_1,\cdots,a_n),B=(b_1,\cdots,b_n),U=L(b_1,\cdots,b_n),\varphi:\alpha\rightarrow A\alpha$。
+则$\dim U-\dim\ker\varphi=r(B)-(n-r(A))=r(A)+r(B)-n\leq \dim\varphi(U)=r(AB)$
+\end{solution}
+\begin{problem}{4.5.1}
+    在实四维空间 $V$ 中，设线性变换 $\varphi$ 在基 $\{e_1, e_2, e_3, e_4\}$ 下的表示矩阵为：
+    \[
+    \begin{pmatrix}
+    1 & 0 & 2 & -1 \\
+    0 & 1 & 4 & -2 \\
+    2 & -1 & 0 & 1 \\
+    2 & -1 & -1 & 2
+    \end{pmatrix}
+    \]
+    求证：由向量 $e_1 + 2e_2$ 及 $e_2 + e_3 + 2e_4$ 生成的子空间 $U$ 是 $\varphi$ 的不变子空间。
+\end{problem}
+\begin{solution}
+    $\varphi(e_1+2e_2)=e_1+2e_2\in U,\varphi(e_2+e_3+2e_4)=e_2+e_3+2e_4\in U$。从而$U$是$\varphi$的不变子空间。
+\end{solution}
+
+\begin{problem}{4.5.2}
+    设 $\varphi, \psi$ 都是线性空间 $V$ 上的线性变换且 $\varphi \psi = \psi \varphi$，求证：$\operatorname{Im} \varphi$ 及 $\ker \varphi$ 都是 $\psi$ 不变子空间。
+\end{problem}
+\begin{solution}
+$\forall \alpha\in Im\varphi,\exists \beta s.t.\varphi(\beta)=\alpha$，所以$\psi(\alpha)=\psi\phi(\alpha)=\phi\psi(\alpha)\in Im\phi$，即$Im\varphi$是$\psi$不变子空间。
+
+$\forall \alpha\in\ker\varphi,\varphi(\alpha)=0$，从而$\psi\varphi(\alpha)=\varphi\psi(\alpha)=\psi(0)=0$，即$\psi(\alpha)\in\ker\varphi$，因此$\ker\varphi$也是$\psi$不变子空间。
+\end{solution}
+
+\begin{problem}{4.5.3}
+    设 $\varphi$ 是 $n$ 维线性空间 $V$ 上的自同构，若 $W$ 是 $\varphi$ 不变子空间，求证：$W$ 也是 $\varphi^{-1}$ 不变子空间。
+\end{problem}
+\begin{solution}
+    取$W$的一组基$\{e_1,\cdots,e_n\}$，由于$\varphi$是自同构，且$W$是$\varphi$的不变子空间，所以$\{\varphi(e_1),\cdots,\varphi(e_n)\}$线性无关，且仍为$W$的一组基。
+    $\forall\alpha\in W,\exists k_i,i=1,\cdots,n,s.t.\sum_ik_i\varphi(e_i)=\alpha$，从而$\varphi^{-1}(\alpha)=\sum_ik_ie_i\in W$，即$W$也是$\varphi^{-1}$不变子空间。
+\end{solution}
+
+\begin{problem}{4.5.6}
+    设 $\varphi$ 是 $n$ 维线性空间 $V$ 上的线性变换，$\varphi$ 在 $V$ 的一组基下的表示矩阵为对角矩阵且主对角线上的元素互不相同，求所有一维的 $\varphi$ 不变子空间并确定它们的个数。
+\end{problem}
+\begin{solution}
+    以题中提到的一组基中的每个基作为基的一维子空间都是$\varphi$不变子空间，共$n$个。
+\end{solution}
+\begin{problem}{总复习.1}
+    设 $V$ 是实数域上次数不超过 $n$ 的多项式全体组成的线性空间，$D$ 是求导变换，求证：
+    \begin{enumerate}
+        \item $D$ 是 $V$ 上的线性变换，并求 $D$ 在基 $\{1, x, x^2, \dots, x^n\}$ 下的表示矩阵；
+        \item 对任意的 $1 \leq r \leq n+1$，$D$ 的 $r$ 维不变子空间必是由 $\{1, x, \dots, x^{r-1}\}$ 生成的子空间；
+        \item $\operatorname{Im} D \cap \ker D \neq 0$。
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 由于求导的线性性，可知$D$是$V$上的线性变换，所求表示矩阵为：
+     \[
+    \begin{pmatrix}
+    0 & 1 & 0 & \cdots & 0 &0\\
+    0 & 0 & 2 & \cdots & 0 &0\\
+    0 & 0 & 0 & \cdots & 0 &0\\
+    \vdots & \vdots & \vdots &  & \vdots & \vdots \\
+    0 & 0 & 0 & \cdots & 0&n\\
+    0 & 0 & 0 & \cdots & 0&0\\
+    \end{pmatrix}
+    \]
+    \item 若$U$为$r$维不变子空间($1\leq r\leq n+1$)，则$0\in U$，对于任意非零多项式$f\in U$，若它的次数大于0，则在
+    多次求导变换后，将得到一个零次多项式，又因为$U$是$D$不变子空间，所以$1\in D$。类似的可以证明$x,\cdots,x^{r-1}$都在$U$中，而
+    $\{1,x,\cdots,x^{r-1}\}$线性无关，构成$U$的一组基，从而$U$是$\{1,x,\cdots,x^{r-1}\}$生成的子空间。
+    \item $1\in$Im$D\cap\ker D$
+    \end{enumerate}
+\end{solution}
+
+\begin{problem}{总复习.2}
+    设 $V$ 是数域 $\mathbb{K}$ 上的向量空间，$\varphi$ 是 $V$ 上线性变换，若 $\varphi$ 在基 $\{e_1, e_2, \dots, e_n\}$ 下的表示矩阵为
+    \[
+    \begin{pmatrix}
+    0 & 0 & 0 & \cdots & 0 &0\\
+    1 & 0 & 0 & \cdots & 0 &0\\
+    0 & 1 & 0 & \cdots & 0 &0\\
+    \vdots & \vdots & \vdots &  & \vdots & \vdots \\
+    0 & 0 & 0 & \cdots & 1&0\\
+    \end{pmatrix}
+    \]
+    求证：
+    \begin{enumerate}
+        \item $V$ 中包含 $e_1$ 的 $\varphi$-不变子空间只有 $V$ 自身；
+        \item $V$ 任一非零 $\varphi$-不变子空间必包含 $e_n$；
+        \item $V$ 不能分解为两个非平凡 $\varphi$-不变子空间的直和。
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+   \begin{enumerate}
+    \item 有表示矩阵可知，$\varphi^k(e_1)=e_{k+1},k=0,\cdots,n-1$，若$U$维包含$e_1$的不变子空间，则$\{e_1,\cdots,e_n\}\in U$，为$U$的一组基，从而$U=V$，即$V$ 中包含 $e_1$ 的 $\varphi$-不变子空间只有 $V$ 自身。
+    \item 若$U$为$V$的一个非零$\varphi$不变子空间，任取其中的一个非零向量$\alpha=\sum_ik_ie_i,\exists i,s.t.\forall j<i,k_j=0,k_i\neq 0$，则$\varphi^{n-i}(\alpha)=k_ie_n$，从而
+    $\varphi^{n-i}(\frac{1}{k_i}\alpha)=e_n\in U$，即$V$ 任一非零 $\varphi$-不变子空间必包含 $e_n$。
+    \item 因为$V$ 任一非零 $\varphi$-不变子空间必包含 $e_n$，所以$V$ 不能分解为两个非平凡 $\varphi$-不变子空间的直和。
+   \end{enumerate} 
+\end{solution}
+
+
+\begin{problem}{总复习.4}
+    设 $\varphi$ 是线性空间 $V$ 上的线性变换，若它在 $V$ 的任一组基下的表示矩阵都相同，求证：$\varphi$ 是纯量变换，即存在常数 $k$，使得 $\varphi(a) = ka$ 对一切 $a \in V$ 都成立。
+\end{problem}
+\begin{solution}
+   只需证明$\varphi$ 的表示矩阵$A=kI$，其中$k$为常数即可。
+
+   由于$\varphi$在$V$的任一组基下的表示矩阵不变，所以对于任何非异阵$X$，有
+   \[A=X^{-1}AX\]
+   取$X=P_{ij},i\neq j,i,j=1,\cdots,n$，可得$A(i,i)=A(j,j)$。取$X=P_i(-1),i=1,\cdots,n$，可得$A(i,j)=-A(i,j)$，因此
+$A=kI$，其中$k$为常数。
+\end{solution}
+
+
+\begin{problem}{总复习.18}
+    设 $V = M_n(\mathbb{K})$，$A, B$ 是两个 $n$ 阶矩阵，定义 $V$ 上的变换：
+    \[
+    \varphi(X) = AXB,
+    \]
+    求证：$\varphi$ 是 $V$ 上的线性变换，$\varphi$ 是线性同构的充分必要条件是 $A, B$ 都是非奇异矩阵。
+\end{problem}
+\begin{solution}
+由矩阵乘法满足分配律易知$\varphi$ 是$V$上的线性变换。
+
+充分性：
+
+若$A,B$都是非奇异矩阵，$\forall Y\in V$，$\varphi(A^{-1}VB^{-1})=Y$，若$\varphi(X_1)=\varphi(X_2)$，则
+$A^{-1}\varphi(X_1)B^{-1}=A^{-1}\varphi(X_2)B^{-1}$，即$X_1=X_2$，从而$\varphi$为双射，因此$\varphi$为线性同构。
+
+必要性：
+
+若$\varphi$是线性同构，则$\exists X,s.t.AXB=I$，从而$r(A)\geq n,r(B)\geq n$，即$A,B$都是非奇异矩阵。
+\end{solution}
+
+
+\begin{problem}{总复习.20}
+    设 $U, W$ 是 $n$ 维线性空间 $V$ 的子空间且 $\dim U + \dim W = \dim V$，求证：存在 $V$ 上的线性变换 $\varphi$，使得 $\ker \varphi = U$，$\operatorname{Im} \varphi = W$。
+\end{problem}
+\begin{solution}
+   由于 $\dim U + \dim W = \dim V$，所以$U+W$为直和。取$U$的一组基$e_1,\cdots,e_{\dim U}$，取$W$的一组基$f_1,\cdots,f_{\dim W}$，则$e_1,\cdots,e_{\dim U},f_1,\cdots,f_{\dim W}$是$V$的一组基。 
+   定义$\varphi:\sum_ik_ie_i+\sum_it_ij_i\rightarrow\sum_it_ij_i$，则$\ker\varphi=U,$Im$\varphi=W$。
+\end{solution}
+\begin{problem}{总复习.34}
+    设 $\varphi, \varphi_1, \dots, \varphi_m \, (m \geq 2)$ 是 $n$ 维线性空间 $V$ 上的线性变换且适合条件：
+    \[
+    \varphi^2 = \varphi, \quad \varphi = \varphi_1 + \cdots + \varphi_m, \quad r(\varphi) = r(\varphi_1) + \cdots + r(\varphi_m).
+    \]
+    求证：$\varphi_i \varphi_j = 0 \, (i \neq j)$，$\varphi_i^2 = \varphi_i$，$i = 1, \dots, m$。
+\end{problem}
+\begin{solution}
+   因为 
+   \[ r(\varphi) = r(\varphi_1) + \cdots + r(\varphi_m)\]
+   所以 
+   \[\dim \varphi(V)=\sum_i\dim\varphi_i(V)\]
+   因此$\sum_i\varphi(V)=\varphi(V)$是直和，且$\varphi_i(V)\cap\varphi_j(V)=0,i\neq j$，从而$\varphi_i\varphi_j=0(i\neq j)$。
+
+   因此有
+   \[\varphi^2=\varphi=\sum_i\varphi^2_i\]
+   又因为$\varphi^2_i(V)\subseteq\varphi_i(V)$，所以$\varphi_i^2(V)\cap\varphi_j^2(V)=0,i\neq j$，即$\varphi=\sum_i\varphi^2_i$也是直和。
+   由于对于直和，分解方式唯一，$\forall\alpha\in V$，$\varphi(\alpha)=\sum_i\varphi_i(\alpha)=\sum_i\varphi^2(\alpha)$，因为$\varphi_i^2(V)\subseteq\varphi(V)$，所以$\varphi^2_i(\alpha)=\varphi_i(\alpha)$，由于$\alpha$的任意性，所以有$\varphi^2_i=\varphi_i,i=1,\cdots,m$
+\end{solution}
+
+
+\begin{problem}{总复习.35}
+    设 $A$ 是 $n$ 阶方阵，求证：$r(A^n) = r(A^{n+1}) = r(A^{n+2}) = \cdots$。
+\end{problem}
+\begin{solution}
+    若$A$为非奇异阵，则$r(A^i)=n,i=1,\cdots$。
+    若$A$为奇异阵，则：
+    \[n>r(A)\geq r(A^2)\geq\cdots\geq r(A^{n+1})\]
+    由于$r(A^{n+1})\geq 0$，所以其中至少有一个等号成立，不妨设$r(A^i)=r(A^{i+1}),1\leq i\leq n$。
+    则线性方程组$A^iX=0$的解空间$V_1$与线性方程组$A^{i+1}X=0$的解空间$V_2$维度相同，又因为$V_1\subseteq V_2$，所以$V_1=V_2$。
+    从而$A^jA^iX=0,A^jA^{i+1}X=0,j=0,\cdots$的解空间的维度相同，从而$r(A^n)=r(A^{n+1})=\cdots$。
+\end{solution}
+\end{document}

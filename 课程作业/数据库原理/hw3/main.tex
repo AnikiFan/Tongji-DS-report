@@ -1,0 +1,43 @@
+\documentclass[a4paper]{article}
+
+\input{header.tex}
+
+\title{作业{\hspace{1ex}}HW3}
+\author{姓名：范潇{\quad}学号：2254298{\quad}日期：\today}
+\date{}
+\begin{document}
+\maketitle
+在本次作业中我遵循\emph{SQLite}的语法。
+\section{(4.7)}
+\begin{lstlisting}
+create table employee(
+    ID varchar(10) primary key ,
+    person_name varchar(20),
+    street varchar(20),
+    city varchar(20)
+);
+create table company(
+    company_name varchar(20) primary key ,
+    city varchar(20)
+);
+create table works(
+    ID varchar(10) primary key references employee,
+    company_name varchar(20) references company,
+    salary numeric(10)
+);
+create table manages(
+    ID varchar(10) primary key references employee,
+    manager_id varchar(10) references employee
+    -- manager must also be an employee
+);
+\end{lstlisting}
+\section{(4.16)}
+\begin{lstlisting}
+--4.16
+select ID
+from student natural left outer join takes
+where course_id is null;
+-- course_id is part of the primary key of takes
+-- so that if it is null, it means that the corresponding student haven't taken any courses yet
+\end{lstlisting}
+\end{document}

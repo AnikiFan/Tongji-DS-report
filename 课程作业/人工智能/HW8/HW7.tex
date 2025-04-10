@@ -1,0 +1,97 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\usepackage{makecell}
+\usepackage{color}
+\usepackage{geometry}%设置整体页面布局
+\usepackage{pdfpages}
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\title{\textbf{HW7}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{破案问题}
+    从给定事实中可以得到以下逻辑语句
+    \begin{enumerate}
+        % \item 论域$U=\{A,B,C\}$
+        \item $Victim = A,Murder(A)\lor Murder(B)\lor Murder(C)$
+        \item $\forall x( Murder(x)\Rightarrow Hate(x,Victim))$
+        \item $\forall x( Hate(A,x)\Rightarrow\lnot Hate(C,x))$
+        \item $\forall x (\lnot (x=B)\Rightarrow Hate(A,x))$
+        \item $\forall x( Richer(A,x)\Rightarrow Hate(B,x))$
+        \item $\forall x( Hate(A,x)\Rightarrow Hate(B,x))$
+        \item $\lnot\exists x\forall y Hate(x,y)$
+        \item $\forall x( Murder(x)\Rightarrow Richer(Victim,x))$
+        \item $\lnot(A=B)$
+    \end{enumerate}
+    下面将其化为子句集
+    \begin{align*}
+       &(Victim = A) \land (Murder(A)\lor Murder(B)\lor Murder(C)) \land (\forall x (Murder(x)\Rightarrow Hate(x,Victim))) \land\\
+      & (\forall x (Hate(A,x)\Rightarrow\lnot Hate(C,x)))\land (\forall x (\lnot (x=B)\Rightarrow Hate(A,x)))\land\\
+      &(\forall x (Richer(A,x)\Rightarrow Hate(B,x)))\land (\forall x( Hate(A,x)\Rightarrow Hate(B,x)))\land \\
+        & (\lnot\exists x\forall y Hate(x,y)) \land (\forall x( Murder(x)\Rightarrow Richer(Victim,x)))\land(\lnot(A=B))\\
+      \equiv&(Victim = A) \land ( Murder(A)\lor Murder(B)\lor Murder(C)) \land (\forall x (\lnot Murder(x)\lor Hate(x,Victim))) \land\\
+      & (\forall x (\lnot Hate(A,x)\lor\lnot Hate(C,x)))\land (\forall x ( (x=B)\lor Hate(A,x)))\land\\
+      &(\forall x (\lnot Richer(A,x)\lor Hate(B,x)))\land (\forall x(\lnot Hate(A,x)\lor Hate(B,x)))\land \\
+        & (\lnot\exists x\forall y Hate(x,y)) \land (\forall x(\lnot Murder(x)\lor Richer(Victim,x)))\land(\lnot(A=B))\\
+    \equiv&(Victim = A) \land (Murder(A)\lor Murder(B)\lor Murder(C)) \land (\forall y (\lnot Murder(y)\lor Hate(y,Victim))) \land\\
+      & (\forall w (\lnot Hate(A,w)\lor\lnot Hate(C,w)))\land (\forall v ( (v=B)\lor Hate(A,v)))\land\\
+      &(\forall t (\lnot Richer(A,t)\lor Hate(B,t)))\land (\forall r(\lnot Hate(A,r)\lor Hate(B,r)))\land \\
+        & (\forall m\exists n \lnot Hate(m,n)) \land (\forall z(\lnot Murder(z)\lor Richer(Victim,z)))\land(\lnot(A=B))\\
+    \end{align*}
+    消去存在量词后得
+    \begin{align*}
+     &(Victim = A) ( Murder(A)\lor Murder(B)\lor Murder(C))  \land (\forall y (\lnot Murder(y)\lor Hate(y,Victim))) \\
+      \land& (\forall w (\lnot Hate(A,w)\lor\lnot Hate(C,w)))\land (\forall v ( (v=B)\lor Hate(A,v)))\\
+      \land &(\forall t (\lnot Richer(A,t)\lor Hate(B,t)))\land (\forall r(\lnot Hate(A,r)\lor Hate(B,r)))\\
+       \land &  (\forall m Hate(m,f(m))) \land (\forall z(\lnot Murder(z)\lor Richer(Victim,z)))\land(\lnot(A=B))\\
+    \end{align*}
+    转为前束形并略去全称量词得
+    \begin{align*}
+     &(Victim = A) \land  (Murder(A)\lor Murder(B)\lor Murder(C)) \land (\lnot Murder(y)\lor Hate(y,Victim)) \\
+      \land&  (\lnot Hate(A,w)\lor\lnot Hate(C,w))\land  ( (v=B)\lor Hate(A,v))\\
+      \land &(\lnot Richer(A,t)\lor Hate(B,t))\land (\lnot Hate(A,r)\lor Hate(B,r))\\
+       \land &  ( Hate(m,f(m))) \land (\lnot Murder(z)\lor Richer(Victim,z))\land(\lnot(A=B))\\
+    \end{align*}
+    已经化为合取范式，消去合取符号并子句变量标准化，把$Victim$换为$A$后得
+     \begin{align*}
+       Murder(A)\lor Murder(B)\lor Murder(C)\\ \lnot Murder(y)\lor Hate(y,A) \\
+        \lnot Hate(A,w)\lor\lnot Hate(C,w)\\  (v=B)\lor Hate(A,v)\\
+      \lnot Richer(A,t)\lor Hate(B,t)\\ \lnot Hate(A,r)\lor Hate(B,r)\\
+          Hate(m,f(m)) \\ \lnot Murder(z)\lor Richer(A,z)\\\lnot(A=B)\\
+    \end{align*}
+    设凶手为$u$，将$\lnot Murder(u)\lor ANSWER(u)$加入子句集中。再考虑事实“没有人比自己富有”，$\forall x(\lnot Richer(x,x))$，化为子句即$\lnot Richer(s,s)$
+      \begin{align}
+      Murder(A)\lor Murder(B)\lor Murder(C) \\ \lnot Murder(y)\lor Hate(y,A) \\
+        \lnot Hate(A,w)\lor\lnot Hate(C,w)\\  (v=B)\lor Hate(A,v)\\
+      \lnot Richer(A,t)\lor Hate(B,t)\\ \lnot Hate(A,r)\lor Hate(B,r)\\
+          Hate(m,f(m)) \\ \lnot Murder(z)\lor Richer(A,z)\\\lnot(A=B)\\
+          \lnot Murder(u)\lor ANSWER(u)\\\lnot Richer(s,s)
+    \end{align}
+
+    取置换$\sigma=\{A/v\}$，由(4),(9)得$Hate(A,A)$(12)。
+
+    取置换$\sigma=\{A/w\}$，由(12),(3)得$\lnot Hate(C,A)$(13)。
+
+    取置换$\sigma=\{C/y\}$，由(13),(2)得$\lnot Murder(C)$(14)。
+
+    由(13),(1)得$Murder(B)\lor Murder(A)$(15)。
+
+    取置换$\sigma=\{A/z,A/s\}$，由(8),(11)得$\lnot Murder(A)$(16)。
+
+    由(16),(15)得$Murder(B)$(17)。
+
+    取置换$\sigma=\{B/u\}$，由(10),(17)得$ANSWER(B)$(18)。
+
+    所以凶手是B。
+\end{problem}
+\end{document}

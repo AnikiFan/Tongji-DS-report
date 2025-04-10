@@ -1,0 +1,1792 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{ctex}%提供中文支持
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{定义}
+\theoremstyle{plain}
+\newtheorem*{property}{性质}
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\author{Fan}
+\title{丘维声高等代数读书笔记}
+\date{2023年暑假}
+\begin{document}
+\maketitle
+\tableofcontents
+\begin{abstract}
+    本笔记是丘维声高等代数的读书笔记,主要关注知识结构而非解题技巧.    
+\end{abstract}
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+\begin{longtable}{cc}
+       \caption{常用记号} \\
+       \multicolumn{1}{c}{含义}&\multicolumn{1}{c}{记号}\\
+       \hline
+       \endfirsthead
+       \multicolumn{1}{c}{含义}&\multicolumn{1}{c}{记号}\\
+       \hline\endhead
+       任意矩阵&$A$\\
+       矩阵A的转置&$A^{\top}$或 $A'$\\
+       方阵 $A$的行列式&$\lvert A\rvert$或 det $A$\\
+       方阵 $A$的 $(i,j)$元的余子式& $M_{ij}$\\
+       方阵 $A$的 $(i,j)$元的代数余子式& $A_{ij}$\\
+       矩阵 $A$的一个k阶子式 & 
+        $A
+        \begin{pmatrix}
+        i_1,i_2,\cdots,i_k\\
+        j_1,j_2,\cdots,j_k\\    
+        \end{pmatrix}$
+       \\
+       矩阵 $A$的一个k阶子式对应的余子式 &
+       $A
+       \begin{pmatrix}
+        i_1^{\prime},i_2^{\prime},\cdots,i_{n-k}^{\prime}\\
+        i_1^{\prime},j_2^{\prime},\cdots,j_{n-k}^{\prime}\\
+       \end{pmatrix}
+       $
+       \\
+        矩阵 $A$的一个k阶子式对应的代数余子式 &
+       $(-1)^{\sum_{r=1}^{k}{i_r+j_r}}A
+       \begin{pmatrix}
+        i_1^{\prime},i_2^{\prime},\cdots,i_{n-k}^{\prime}\\
+        i_1^{\prime},j_2^{\prime},\cdots,j_{n-k}^{\prime}\\
+       \end{pmatrix}
+       $\\
+       由 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$生成的子空间&
+       $<\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}>$
+       \\
+       向量组 $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_s}$的秩
+       &
+       rank $\{\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_s}\}$
+       \\
+       $K^n$的一组标准基 & $\varepsilon_1,\varepsilon_2,\cdots,\varepsilon_n$
+       \\
+       线性空间 $U$的维数& dim $U$\\
+       矩阵 $A$的秩& rank($A$)\\
+       \makecell{主对角线上元素都是1,\\其余元素都是0的n级矩阵}&$I_n$\\
+       主对角线以外的元素全为0的方阵& diag $\{d_1,d_2,\cdots,d_n\}$\\
+       只有 $(i,j)$元为1,其余元素全为0的矩阵& $E _{ij}$\\
+       对角矩阵&$D$\\
+       正交矩阵&$T$\\
+       酉矩阵& $U$\\
+       \makecell{单位矩阵的第i行(列)的k倍\\加到第j行(列)上得到的初等矩阵}&$P(j,i(k))$\\
+       \makecell{单位矩阵的第i行(列)与第j行(列)\\互换得到的初等矩阵}&$P(i,j)$\\
+       \makecell{单位矩阵的第i行(列)\\乘以非零常数c得到的初等矩阵}&$P(i(c))$\\
+       矩阵 $A$的伴随矩阵或矩阵 $A$的转置共轭& $A^*$\\
+       Kronecker记号&
+        $
+            \delta _{ij}=\begin{cases}
+                1,&\text{当} i=j,\\
+                0,&\text{当} i\neq j\\
+            \end{cases}
+        $
+        \\
+        向量 $\bm{\alpha}$与 $\bm{\beta}$之间的夹角&
+        $<\bm{\alpha},\bm{\beta}>$\\
+        集合 $S$上的恒等变换&$1_S$\\
+        数域$K$上所有 $s\times n$矩阵组成的集合& $M _{s\times n}(K)$\\
+        矩阵 $A$的广义逆 & $A^-$\\
+        矩阵 $A$的Morre-Penrose广义逆& $A^+$\\
+        n级矩阵 $A$的迹& $tr(A)$\\
+        $A$与 $B$的Kronecker基& $A \otimes B$\\
+        二次型 $\mathbf{X}'A\mathbf{X}$与 $\mathbf{Y}'B\mathbf{Y}$等价 & $\mathbf{X}'A\mathbf{X} \cong \mathbf{Y}'B\mathbf{Y}$\\
+        矩阵 $A$与 $B$合同& $A\simeq B$\\
+        一元多项式 $f(x)$的次数& deg $f(x)$或 deg $f$\\
+        数域$K$中所有非零数组成的集合 & $K^*$\\
+        整数环&$\mathbf{Z}$\\
+        数域$K$上的一元多项式环&K[x]\\
+        数域$K$上n级全矩阵环& $M_n[K]$\\
+        数域$K$上矩阵 $A$的所有多项式组成的集合& $K[A]$\\
+        自然数集& $\mathbf{N}$\\
+        正整数集 & $\mathbf{N}^*$\\
+        在 $K[x]$中,$f(x)$与 $g(x)$相伴& $f(x)\sim g(x)$\\
+        $\lambda-$矩阵&$A(\lambda),B(\lambda),\cdots$\\
+        $f_1(x ),\cdots,f_s(x)$的首一最大公因式& $(f_1(x),\cdots,f_s(x))$或 $g.c.d(f_1(x),\cdots,f_s(x))$\\
+        数 $a_1,a_2,\cdots,a_s$的正的最大公因数& $(a_1,a_2,\cdots,a_s)$或 $g.c.d(a_1,a_2,\cdots,a_s)$\\
+        数 $a,b$的最小公倍数& $[a,b]$\\
+        $A(\lambda)$的所有 $k$阶子式的首一最大公因式&$D_k(\lambda)$\\
+\end{longtable}
+\newpage
+\section{线性方程组及n维向量空间 $K^n$}
+\subsection{初等变换}
+线性方程组以及矩阵均有初等变换,即把某一行的倍数加到另一行上;互换两行的位置;用一个非零数乘某一行.
+这三种初等变换都是可逆的.
+
+通过这三种初等变换,可以把任意矩阵依次化简为阶梯形矩阵和化简行阶梯形矩阵.
+前者要求所有零行位于非零行下方,同时每一非零行中最左侧的非零元素的列指标随行指标严格递增,
+该最左侧的非零元素称为主元.后者在此基础之上还要求每个主元均为1,同时每个主元所在列的其他元素均为0.
+\begin{remark}
+    在化简至阶梯形矩阵和化简行阶梯形矩阵的过程中尽量避免出现分数,且
+    前后矩阵之间用箭头来连接,初等行变换的记号约定写在箭头的上方.当元素中含有未知数时
+    要注意是非为零.
+\end{remark}
+\subsection{线性方程组的解}
+想要判断线性方程组的解的情况,一般先将其转化为行阶梯形.
+
+若出现``$0=d$''(其中 $m$为非零数)这种矛盾方程时,则该方程组无解.
+若没有出现矛盾方程,则最后一列必定不会出现主元.此时,若方程组主元数等于未知量个数,则方程组有唯一解;
+若主元数小于未知量个数,则有无穷多解.
+
+\begin{theorem}\label{1.1}
+    n元线性方程组的解的情况只有三种可能:无解,有唯一解,有无穷多解.
+\end{theorem}
+我们称以主元为系数的未知量为主变量,其余未知量称为自由未知量.
+
+在方程组有解的情况下,若想进一步求出解,则将增广矩阵化为化简阶梯形.对于有唯一解的情况,可以直接从化简阶梯形中得到解;
+对于有无穷多解的情况,可以将含自由未知量的项移至等号右边,即用自由未知量来表示主变量,这样得到的关系式组称为原线性方程组的一般解.
+
+若一个线性方程组有解,则称其为相容的;否则,称其为不相容的.
+
+常数项全为零的线性方程组称为齐次线性方程组.显然所有未知量均为零时,
+齐次线性方程组成立,该解称为零解;其余解称为非零解.由定理\ref{1.1}可知,当一个齐次方程组
+有非零解时,其必定有无穷多个解
+\subsection{数域}
+为保证作初等变换时的合理性,我们要对矩阵中的元素加以限制.
+\begin{definition}
+    复数集的一个子集 $K$如果满足:
+
+(1)$0,1\in K$;
+
+(2)$a,b\in K\rightarrow a\pm b,ab\in K$;
+
+(3)$a,b\in K,b\neq 0\rightarrow \frac{a}{b}\in K$,
+
+则称 $K$为一个数域.
+\end{definition}
+显然,有理数集,实数集,复数集否是数域;但整数集不是.
+
+任一数域都包含有理数域,即有理数域是最小的数域;由定义可知,复数域则是最大的数域.
+在讨论线性方程组以及矩阵的相关问题时,都必须是在一个给定数域 $K$内进行的,称``数域 $K$上的线性方程组/矩阵''.
+\subsection{n维向量空间 $K^n$}
+取定一个数域 $K$,设n是任意给定的一个正整数.令
+\[K^n=\{(a_1,a_2,\cdots,a_n)\vert a_i\in K ,i=1,2,\cdots,n\}.\]
+如果 $a_i=b_i(i=1,2,\cdots,n)$,则称 $K^n$中的两个元素: $(a_1,a_2,\cdots,a_n)$与
+$(b_1,b_2,\cdots,b_n)$相等.
+
+在 $K^n$中规定加法运算如下:
+\[(a_1,a_2,\cdots,a_n)+(b_1,b_2,\cdots,b_n):=(a_1+b_1,a_2+b_2,\cdots,a_n+b_n).\]
+在 $K$中的元素与 $K^n$的元素之间规定的数量乘法运算如下:
+\[k(a_1,a_2,\cdots,a_n):=(ka_1,ka_2,\cdots,ka_n).\]
+容易验证加法与数量乘法满足下述8条运算性质:对于 $\bm{\alpha},\bm{\beta},\gamma\in K^n;k,l\in K,$
+有
+\begin{enumerate}
+\item $\bm{\alpha}+\bm{\beta}=\bm{\beta}+\bm{\alpha};$
+\item $(\bm{\alpha}+\bm{\beta})+\gamma=\bm{\alpha}+(\bm{\beta}+\gamma);$
+\item 记元素$(0,0,\cdots,0)$为 $0$,称为 $K^n$的零元素,它使得
+\[0+\bm{\alpha}=\bm{\alpha}+0=\bm{\alpha}\]
+\item 对于 $\bm{\alpha}=(a_1,a_2,\cdots,a_n)\in K^n$,令
+\[-\bm{\alpha}:=(-a_1,-a_2,\cdots,-a_n)\in K^n,\]
+称 $-\bm{\alpha}$为 $\bm{\alpha}$的负元素.
+\item $1\cdot \bm{\alpha}=\bm{\alpha};$
+\item $(kl)\bm{\alpha}=k(l \bm{\alpha});$
+\item $(k+l)\bm{\alpha}=k \bm{\alpha}+l \bm{\alpha};$
+\item $k(\bm{\alpha}+\bm{\beta})=k \bm{\alpha}+k \bm{\beta}.$
+\end{enumerate}
+\begin{definition}
+    数域 $K$上所有n元有序数组组成的集合 $K^n$,连同定义在它上面的 加法运算和数量乘法运算,
+    及其满足的8条运算法则一起,称为数域 $K$上的一个n维向量空间.其元素称为n维向量;设
+    向量 $\bm{\alpha}=(a_1,a_2,\cdots,a_n)$,称 $a_i$是 $\bm{\alpha}$的第i个分量.
+\end{definition}
+\begin{definition}
+    在向量空间 $K^n$中,给定向量组 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$,任给
+    $K$中一组数 $k_1,k_2,\cdots,k_s$,则称向量 $\sum_{i=1}^{s}k_i \bm{\alpha_i}$为
+    这个向量组的一个线性组合,那组数则称为系数.
+\end{definition}
+\begin{definition}
+    在向量空间 $K^n$中,给定向量组 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$,
+    对于 $\bm{\beta}\in K^n$,如果存在 $K$中的一组系数,使得 $\bm{\beta}$为给定向量组的线性组合,
+    则称该向量能由该给定向量组线性表出.
+\end{definition}
+显然,线性方程组是否有解这个问题等价于常数项列向量 $\bm{\beta}$能否由系数矩阵的列向量组
+线性表出.
+\begin{definition}
+    $K^n$的一个非空子集 $U$如果满足:
+    \begin{enumerate}
+        \item $\bm{\alpha},\bm{\beta}\in U\rightarrow \bm{\alpha}+\bm{\beta}\in U,$
+        \item $\bm{\alpha}\in U,k\in K \rightarrow k \bm{\alpha}\in U,$
+    \end{enumerate}
+    那么称 $U$是 $K^n$的一个线性子空间,简称为子空间.
+\end{definition}
+特别地,由向量组 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$的所有线性组合所组成的集合
+$W$也是 $K^n$的一个子空间,记作 $<\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}>$.
+\begin{theorem}
+    数域 $K$上n元线性方程组 $x_1\bm{\alpha_1},x_2\bm{\alpha_2},\cdots,x_n\bm{\alpha_n}=\bm{\beta}$
+    有解
+
+   $ \leftrightarrow \bm{\beta}\in <\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_n}>$.
+\end{theorem}
+\begin{definition}
+    $K^n$中向量组 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}(s\geq1)$称为是线性相关的,
+    如果有$K$中不全为零的数 $k_1,k_2,\cdots,k_s$,使得线性组合为零元素.否则称该
+    向量组为线性无关.
+\end{definition}
+\begin{definition}
+   如果向量组 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$的每一个向量都可以由向量组
+   $\bm{\beta_1},\bm{\beta_2},\cdots,\bm{\beta_r}$线性表出,那么称向量组 $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$可以
+   由向量组 $\bm{\beta_1},\bm{\beta_2},\cdots,\bm{\beta_r}$线性表出.如果向量组  $\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}$与
+   向量组 $\bm{\beta_1},\bm{\beta_2},\cdots,\bm{\beta_r}$能够相互表出,则称它们之间等价,记作
+   \[\{\bm{\alpha_1},\bm{\alpha_2},\cdots,\bm{\alpha_s}\}\cong \{\bm{\beta}_1,\bm{\beta}_2,\cdots,\bm{\beta}_r\}.\]
+\end{definition}
+\begin{definition}
+    如果一个向量组的子组与该向量组等价,则称该子组为该向量组的极大线性无关组.
+\end{definition}
+\begin{definition}
+    一个向量组的极大线性无关组所含向量的个数称为这个向量组的秩.
+\end{definition}
+全由零向量组成的向量组的秩规定为0.
+向量组 $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_s}$的秩记作 rank $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_s}$.
+\subsection{子空间的基与维数}
+\begin{definition}
+    设 $U$是 $K^n$的一个子空间,如果 $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_r}\in U$,
+    并且满足下述概念:
+    \begin{enumerate}
+        \item $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_r}$线性无关
+        \item $U$中每一个向量都可以由 $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_r}$
+    线性表出,那么称 $\bm{\alpha_1},\bm{\alpha_1},\cdots,\bm{\alpha_r}$是 $U$ 的一个基.
+    线性表出表达式中的r个系数依次组成的有序数组称为该向量在这组基下的坐标.
+    \end{enumerate}
+\end{definition}
+\begin{definition}
+    线性空间 $U$的基所含的向量个数称为 $U$的维数.
+\end{definition}
+\subsection{矩阵的秩}
+\begin{theorem}
+    阶梯形矩阵 $J$的行秩与列秩相等,它们都等于 $J$的非零行的个数;并且 $J$的主元
+    所在的列构成列向量的一个极大线性无关组.
+\end{theorem}
+\begin{definition}
+    矩阵 $A$的行秩与列秩统称为 $A$的秩,记作rank($A$).
+\end{definition}
+\begin{theorem}
+    矩阵的初等变换不改变矩阵的秩.
+\end{theorem}
+\begin{theorem}
+    任一非零矩阵的秩等于它的不为零的子式的最高阶数.并且最高阶数的不为零的子式所在
+    的列构成该矩阵的列向量组的一个极大线性无关组.
+\end{theorem}
+\begin{theorem}
+    线性方程组有解的充分必要条件是:它的系数矩阵与增广矩阵的秩相等.
+\end{theorem}
+\begin{theorem}
+    线性方程组有解时,如果它的系数矩阵 $A$的秩等于未知量的个数n,那么该方程组由唯一解;
+    如果 $A$的秩小于n,那么线性方程组有无穷多解.
+\end{theorem}
+\begin{theorem}
+     设 $A$是实数域上 $m\times n$矩阵,则
+     \[\text{rank}(AA'A)=\text{rank}(A'A)=\text{rank}(AA')=\text{rank}(A)=\text{rank}(A').\]
+\end{theorem}
+\subsection{线性方程组的解集的结构}
+数域 $K$上的n元齐次线性方程组
+\[\sum_{i=1}^{n}{x_i \bm{\alpha_i}}=0\]
+的解是 $K^n$中的一个向量,我们称该向量为该齐次线性方程组的一个解向量.可以证明,n元齐次线性方程组的
+解集是 $K^n$的一个子空间,称其为该方程的解空间.解空间的一个基称为该齐次线性方程组的一个基础解系.
+\begin{definition}
+    n元齐次线性方程组有非零解时,如果它的有限多个解 $\eta _1,\eta _2,\cdots,\eta _t$满足:
+    \begin{enumerate}
+        \item $\eta_1,\eta_2,\cdots,\eta_t$线性无关;
+        \item 该齐次线性方程组的每一个解都可以用 $\eta_1,\eta_2,\cdots,\eta_t$线性表出,
+    \end{enumerate}
+    那么称 $\eta_1,\eta_2,\cdots,\eta_t$为该齐次线性方程组的一个基础解系.
+    称
+    \[\sum_{i=1}^{t}k_i\eta_i,k_i\in K(i=1,2,\cdots,t)\]
+    为该齐次线性方程组的通解
+\end{definition}
+\begin{theorem}
+    数域 $K$上n元齐次线性方程组的解空间 $W$的维数为
+    \[\dim W=n-\text{rank}(A)\],
+    其中 $A$时方程组的系数矩阵.
+\end{theorem}
+对于数域 $K$上的n元非齐次线性方程组
+\[x_1\bm{\alpha}_1+x_2\bm{\alpha}_2,\cdots,x_n\bm{\alpha}_n=\bm{\beta}\]
+我们称
+\[x_1\bm{\alpha}_1+x_2\bm{\alpha}_2+\cdots+x_n\bm{\alpha}_n=0,\]
+为它的导出组.
+
+记导出组的解集为 $W$,则有:
+\begin{theorem}
+    如果数域 $K$上n元齐次线性方程组有解,那么它的解集 $U$为
+    \[U=\{\bm{\gamma_0}+\eta\vert\eta\in W\},\]
+    其中 $\bm{\gamma}$是非齐次方程组的一个解,称为特解,W则是该非齐次方程组的导出组的解空间.
+\end{theorem}
+\begin{remark}
+    我们把集合 $\{\bm{\gamma_0}+\eta\vert\eta\in W\}$记作 $\bm{\gamma_0}+W$.称它
+    是一个 $W$型的线性流形(或子空间 $W$的一个陪集),把 $\dim W$称为线性流形 $\bm{\gamma_0}+W$的维数.
+\end{remark}
+\begin{remark}
+    取导出组的一个基础解系 $\eta_1,\eta_2,\cdots,\eta_{n-r}$,其中r是系数矩阵 $A$的秩.则
+    非齐次线性方程组的解集 $U$为
+    \[U=\{\bm{\gamma_0+\sum_{i=0}^{n-r}{k_i\eta_i}}\vert k_i\in K,i=1,2,\cdots,n-r\}\]
+    其中 $\bm{\gamma_0}$是非齐次线性方程组的一个特解.解集 $U$的代表元素
+    \[\bm{\gamma_0+\sum_{i=0}^{n-r}{k_i\eta_i}},(k_1,\cdots,k_{n-r}\in K)\]
+    称为非齐次线性方程组的通解.
+\end{remark}
+\section{行列式}
+\subsection{n元排列}
+n个不同的自然数的一个全排列称为一个n元排列,其总数为 $n!$.
+
+在n元排列 $a_1a_2\cdots a_n$中,任取一对数 $a_ia_j$其中($i<j$),如果 $a_i<a_j$,
+则称这一对数构成一个顺序;如果 $a_i>a_j$,则称这一对数构成一个逆序.一个n元排序中逆序的总数
+称为逆序数,记作 $\tau (a_1a_2\cdots a_n)$.逆序数为偶数的排列称为偶排列,否则称为奇排列.
+互换排列中任意两个数的位置会改变该排列的奇偶性
+\subsection{n阶行列式}
+\begin{definition}
+    n阶方阵 $(a_{ij})$的行列式 
+    $$\lvert (a_{ij}) \rvert=\sum_{j_1j_2\cdots j_n}{(-1)^{\tau(j_1j_2\cdots j_n)}a_{1j_1}a_{2j_2}\cdots a_{nj_n}}$$
+\end{definition}
+\begin{remark}
+    上式被称为n阶行列式的完全展开式.更一般地有
+    $$\lvert (a_{ij}) \rvert=\sum_{j_1j_2\cdots j_n}{(-1)^{\tau(i_1i_2\cdots i_n)+\tau(j_1j_2\cdots j_n)}a_{i_1j_1}a_{i_2j_2}\cdots a_{i_nj_n}}$$
+\end{remark}
+n阶行列式有以下7条性质:
+\begin{enumerate}
+    \item det $A^{\top}=$ det $A$
+    \item 行列式关于其一行具有线性性
+    \item 行列式一行的公因子可以提出去
+    \item 行列式的两行成比例时,其值为0
+    \item 行列式的两行互换时,其值反号
+    \item 行列式的两行相同时,其值为零
+    \item 行列式一行的倍数加到另一行上后,其值不变
+\end{enumerate}
+\begin{remark}
+    计算行列式的值时尽量利用行列式的性质.
+\end{remark}
+\begin{remark}
+    若$A$经初等变换后得到 $B$,则det $B=l$det $A$,其中 $l$是某个非零数.即初等行变换
+    不改变行列式的非零性质.
+\end{remark}
+Vandermonde行列式常常出现在各类问题中,
+\begin{equation*}
+    \begin{vmatrix}
+        1 & 1 & 1 & \cdots & 1 \\
+        a_1 & a_2 & a_3 & \cdots & a_n \\
+        a_1^2 & a_2^2 & a_3^2 & \cdots & a_n^2 \\
+        \vdots &      &       &        &  \vdots \\
+        a_1^{n-1} & a_2^{n-1} & a_3^{n-1} & \cdots a_n^{n-1}\\
+    \end{vmatrix}
+    = \prod _{1\leq j < i\leq n}(a_i-a_j).
+\end{equation*}
+\begin{theorem}
+    设 $A$,$B$都是n级矩阵,则
+    \[\begin{vmatrix}
+        A&B\\
+        B&A\\
+    \end{vmatrix}=\abs{A+B}\abs{A-B}.\]
+\end{theorem}
+\subsection{n阶行列式展开}
+n阶行列式可以按一行来展开.
+\begin{theorem}
+    n阶行列式det $A$等于它的第i行元素与自己的代数余子式的乘积之和,即
+    $$\lvert A \rvert =\sum_{k=1}^{n}a_{ik}A_{ik}$$
+\end{theorem}
+\begin{remark}
+    类似地,也可以按一列来展开.
+\end{remark}
+\begin{remark}
+    也经常逆用该展开式,即根据等式右侧来构造等式左侧中的矩阵.
+\end{remark}
+行列式可以按照一行来展开,也可以按照多行来展开.
+\begin{theorem}{Laplace展开}
+   在n阶行列式det $A$中,取定第 $i_1,i_2,\cdots,i_k$行 $(i_1<i_2<\cdots<i_k)$,
+   则这k行元素形成的所有k阶子式与它们自己的代数余子式的乘积之和等于det $A$,即
+   \begin{equation*}
+   \abs{A}=\sum_{1\leq j_1<j_2<\cdots<j_k\leq n}A
+       \begin{pmatrix}
+        i_1,i_2,\cdots,i_{k}\\
+        i_1,j_2,\cdots,j_{k}\\
+       \end{pmatrix}(-1)^{\sum_{r=1}^{k}{i_r+j_r}}
+       \begin{pmatrix}
+        i_1^{\prime},i_2^{\prime},\cdots,i_{n-k}^{\prime}\\
+        i_1^{\prime},j_2^{\prime},\cdots,j_{n-k}^{\prime}\\
+       \end{pmatrix}
+    \end{equation*}
+\end{theorem}
+\subsection{Cramer法则}
+\begin{theorem}
+    n个方程的n元线性方程组有唯一解的充分必要条件时它的系数行列式不为零.
+\end{theorem}
+\begin{theorem}
+    n个方程的n元线性方程组的系数行列式det $A\neq0$时,其唯一解为
+    $$\left(\frac{\lvert B_1\rvert}{\abs{A}},\frac{\abs{B_2}}{\abs{A}},\cdots,\frac{\abs{B_n}}{\abs{A}}\right).$$
+\end{theorem}
+\section{矩阵及其运算}
+\subsection{矩阵的运算}
+\begin{definition}
+    对于数域 $K$上两个矩阵 $A,B$,如果它们行数相等,列数相等,且它们的所有元素都对应相等,
+    则称这两个矩阵相等,记作 $A=B$.
+\end{definition}
+\begin{definition}
+    设 $A=(a_{ij}),B=(b_{ij})$都是 数域$K$上 $s\times n$矩阵,令
+    \[C=(a_{ij}++b_{ij})_{s\times n},\]
+    则称矩阵 $C$是矩阵 $A$与 $B$的和,记作 $C=A+B$.
+\end{definition}
+\begin{definition}
+    设 $A=(a_{ij})$是 数域$K$上 $s\times n$矩阵, $k\in K$,令
+    \[M=(k a_{ij})_{s\times n},\]
+    则称矩阵 $M$是 $k$与矩阵 $A$的数量乘积,记作 $M=kA$.
+\end{definition}
+\begin{definition}
+    设 $A=(a_{ij})_{s\times n},$矩阵 $(-a_{ij})_{s\times n}$称为 $A$的负矩阵,记作 $-A$.
+\end{definition}
+\begin{definition}
+    设 $A,B$都是 $s\times n$矩阵,则
+    \[A-B:=A+(-B).\]
+\end{definition}
+\begin{definition}
+    设 $A=(a_{ij})_{s\times n},B=(b_{ij})_{s\times m},$令
+    \[C=(c _{ij})_{s\times m},\]
+    其中
+    \[c _{ij}=\sum_{k=1}^{n}{a_{ik}b_{kj}},\]
+    $i=1,2,\cdots,s;j=1,2,\cdots,m.$则矩阵 $C$称为矩阵 $A$与 $B$的乘积,记作
+    $C=AB.$
+\end{definition}
+\begin{remark}
+    要注意矩阵乘法对于等号左右矩阵的行列数的要求,正是因为这些要求,导致矩阵
+    的乘法适合结合律,但是不适合交换律;对于假发适合右分配律和左分配律;对于数量乘法满足:
+    \[k(AB)=(kA)B=A(kB).\]
+\end{remark}
+\begin{remark}
+    主对角线上是同一个数 $k$,其余元素都是0的n级矩阵称为n级数量矩阵,记为 $kI$.
+\end{remark}
+\begin{definition}
+    如果两个矩阵 $A$与 $B$满足 $AB=BA$,那么称 $A$与 $B$可交换.
+\end{definition}
+\begin{remark}
+    可以证明:一个矩阵当且仅当它是n级数量矩阵时,它与任意n级矩阵可交换.
+\end{remark}
+\begin{definition}
+    设 $A=(a _{ij}),B=(b _{ij})$分别是 数域$K$上的n级,m级矩阵.下述矩阵
+    \[\begin{pmatrix}
+        a_{11}B&a_{12}B&\cdots&a_{1n}B\\
+        a_{21}B&a_{22}B&\cdots&a_{2n}B\\
+        \cdots & \cdots & \cdots & \cdots \\
+        a_{n1}B&a_{n2}B&\cdots&a_{nn}B\\
+    \end{pmatrix}\]
+    称为 $A$与 $B$的Kronecker积,记作 $A\otimes B$.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item $A\otimes (B+C)=A\otimes B+A\otimes C;$
+        \item $(B+C)\otimes A=B\otimes A + C\otimes A;$
+        \item $A\otimes(kB)=(kA)\otimes B=k(A\otimes B);$
+        \item $I_n\otimes I_m=I_{mn};$
+        \item $(A\otimes B)\otimes C=A\otimes(B\otimes C);$
+        \item $(AC)\otimes (BD)=(A\otimes B)(C\otimes D);$
+        \item 若 $A,B$都可逆,则 $A\otimes B$也可逆,且 $(A\otimes B)^{-1}=A^{-1}\otimes B^{-1};$
+        \item $\abs{A\otimes B}=\abs{A}^m\abs{B}^n,$其中 $A$,$B$分别是n级,m级矩阵.
+    \end{enumerate}
+\end{property}
+\subsection{特殊矩阵}
+\begin{theorem}
+    用一个对角矩阵左(右)乘一个矩阵 $A$,就相当于用对角矩阵的主对角元分别取乘 $A$
+    的相应的行(列).
+\end{theorem}
+\begin{theorem}
+    用基本矩阵 $E _{ij}$左乘一个矩阵 $A$,就相当于把A的 $j$行般到第 $i$行的位置,
+    而乘积矩阵的其余行全为0行;用基本矩阵 $E _{ij}$右乘一个矩阵 $A$,就相当于把 $A$
+    的第 $i$列搬到第 $j$列的位置,而乘积矩阵的其余列全为0列.
+\end{theorem}
+\begin{remark}
+    乘以基本矩阵的效果总是将基本矩阵内侧下标对应的行(列)转移至外侧下标对应的行(列).
+    其余行(列)置零.
+\end{remark}
+\begin{remark}
+    左乘一个矩阵相当于对于被左乘的矩阵以其行为单位施加效果;
+    右乘一个矩阵相当于对于被右乘的矩阵以其列为单位施加效果.
+\end{remark}
+\begin{theorem}
+    两个n级上三角矩阵 $A$ 与 $B$的乘积仍为上三角矩阵,并且 $AB$的主对角元
+    对于 $A$与 $B$的相应主对角元的乘积.
+\end{theorem}
+\begin{theorem}
+    用初等矩阵左(右)乘一个矩阵 $A$,就相当于 $A$作了一次相应的初等行(列)
+\end{theorem}
+\begin{definition}
+    方阵 $A$如果满足 $A=A'$,那么称 $A$为对称矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 实对称矩阵的每一个主对角元都在最小特征值于最大特征值之间.
+    \end{enumerate}
+\end{property}
+
+\begin{definition}
+    方阵 $A$如果满足 $A=-A'$,那么称 $A$为斜对称矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 实数域上斜对称矩阵的特征多项式在复数域中的根是0或纯虚数.
+        \item 斜对称矩阵的秩为偶数.
+    \end{enumerate}
+\end{property}
+
+\begin{definition}
+    方阵 $A$如果满足 $A^2=I$,那么称 $A$是对合矩阵.
+\end{definition}
+\begin{property}
+\begin{enumerate}
+    \item 与对合矩阵相似的矩阵仍是对合矩阵.
+    \item n级矩阵 $A$是对合矩阵的充分必要条件是 $\text{rank}(I+A)+\text{rank}(I-A)=n.$
+    \item n级对合矩阵 $A$ 一定有特征值,并且它的特征值是1或-1.特别地,当 $A\neq \pm I $时,1和-1都是 $A$的特征值.
+\end{enumerate}
+\end{property}
+
+\begin{definition}
+    方阵 $A$如果满足 $A^2=A$,那么称 $A$是幂等矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 与幂等矩阵相似的矩阵仍是幂等矩阵.
+        \item 幂等矩阵一定可对角化,并且如果幂等矩阵 $A$的秩为 $r(r>0)$,那么
+        \[A\sim \begin{pmatrix}
+            I_r&0\\
+            0&0\\
+        \end{pmatrix}.\]
+        \item 幂等矩阵一定有特征值,并且它的特征值是1或者0.
+        \item $A$是幂等矩阵当且仅当 $\text{rank}(A)+\text{rank}(I-A)=n.$
+    \item 幂等矩阵的秩等于它的秩.
+    \end{enumerate}
+\end{property}
+
+\begin{definition}
+    方阵 $A$如果满足存在一个正整数 $k$,使得 $A^k=0$,则称 $A$是幂零矩阵,其中使得 $A^l=0$
+    成立的最小正整数称为 $A$的幂零指数.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 与幂零矩阵相似的矩阵仍是幂零矩阵,并且它们的幂零指数相等.
+        \item 幂零矩阵一定有特征值,并且它的特征值一定是0.
+        \item 不为零矩阵的幂零矩阵不能对角化.
+    \end{enumerate}
+\end{property}
+\begin{definition}
+    方阵 $A$如果满足存在正整数 $m$使得 $A^m=I$,那么称 $A$是周期矩阵.使得 $A^m=I$成立
+    的最小正整数 $m$称为 $A$的周期.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 与周期矩阵相似的矩阵仍是周期矩阵,并且它们的周期相等.
+    \end{enumerate}
+\end{property}
+\begin{definition}
+    每行有且只有一个元素是1,每列也有且只有一个元素是1,其余元素全为0的n级矩阵称为
+    n级置换矩阵.
+\end{definition}
+\begin{property}
+    设 $P$是n级置换矩阵,它的第 $l$列的元素1位于第 $i_l$行, $l=1,2,\cdots,n$.
+    \begin{enumerate}
+        \item P=($\varepsilon_{i_1} ,\varepsilon_{i_2} ,\cdots,\varepsilon_{i_n}$);
+        \item 把 $I$的第 $1,2,\cdots,n$行分别调到 $i_1,i_2,\cdots,i_n$行的位置得到的矩阵等于 $P$;
+        \item 把 $I$的第 $i_1,i_2,\cdots,i_n$列分别调到第 $1,2,\cdots,n$列的位置得到的矩阵等于 $P$;
+        \item $P$可逆,并且 $P^{-1}=P'$,从而 $P^{-1}$也是置换矩阵;
+        \item 在一个n级矩阵 $A$左边乘上置换矩阵 $P$,就相当于把 $A$的第 $1,2,\cdots,n$行
+        分别调到第 $i_1,i_2,\cdots,i_n$行的位置;在 $A$的右边乘上置换矩阵 $P$,就相当于把 $A$的第 $i_1,i_2,\cdots,i_n$
+        列分别调到第 $1,2,\cdots,n$列的位置.
+    \end{enumerate}
+\end{property}
+\subsection{矩阵乘积}
+\begin{theorem}
+    设 $A=(a _{ij})_{s\times n},B=(b _{ij})_{n\times m},$则
+    \[\text{rank}(AB)\leq \min{\text{rank}(A),\text{rank}(B)}.\]
+\end{theorem}
+\begin{theorem}
+    设 $A=(a _{ij})_{n\times n},B=(b _{ij})_{n\times n},$则
+    \[\abs{AB}=\abs{A}\abs{B}.\]
+\end{theorem}
+\begin{theorem}[Binet-Cauchy公式]
+   设 $A=(a _{ij})_{s\times n},B=(b _{ij})_{n\times s},$ 
+   \begin{enumerate}
+    \item 如果 $s>n$,那么 $\abs{AB}=0;$
+    \item 如果 $s\leq n$,那么 $\abs{AB}$等于 $A$的所有s级子式与 $B$的相应s级子式的乘积之和,即
+    \[\abs{AB}=\sum_{1 \leq v_1,<v_2,\cdots,<v_s\leq n}{
+        A
+        \begin{pmatrix}
+        1,2,\cdots,s\\
+        v_1,v_2,\cdots,v_s\\
+        \end{pmatrix}
+        \cdot
+        B
+        \begin{pmatrix}
+            v_1,v_2,\cdots,v_s\\
+            1,2,\cdots,s\\
+        \end{pmatrix}
+    }\]
+   \end{enumerate}
+\end{theorem}
+\begin{remark}
+    证明一个等式的方法之一是将等式两边视为从同一个起点开始,用不同方式得到的形式不同的结果.
+\end{remark}
+\begin{theorem}
+    设 $A=(a _{ij})_{s\times n},B=(b _{ij})_{n\times s},$设正整数 $r\leq s$.
+    \begin{enumerate}
+        \item 如果 $r>n$,那么 $AB$的所有r阶子式都等于0;
+        \item 如果 $r\leq n$,那么 $AB$的任一r阶子式为
+    \end{enumerate}
+        \[AB
+        \begin{pmatrix}
+            i_1,i_2,\cdots,i_r\\
+            j_1,j_2,\cdots,j_r\\
+        \end{pmatrix}
+        =
+        \sum_{1\leq v_1,<v_2,\cdots,<v_r\leq n}
+        A
+        \begin{pmatrix}
+            i_1,i_2,\cdots,i_r\\
+            v_1,v_2,\cdots,v_r\\
+        \end{pmatrix}
+        B
+        \begin{pmatrix}
+            v_1,v_2,\cdots,v_r\\
+            j_1,j_2,\cdots,j_r\\
+        \end{pmatrix}
+        .
+        \]
+\end{theorem}
+\begin{definition}
+    矩阵 $A$的一个子式如果行指标与列指标相同,那么称它为 $A$的一个主子式.
+\end{definition}
+\subsection{逆矩阵}
+\begin{theorem}
+    数域$K$上n级矩阵 $A$可逆的充分必要条件是 $\abs{A}\neq 0$.当 $A$可逆时,
+    \[A^{-1}=\frac{1}{\abs{A}}A^*\].
+    其中 $A^*=(A_{ji})_{n\times n}$.
+\end{theorem}
+\begin{theorem}
+    设 $A$与 $B$都是 数域$K$上的n级矩阵,如果
+    \[AB=I,\]
+    那么 $A$与 $B$都是可逆矩阵,并且 $A^{-1}=B,B^{-1}=A$.
+\end{theorem}
+\subsection{矩阵的分块}
+把矩阵 $A$的若干行,若干列的交叉位置元素按原来顺序排成的矩阵称为 $A$的一个子矩阵.
+
+把一个矩阵 $A$的行分成若干组,列也分为若干组,从而 $A$被分为若干个子矩阵,把 $A$看成
+是由这些子矩阵组成的,这称为矩阵的分块,这种由子矩阵组成的矩阵称为分块矩阵.
+
+两个具有相同分法的 ${s\times n}$矩阵相加,只要把对应的子矩阵相加;数 $k$乘一个分块矩阵,即
+用 $k$去乘每一个子矩阵;转置一个分块矩阵即把各个子矩阵先视为元素来进行转置,再在各个子矩阵内部进行一次转置.
+例如:
+\[A=
+\begin{pmatrix}
+    A_1&A_2\\
+    A_3&A_4\\
+\end{pmatrix}
+,A'=
+\begin{pmatrix}
+    A_1'&A_3'\\
+    A_2'&A_4'\\
+\end{pmatrix}
+.
+\]
+想要将两个分块矩阵相乘,左右矩阵的分法需要满足:
+\begin{enumerate}
+    \item 左矩阵的列组数等于右矩阵的行组数;
+    \item 左矩阵的每个列组所含列数等于右矩阵的对应行组所含行数.
+\end{enumerate}
+若满足,则可以将各个子矩阵视为元素后进行矩阵乘法即可.需要注意的是,子矩阵之间的乘法应当是
+左矩阵的子矩阵在左边,右矩阵的子矩阵在右边,不能交换次序.
+
+类似地,分块矩阵也有对应的初等变换.
+\begin{theorem}
+    设 $A$,$B$分别是 $s\times n,n\times s$矩阵,则
+    \[\abs{I_s-AB}=\abs{I_n-BA}.\]
+\end{theorem}
+\begin{theorem}
+    设
+    \[
+        A=
+    \begin{pmatrix}
+        A_1&A_3\\
+        0& A_2\\
+    \end{pmatrix}
+        \]
+        其中 $A_1,A_2$都是方阵,则 $A$可逆当且仅当 $A_1,A_2$都可逆,此时
+        \[
+            A^{-1}=
+            \begin{pmatrix}
+               A^{-1}_1&-A_1^{-1}A_3A_2^{-1}\\
+               0&A_2^{-1}\\ 
+            \end{pmatrix}\]
+\end{theorem}
+\begin{theorem}
+    设 $A$是 $s\times n$矩阵,$B$是 $l\times m$矩阵,则
+    \[
+        \text{rank}
+        \begin{pmatrix}
+            A&0\\
+            0&B\\
+        \end{pmatrix}
+        =rank(A)+rank(B).
+        \]
+\end{theorem}
+\begin{theorem}
+    设 $A$是 $s\times n$矩阵, $B$是 $l\times m$矩阵, $C$是 $s\times m$矩阵,则
+    \[
+        \text{rank}\begin{pmatrix}
+            A&C\\
+            0&B\\
+        \end{pmatrix}
+        \geq 
+        \text{rank}(A)+\text{rank}(B).
+        \]
+\end{theorem}
+\subsection{正交矩阵与欧几里得空间}
+\begin{definition}
+    实数域上的n级矩阵 $A$如果满足
+    \[AA'=I,\]
+    那么称 $A$是正交矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 正交矩阵的特征值的绝对值为1.
+        \begin{itemize}
+            \item 如果 $\abs{A}=-1$,那么-1是 $A$的一个绝对值;
+            \item 如果 $\abs{A}=1$,且n是奇数,那么1是 $A$的一个特征值.
+        \end{itemize}
+    \end{enumerate}
+\end{property}
+
+\begin{definition}
+    在 $\mathbf{R}^n $中,任给 $\bm{\alpha}=(a_1,a_2,\cdots,a_n),\bm{\beta}=(b_1,b_2,\cdots,b_n),$
+    规定
+    \[(\bm{\alpha},\bm{\beta}):=a_1b_1+a_2b_2+\cdots+a_nb_n,\]
+    这个二元实值函数 $(\bm{\alpha},\bm{\beta})$称为 $\mathbf{R^n}$的一个内积(通常称为标准内积).
+\end{definition}
+可以验证, $\mathbf{R}^n$的标准内积有一下性质:
+\begin{enumerate}
+    \item $(\bm{\alpha},\bm{\beta})=(\bm{\beta},\bm{\alpha})$,(对称性)
+    \item $(\bm{\alpha}+\bm{\gamma},\bm{\beta})=(\bm{\alpha},\bm{\beta})+(\bm{\gamma},\bm{\beta}),$(线性性之一)
+    \item $(k \bm{\alpha},\bm{\beta})=k(\bm{\alpha},\bm{\beta}),$(线性性之二)
+    \item $(\bm{\alpha},\bm{\alpha})\geq 0,$等号成立当且仅当 $\bm{\alpha}=0$.(正定性)
+\end{enumerate}
+\begin{remark}
+    如果 $\bm{\alpha},\bm{\beta}$是列向量,那么标准内积可以写成
+    \[(\bm{\alpha},\bm{\beta})=\bm{\alpha}'\bm{\beta}.\]
+\end{remark}
+n维向量空间 $\mathbf{R}^n$有了标准内积后,就称其为一个欧几里得空间.
+\begin{definition}
+在欧几里得空间 $\mathbf{R}^n$中,向量 $\bm{\alpha}$的长度 $\abs{\bm{\alpha}}$规定为
+\[\abs{\bm{\alpha}}:=\sqrt{(\bm{\alpha},\bm{\alpha})}.\]
+特别地,长度为1的向量称为单位向量.
+\end{definition}
+\begin{definition}
+    在欧几里得空间 $\mathbf{R}^n$中,如果 $(\bm{\alpha},\bm{\alpha})=0$,那么称 $\bm{\alpha}$与
+    $\bm{\beta}$正交,记作 $\bm{\alpha}\perp \bm{\beta}$.
+    在欧几里得空间 $\mathbf{R}^n$中,由非零向量组成的向量组如果其中每两个不同的
+    向量都正交,则称它们为正交向量组.
+    如果正交向量组的每一个向量都是单位向量,那么称它为正交单位向量组.
+
+    特别地,在欧几里得空间 $\mathbf{R}^n$中,由n个向量组成的正交向量组是 $\mathbf{R}^n$的一个基,
+    称为正交基.n个单位向量组成的正交向量组称为 $\mathbf{R}^n$的一个标准正交基.
+\end{definition}
+\begin{theorem}
+    欧几里得空间 $\mathbf{R}^n$中,正交向量组一定是线性无关的.
+\end{theorem}
+\begin{theorem}
+    实数域上的n级矩阵 $A$是正交矩阵的充分必要条件为: $A$的行(列)向量组构成
+    欧几里得空间 $\mathbf{R}^n$的一个标准正交基.
+\end{theorem}
+\begin{theorem}
+    设 $\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_s$是欧几里得空间 $\mathbf{R}^n$
+    中一个线性无关的向量组,令
+    \[\bm{\beta}_1=\bm{\alpha}_1\]
+    \[\bm{\beta}_2=\bm{\alpha}_2-\frac{(\bm{\alpha}_2,\bm{\beta}_1)}{(\bm{\beta}_1,\bm{\beta}_1)}\bm{\beta}_1,\]
+    \[\cdots\]\[\bm{\beta}_s=\bm{\alpha}_s-\sum_{j=1}^{s-1}{\frac{(\bm{\alpha}_s,\bm{\beta}_j)}{(\bm{\beta}_j,\bm{\beta}_j)}\bm{\beta}_j,}\]
+    则 $\bm{\beta}_1,\bm{\beta}_2,\cdots,\bm{\beta}_s$是正交向量组,并且 $\bm{\beta}_1,\bm{\beta}_2,\cdots,\bm{\beta}_s$与 $\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_s$
+    等价.
+\end{theorem}
+\begin{definition}
+    设 $U$是欧几里得空间 $\mathbf{R}^n$的一个子空间,如果向量 $\bm{\alpha}$与
+    $U$每一个向量正交,那么称 $\bm{\alpha}$与 $U$正交,记作 $\bm{\alpha}\perp U$.
+    令 
+    \[U^{\perp}:=\{\bm{\alpha}\in \mathbf{R}^n\vert \bm{\alpha}\perp U \}.\]
+    称 $U^{\perp}$是 $U$的正交补,它是 $\mathbf{R}^n$的一个子空间.
+\end{definition}
+\begin{definition}
+    设 $U$是欧几里得空间 $\mathbf{R}^n$的一个子空间.令\[
+    \begin{array}{rl}
+        P_U:&\mathbf{R}^n\longrightarrow \mathbf{R}^n\\
+        &\bm{\alpha}\longmapsto \bm{\alpha}_1,\\
+    \end{array}
+    \]
+    其中 $\bm{\alpha}_1\in U$,并且 $\bm{\alpha}-\bm{\alpha}_1\in U^{\top}$,则
+    称 $P_U$是 $\mathbf{R}^n$在 $U$上的正交投影,把 $\bm{\alpha}_1$称为向量 $\bm{\alpha}$在 $U$
+    上的正交投影.
+\end{definition}
+\begin{definition}
+    在欧几里得空间 $\mathbf{R}^n$中,两个非零向量 $\bm{\alpha},\bm{\beta}$的夹角
+    $<\bm{\alpha},\bm{\beta}>$规定为
+    \[<\bm{\alpha},\bm{\beta}>:=\arccos{\frac{(\bm{\alpha},\bm{\beta})}{\abs{\bm{\alpha}}\abs{\bm{\beta}}}}.\]
+    于是 $0\leq <\bm{\alpha},\bm{\beta}>\leq \pi.$
+\end{definition}
+\subsection{$K^n$到 $K^s$的线性映射}
+\begin{definition}
+    设 $S$和 $S'$是两个集合,如果存在一个对应法则 $f$,使得集合 $S$中的每一个元素 $a$,
+    都有集合 $S'$中唯一确定的元素 $b$与它对应,那么称 $f$是集合 $S$到 $S'$的一个映射,记作
+    \[
+    \begin{array}{rrcl}
+    f : &  S & \longrightarrow  & S' \\
+                   &  a  & \longmapsto    & b, \\
+    \end{array}
+    \]
+    其中 $b$称为 $a$在 $f$下的象, $a$称为 $b$在 $f$下的一个原象. $a$在 $f$下的象用符号 $f(a)$或 $fa$
+    表示,于是映射 $f$也可以记成
+    \[f(a)=b,\phantom{aa}a\in S.\]
+\end{definition}
+\begin{definition}
+    设 $f$是集合 $S$到集合 $S'$的一个映射,则把 $S$叫做映射 $f$的定义域,把
+    $S'$叫做 $f$的陪域. $S$的所有元素在 $f$下的象组成的集合叫做 $f$的值域或
+    $f$的象,记作 $f(S)$或 $Imf.$即
+    \[f(S):=\{f(a)\vert a\in S\}=\{b\in S'\vert \text{存在}a\in S \text{使}f(a)=b\}.\]
+\end{definition}
+\begin{definition}
+    设 $f$是集合 $S$到集合 $S'$的一个映射,如果 $f(S)=S'$,那么称 $f$是满射(或 $f$是 $S$到 $S'$上的映射).
+
+    如果映射 $f$的定义域 $S$中不同的元素的象也不同看,那么称 $f$是单射(或 $f$是一对一映射)
+
+    如果映射 $f$既是单射,又是满射,那么称 $f$是双射(或 $f$是 $S$到 $S'$的一个一一对应).
+\end{definition}
+\begin{definition}
+    映射 $f$与映射 $g$称为相等,如果它们的定义域相等,陪域相等,并且对应法则相同,即 $\forall x \in S:f(x)=g(x)$.
+\end{definition}
+\begin{remark}
+    集合 $S$到自身的一个映射,通常称为 $S$上的一个变换.
+
+    集合 $S$到数集(数域$K$的任一非空子集)的一个映射,通常称为 $S$上的一个函数.
+\end{remark}
+\begin{definition}
+    陪域 $S'$中的元素 $b$在映射 $f$下的所有原象组成的集合称为 $b$在 $f$下的原象集,记作 $f^{-1}(b).$
+\end{definition}
+\begin{definition}
+    映射 $f:S\rightarrow S$如果把 $S$中的每一个元素对应到它自身,即 $\forall x\in S:f(x)=x,$那么
+    称 $f$是恒等映射(或 $S$上的恒等变换),记作 $1_S$.
+\end{definition}
+\begin{definition}
+    相继施行映射 $g:S\rightarrow S'$和 $f:S'\rightarrow S"$,得到 $S$到 $S"$的
+    一个映射,称为 $f$与 $g$的乘积(或合成),记作 $fg$.即
+    \[(fg)(a):=f(g(a)),\phantom{ss}\forall a \in S.\]
+\end{definition}
+\begin{definition}
+    设 $f:S\rightarrow S'$,如果存在一个映射 $g:S'\rightarrow S$,使得
+    \[fg=1_{S'}\phantom{aaaa}gf=1_S.\]
+    那么称映射 $f$是可逆的,此时称 $g$是 $f$的一个逆映射.
+
+    我们将 $f$的逆映射记作 $f^{-1}.$
+\end{definition}
+\begin{theorem}
+    映射 $f:S\rightarrow S'$是可逆的充分必要条件为 $f$是双射.
+\end{theorem}
+\begin{definition}
+    数域$K$上的向量空间 $K^n$到 $K^s$的一个映射 $\sigma$如果保持加法和数量乘法,即
+    $\forall \bm{\alpha},\bm{\beta}\in K^n,h\in K,$有
+    \[\sigma(\bm{\alpha}+\bm{\beta})=\sigma(\bm{\alpha})+\sigma(\bm{\beta}),\]
+    \[\sigma(k \bm{\alpha})=k\sigma(\bm{\alpha})\]
+    那么称 $\sigma$是 $K^n$到 $K^s$的一个线性映射. 
+\end{definition}
+\begin{definition}
+    设 $\sigma$是 $K^n$到 $K^s$的一个映射, $K^n$的一个子集
+    \[\{\bm{\alpha}\in K^n\vert \sigma(\bm{\alpha})=0\}\]
+    称为映射 $\sigma$的核,记作 Ker$\sigma$.
+\end{definition}
+\subsection{酉空间}
+\begin{definition}
+    在复数域上的n维向量空间 $\mathbf{C}^n$中,任给两个列向量 $\bm{\alpha},\bm{\beta}$,规定
+    \[(\bm{\alpha},\bm{\beta}):=\bm{\alpha}'\bar{\bm{\beta}},\]
+    这个二元复值函数 $(\bm{\alpha},\bm{\beta})$称为 $\mathbf{C}^n$上的一个内积.
+\end{definition}
+\begin{property}
+    $\forall \bm{\alpha},\bm{\beta},\bm{\gamma}\in\mathbf{C}^n,k\in \mathbf{C},$有
+    \begin{enumerate}
+        \item $(\bm{\alpha},\bm{\beta})=\overline{(\bm{\beta},\bm{\alpha})} ;$
+        \item $(\bm{\alpha}+\bm{\gamma},\bm{\beta})=(\bm{\alpha},\bm{\beta})+(\bm{\gamma},\bm{\beta});$
+        \item $(k \bm{\alpha},\bm{\beta})=k(\bm{\alpha},\bm{\beta})$;
+        \item $(\bm{\alpha},\bm{\alpha})$是非负实数,$(\bm{\alpha},\bm{\alpha})=0$当且仅当 $\bm{\alpha}=0.$ 
+    \end{enumerate}
+\end{property}
+\begin{remark}
+由性质1,3可知 $(\bm{\alpha},k \bm{\beta})=\bar{k}(\bm{\alpha},\bm{\beta}).$因此 $\mathbf{C}^n$上的内积对于第二个变量不具有线性.
+\end{remark}
+在 $\mathbf{C}^n$中,定义了上述的内积后,称 $\mathbf{C}^n$为n维酉空间,其中的正交以及正交向量组等
+概念与欧几里得空间中的定义一致
+\begin{theorem}
+    设 $A=(a _{ij})$是n级复矩阵.令
+    \[D_i(A)=\{z\in\mathbf{C}\vert \abs{z-a _{ii}}\leq\sum_{j\neq i}{\abs{a _{ij}}}\}\]
+    称 $D_i(A),i=1,2,\cdots,n$,是 $A$的n个 Gersorin圆盘.
+    
+    n级复矩阵 $A$的每一个特征值都在 $A$的某个Gersorin圆盘中.
+\end{theorem}
+\begin{theorem}
+    若 $A$不可逆,则 $A$的特征值0属于 $A$的某一个Gersgorin圆盘.
+
+    若 $A$的每一个Getsgorin圆盘都不包括原点,那么 $A$一定是可逆矩阵.
+\end{theorem}
+\subsection{酉矩阵与Hermite矩阵}
+\begin{definition}
+    复数域上的n级矩阵 $U$如果满足
+    \[U\bar{U}'=I,\]
+    那么称 $U$是酉矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 酉矩阵的特征值的模为1.
+        \item n级酉矩阵 $A$一定酉相似于一个对角矩阵.即,存在n级酉矩阵 $U$,使得 $U^{-1}AU$为对角矩阵.
+        \item 酉矩阵 $A$的属于不同特征值的特征向量一定正交.
+    \end{enumerate}
+\end{property}
+\begin{definition}
+    设 $A$是n级复矩阵,如果 $\bar{A}'=A$,那么称 $A$是Hermite矩阵,或自伴矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item Hermite矩阵的特征值是实数.
+        \item Hermite矩阵一定酉相似于一个实对角矩阵.
+    \end{enumerate}
+\end{property}
+
+\begin{definition}
+    设 $A$是n级复矩阵,如果 $\bar{A}'=-A$,那么称 $A$是斜 Hermite矩阵.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 斜Hermite矩阵的特征值是0或纯虚数.
+    \end{enumerate}
+\end{property}
+\begin{definition}
+    设 $A$是n级复矩阵,如果 $AA^*=A^*A$,那么称 $A$是正规矩阵.
+\end{definition}
+\begin{remark}
+    一般地,在复数域上的相关内容中,*上标意为取转置共轭.
+\end{remark}
+\begin{property}
+    \begin{enumerate}
+        \item 对于n级正规矩阵 $A$,如果 $\lambda_0$是 $A$的一个特征值,$\bm{\alpha}$
+        是 $A$的属于 $\lambda_0$的一个特征向量,那么 $\bar{\lambda_0}$是 $A^*$的一个特征值,
+        $\bm{\alpha}$是 $A^*$的属于 $\bar{\lambda_0}$的一个特征向量.
+        \item 正规矩阵的属于不同特征值的特征向量一定正交.
+    \end{enumerate}
+\end{property}
+\section{矩阵的相抵与相似}
+\subsection{等价关系与集合的划分}
+\begin{definition}
+    设 $S,M$是两个集合,下述集合
+    \[\{(a,b)\vert a\in S,b\in M\}\]
+    称为 $S$与 $M$的笛卡尔积,记作 $S\times M$,其中两个元素 $(a_1,b_1)$与 $(a_2,b_2)$如果
+    满足 $a_1=a_2,b_1=b_2$,那么称它们相等,记作 $(a_1,b_1)=(a_2,b_2)$.
+\end{definition}
+\begin{definition}
+    设 $S$是一个非空集合,我们把 $S\times S$的子集 $W$叫做 $S$上的一个二元关系.如果 $(a,b)\in W$,那么
+    称 $a$与 $b$有 $W$关系,记作 $aWb$,或 $a\sim b$;否则称 $a$与 $b$没有 $W$关系.
+\end{definition}
+\begin{definition}
+    集合 $S$上的一个二元关系 $\sim$如果具有下述性质: $\forall a,b,c\in S$,有
+    \begin{enumerate}
+        \item $a\sim a$(反身性);
+        \item $a\sim b \phantom{aa}\rightarrow \phantom{aa}b\sim a$(对称性);
+        \item $a \sim b$且 $b\sim c\phantom{aa}\rightarrow\phantom{aa}a\sim c$(传递性).
+    \end{enumerate}
+    那么称 $\sim$是 $S$上的一个等价关系.
+\end{definition}
+\begin{definition}
+    设 $\sim$是集合 $S$上的一个等价关系, $a\in S$,令
+    \[\bar{a}:=\{x\in S \vert x\sim a\},\]
+    称 $\bar{a}$是由 $a$确定的等价类, $a$称为等价类 $\bar{a}$的一个代表.
+\end{definition}
+\begin{definition}
+    如果集合 $S$是一些非空子集 $S_i(i\in I,\text{这里}I\text{表示指标集})$的并集,
+    并且其中不相等的子集一定不相交,那么集合 $\{S_i\vert i\in I\}$是 $S$的一个划分,记作 $\pi(S)$.
+\end{definition}
+\begin{theorem}
+    设 $\sim$是集合 $S$上的一个等价关系,则所有等价类组成的集合是 $S$的一个划分,
+    记作 $\pi_{\sim(S)}$.
+\end{theorem}
+\begin{definition}
+    设 $\sim$是集合 $S$上的一个等价关系.由所有等价类组成的集合称为 $S$对于关系 
+    $\sim$的商集,记作 $S/\sim$.
+\end{definition}
+\begin{definition}
+    一般地,设 $\sim$是集合 $S$上的一个等价关系,一种量或一种表达式如果对于同一个等价类
+    力的元素是相等的,那么称这种量或表达式时一个不变量;恰好能完全决定等价类的一组不变量
+    称为完全不变量.
+\end{definition}
+\subsection{矩阵的相抵}
+\begin{definition}
+    对于 数域$K$上的 $s\times n$矩阵 $A$和 $B$,如果 $A$经过一系列初等行变换
+    和初等列变换能变成矩阵 $B$,那么称 $A$与 $B$是相抵的,记作 $A\overset{\text{相抵}}{\sim}B$.     
+\end{definition}
+容易验证相抵是集合 $M _{s\times n}(K)$上的一个等价关系.在相抵关系下,矩阵 $A$的等价类
+称为 $A$的相抵类.
+\begin{theorem}
+    设 数域$K$上 $s\times n$矩阵 $A$的秩为 $r$.如果 $r>0$,那么 $A$相抵与下述形式的
+    矩阵:
+    \[\begin{pmatrix}
+        I_r&0\\
+        0&0\\
+    \end{pmatrix}\]
+    称该矩阵为 $A$的相抵标准形;如果 $r=0$,那么 $A$相抵于零矩阵,此时称 $A$的相抵标准形是零矩阵.
+\end{theorem}
+\begin{theorem}
+    数域$K$上 $s\times n$矩阵 $A$与 $B$相抵当且仅当它们的秩相等.
+\end{theorem}
+    易知,矩阵的秩时相抵关系下的完全不变量.
+\begin{theorem}
+    设 $A$,$B$分别是 数域$K$上 $s\times n,n\times m$矩阵,则矩阵方程 $ABX=A$有解的
+    充分必要条件是
+    \[\text{rank}(AB)=\text{rank}(A)\].
+\end{theorem}
+\subsection{广义逆矩阵}
+\begin{theorem}
+    设 $A$是 数域$K$上 $s\times n$非零矩阵,则矩阵方程
+    \[AXA=A\]
+    一定有解.如果 $\text{rank}(A)=r$,并且
+    \[A=P\begin{pmatrix}
+        I_r&0\\
+        0&0\\
+    \end{pmatrix}Q,\]
+    其中 $P,Q$分别是 $K$上 $s$级, $n$级可逆矩阵,那么该矩阵方程的通解为
+    \[X=Q^{-1}\begin{pmatrix}
+        I_r&B\\
+        C&D\\
+    \end{pmatrix}
+    P^{-1}.\]
+    其中 $B,C,D$分别是 数域$K$上任意 $r\times (s-r),(n-r)\times r,(n-r)\times (s-r)$矩阵.
+\end{theorem}
+\begin{definition}
+    设 $A$是 数域$K$上 $s\times n$矩阵,矩阵方程 $AXA=A$的每一个解都称为 $A$的一个广义逆矩阵,
+    简称为 $A$的广义逆,用 $A^-$表示 $A$的任意一个广义逆.
+\end{definition}
+\begin{theorem}{非齐次线性方程组的解的结构定理}
+   非齐次线性方程组 $AX=\bm{\beta}$有解时,它的通解为
+   \[X=A^-\bm{\beta}.\] 
+\end{theorem}
+\begin{theorem}{齐次线性方程组解的结构定理}
+    数域$K$上n元齐次线性方程组 $AX=0$的通解为
+    \[X=(I_n-A^-A)Z,\]
+    其中 $A^-$是 $A$的任意给定的一个广义逆, $\mathbf{Z}$取遍 $K^n$中任意列向量.
+\end{theorem}
+\begin{theorem}
+    设 数域$K$上n元非齐次线性方程组 $AX=\bm{\beta}$有解,则它的通解为
+    \[X=A^-\bm{\beta}+(I_n-A^-A)Z\]
+    其中 $A^-$是 $A$任意给定的一个广义逆,$Z$取遍 $K^n$中任意列向量.
+\end{theorem}
+\begin{definition}
+    设 $A$是复数域上 $s\times n$矩阵,下述矩阵方程组
+    \[
+    \begin{cases}
+        AXA=A,\\
+        XAX=X,\\
+        (AX)^*=AX,\\
+        (XA)^*=XA,\\
+    \end{cases}
+    \]
+    称为 $A$的Penrose方程组,它的解称为 $A$的Morre-Penrose广义逆,记作 $A^+$.
+    式中*上标意为取转置共轭.
+\end{definition}
+\begin{theorem}
+    如果 $A$是复数域上 $s\times n$非零矩阵, $A$的Penrose方程组总是有解,并且它的
+    解唯一,设 $A=BC$,其中 $B,C$分别是列满秩与行满秩矩阵,则Penrose方程组的唯一解是
+    \[X=C^*(CC^*)^{-1}(B^*B)^{-1}B^*.\]
+\end{theorem}
+\subsection{矩阵的相似}
+\begin{definition}
+    设 $A$与 $B$都是 数域$K$上n级矩阵,如果存在 数域$K$上一个 n级可逆矩阵 $P$,
+    使得
+    \[P^{-1}AP=B,\]
+    那么称 $A$与 $B$是相似的,记作 $A\sim B.$
+    容易验证相似是一个等价关系,在相似关系下, $A$的等价类称为 $A$的相似类.
+\end{definition}
+\begin{remark}
+    不能忽视在 数域$K$上这一限制.
+\end{remark}
+\begin{property}
+    \begin{enumerate}
+        \item 如果 $B_1=P^{-1}A_1P,B_2=P^{-1}A_2P,$那么
+        \[B_1+B_2=P^{-1}(A_1+A_2)P,\]
+        \[B_1B_2=P^{-1}(A_1A_2)P,\]
+        \[B_1^m=P^{-1}A_1^mP,\]
+        其中 $m$是正整数.
+        \item 相似的矩阵其行列式的值相等.
+        \item 相似的矩阵或者都可逆,或者都不可逆;当它们可逆时,它们的逆矩阵也相似.
+        \item 相似的矩阵有相等的秩. 
+    \end{enumerate}
+\end{property}
+\begin{definition}
+    n级矩阵 $A=(a _{ij})$的主对角线上的元素的和称为 $A$的迹,记作 $tr(A)$.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item $tr(A+B)=tr(A)+tr(B),$
+        \item $tr(kA)=ktr(A),$
+        \item $tr(AB)=tr(BA).$
+        \item 相似的矩阵有相等的迹.
+        \item 设 $f(x)=a_0+a_1x+\cdots+a_mx^m$是 数域$K$上的一元多项式, $A$是 数域$K$上的一个n级矩阵,如果 $A\sim B$,那么 $f(A)\sim f(B).$
+        \item 如果实数域上的n级矩阵 $A$与 $B$不相似,那么把它们看成复数域上的矩阵后仍然不相似.
+    \end{enumerate}
+\end{property}
+以上性质表明,矩阵的行列式,秩和迹都是相似关系下的不变量,简称为相似不变量.
+\begin{definition}
+    如果n级矩阵 $A$能够相似于一个对角矩阵,那么称 $A$可对角化.
+\end{definition}
+\begin{theorem}
+    数域$K$上n级矩阵 $A$可对角化的充分必要条件是, $K^n$中有 n个线性无关的
+    列向量 $\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_n$,以及 $K$
+    中有n个数 $\lambda_1,\lambda_2,\cdots,\lambda_n$(它们之中有些可能相等),
+    使得
+    \[A \bm{\alpha}_i=\lambda_i \bm{\alpha}_i,\phantom{11}i=1,2,\cdots,n.\]
+    此时,令 $P=(\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_n)$,则
+    \[P^{-1}AP=\text{diag}\{\lambda_1,\lambda_2,\cdots,\lambda_n\}.\]
+\end{theorem}
+\subsection{矩阵的特征值和特征向量}
+\begin{definition}
+    设 $A$是 数域$K$上的n级矩阵,如果 $K^n$中有非零列向量 $\bm{\alpha}$,使得
+    \[A \bm{\alpha}=\lambda_0 \bm{\alpha},\phantom{11}\lambda_0\in K,\]
+    那么称 $\lambda_0$是 $A$的一个特征值,称 $\bm{\alpha}$是 $A$的属于特征值 $\lambda_0$的一个特征向量.
+\end{definition}
+\begin{remark}
+    需要注意的是,零向量并不是 $A$的特征向量. 
+\end{remark}
+\begin{theorem}
+    设 $A$是 数域$K$上的n级矩阵,则
+    \begin{enumerate}
+        \item $\lambda_0$是 $A$的一个特征值当且仅当 $\lambda_0$是 $A$的特征多项式 $\abs{\lambda I-A}$在 $K$中的一个根;
+        \item $\bm{\alpha}$是 $A$的属于特征值 $\lambda_0$的一个特征向量当且仅当 $\bm{\alpha}$是齐次线性方程组 $(\lambda_0 I-A)X=0$的一个非零解.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    如果 $\bm{\alpha}$与 $\bm{\beta}$是n级矩阵 $A$的属于不同特征值的特征向量,那么 $\bm{\alpha}+\bm{\beta}$不是 $A$的特征向量.
+\end{theorem}
+\begin{definition}
+    设 $\lambda_j$是 $A$的一个特征值,把齐次线性方程组 $(\lambda_jI-A)X=0$的解空间
+    称为 $A$的属于 $\lambda_j$的特征子空间,其中的全部非零向量就是 $A$的属于 $\lambda_j$的全部特征向量.
+\end{definition}
+\begin{property}
+    \begin{enumerate}
+        \item 相似的矩阵有相等的特征多项式
+        \item 相似的矩阵有相同的特征值(包括重数相同)
+    \end{enumerate}
+\end{property}
+\begin{theorem}
+    设 $A$是 数域$K$上的n级矩阵,则 $A$的特征多项式 $\abs{\lambda I-A}$是一个n此多项式,
+    $\lambda^n$的系数是1,$\lambda^{n-1}$的系数等于 $-tr(A)$,常数项为 $(-1)^n\abs{A}$,$\lambda^{n-k}$的
+    系数为 $A$的所有 $k$阶主子式的和乘以 $(-1)^k,1\leq k<n.$
+\end{theorem}
+\begin{definition}
+    设 $A$是 数域$K$上的n级矩阵,$\lambda_1$是 $A$的特征值.把 $A$的属于 $\lambda_1$的
+    特征子空间的维数叫做特征值 $\lambda_1$的几何重数,而把 $\lambda_1$作为 $A$的特征多项式的根
+    的重数叫做 $\lambda_1$的代数重数,把代数重数简称为重数.
+\end{definition}
+\begin{theorem}
+    设 $\lambda_1$是 数域$K$上n级矩阵 $A$的一个特征值,则 $\lambda_1$的几何重数不超过它的代数重数.
+\end{theorem}
+\begin{theorem}
+    设 $A$,$B$分别是 数域$K$上 $s\times n,n\times s$矩阵.则 $AB$与 $BA$有相同的非零特征值,且重数相同.
+\end{theorem}
+\subsection{矩阵可对角化的条件}
+\begin{theorem}
+    数域$K$上n级矩阵 $A$可对角化的充分必要条件是 $A$有n个线性无关的特征向量 $\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_n$,
+    此时令 $P=(\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_n),$
+    则
+    \[P^{-1}AP=\text{diag}\{\lambda_1,\lambda_2,\cdots,\lambda_n\},\]
+    其中 $\lambda_i$是 $\bm{\alpha}_i$所属的特征值,$i=1,2,\cdots,n$.
+\end{theorem}
+\begin{remark}
+    上述对焦矩阵称为 $A$的相似标准形,除了主对角线上的元素的排序次序外,$A$的相似标准形是唯一的.
+\end{remark}
+\begin{theorem}
+    设 $\lambda_1,\lambda_2$是 数域$K$上的n级矩阵 $A$的不同的特征值, $\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_s$
+    与 $\bm{\beta}_1,\bm{\beta}_2,\cdots,\bm{\beta}_r$分别是 $A$的属于 $\lambda_1,\lambda_2$的线性无关的特征向量,
+    则 $\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_s,$$\bm{\beta}_1,\bm{\beta}_2,\cdots,\bm{\beta}_r$线性无关.
+\end{theorem}
+\begin{theorem}
+    设 $\lambda_1,\lambda_2,\cdots,\lambda_m$是 数域$K$上n级矩阵 $A$的不同的特征值, $\bm{\alpha}_{j1} ,\bm{\alpha}_{j2}   ,\cdots,\bm{\alpha}_{j{r_j}}  $是 $A$
+    的属于 $\lambda_j$的线性无关的特征向量, $j=1,2,\cdots,m$.则向量组
+    \[\bm{\alpha}_{11},\cdots,\bm{\alpha}_{1r_1},\cdots,\bm{\alpha}_{m1},\cdots,\bm{\alpha}_{mr_m}\]
+    是线性无关的.
+\end{theorem}
+\begin{theorem}
+    数域$K$上n级矩阵 $A$可对角化的充分必要条件是: $A$的属于不同特征值的特征子空间的维数之和等于n.
+\end{theorem}
+\begin{theorem}
+    数域$K$上n级矩阵 $A$可对角化的充分必要条件是:$A$的特征多项式的全部复根都属于 $K$,
+    并且 $A$的每个特征值的几何重数等于它的代数重数.
+\end{theorem}
+\begin{definition}
+    实数域上的对称矩阵简称为实对称矩阵.
+
+    如果对于n级实矩阵 $A$,$B$,存在一个n级正交矩阵 $T$,使得 $T^{-1}AT=B,$那么称 $A$正交相似于 $B$.
+\end{definition}
+\begin{remark}
+    正交相似是n级实矩阵组成的集合的一个等价关系.
+\end{remark}
+\begin{theorem}
+    实对称矩阵的特征多项式在复数域中的每一个根都是实数,从而它们都是特征根.
+\end{theorem}
+\begin{theorem}
+    实对称矩阵 $A$的属于不同特征值的特征向量是正交的.
+\end{theorem}
+\begin{theorem}
+    实对称矩阵一定正交相似与对角矩阵.
+\end{theorem}
+\begin{theorem}
+    如果n级实矩阵 $A$正交相似于一个对角矩阵 $D$,那么 $A$一定是对称矩阵.
+\end{theorem}
+\begin{theorem}
+    两个n级实对称矩阵正交相似的充分必要条件是它们相似.
+\end{theorem}
+\begin{remark}
+    对于所有n级实对称矩阵组成的集合来说,特征值(包括重数)是相似关系下的完全不变量.
+\end{remark}
+\begin{theorem}
+    n级实矩阵 $A$正交相似与一个上三角矩阵的充分必要条件是: $A$的特征多项式在复数域中的根都是实根.
+\end{theorem}
+\begin{remark}
+    因为所相似的上三角矩阵的主对角线上的n个元素对应着特征多项式的n个根.
+\end{remark}
+
+\begin{theorem}
+    任一n级复矩阵一定相似于一个上三角矩阵.
+\end{theorem}
+\section{二次型}
+\subsection{二次型及其标准形}
+\begin{definition}
+    数域$K$上的一个n元二次型是系数在 $K$中的n个变量的二次齐次多项式,它的一般形式为
+    \[f(x_1,x_2,\cdots,x_n)=\sum_{i=1}^{n}\sum_{j=1}^{n}{a _{ij}x_ix_j},\]
+    其中 $a_{ji}=a _{ij},1\leq i,j\leq n.$
+
+    令 
+    \[X=\begin{pmatrix}
+        x_1\\x_2\\\cdots\\x_n\\
+    \end{pmatrix},\]
+    则上述二次型可以写成
+    \[f(x_1,x_2,\cdots,x_n)=X'AX,\]
+    其中 
+    \[A=\begin{pmatrix}
+        a_{11}&a_{12}&a_{13}&\cdots&a_{1n}\\
+        a_{12}&a_{22}&a_{23}&\cdots&a_{2n}\\
+        \cdots&\cdots&\cdots&\cdots&\cdots\\
+        a_{1n}&a_{2n}&a_{3n}&\cdots&a_{nn}\\
+    \end{pmatrix},\]
+    称 $A$为二次型 $f(x_1,x_2,\cdots,x_n)$的矩阵,它是对称矩阵.
+\end{definition}
+\begin{definition}
+    令 $Y=(y_1,y_2,\cdots,y_n)'$,设 $C$是 数域$K$上的n级可逆矩阵,下述关系式:
+    \[X=CY\]
+    称为变量 $x_1,x_2,\cdots,x_n$到变量 $y_1,y_2,\cdots,y_n$的一个非退化线性替换.
+\end{definition}
+如果 $T$是正交矩阵,那么变量的替换 $X=TY$称为正交替换.
+\begin{definition}
+    数域$K$上的两个n元二次型 $X'AX$与 $Y'BY$,如果存在一个非退化线性替换 $X=CY$,把
+    $X'AX$变成 $Y'BY$,那么称二次型 $X'AX$与 $Y'BY$等价,记作 $X'AX\cong Y'BY$
+\end{definition}
+\begin{definition}
+    数域$K$上两个n级矩阵 $A$与 $B$,如果存在 $K$上的一个n级可逆矩阵 $C$,使得
+    \[C'AC=B,\]
+    那么称 $A$与 $B$合同,记作 $A\simeq B$.
+\end{definition}
+\begin{theorem}
+    数域$K$上的两个n元二次型 $\mathbf{X}'A\mathbf{X}$与 $\mathbf{Y}'B\mathbf{Y}$等价
+    当且仅当n级对称矩阵 $A$与 $B$合同.
+\end{theorem}
+容易验证,合同是 $M_n(K)$上的一个等价关系.在合同关系下,$A$的等价类称为 $A$的合同类.
+\begin{definition}
+    如果二次型 $\mathbf{X}'A\mathbf{X}$等价于一个只含平方项的二次型,那么这个只含平方项的二次型称为 $\mathbf{X}'A\mathbf{X}$
+    的标准形.
+
+    如果对称矩阵 $A$合同于一个对角矩阵,那么这个对角矩阵称为 $A$的一个合同标准形.
+\end{definition}
+\begin{theorem}
+    实数域上的n元二次型 $\mathbf{X}'A\mathbf{X}$有一个标准形为
+\[\lambda_1y^2_1+\lambda_2y^2_2+\cdots+\lambda_ny^2_n,\]
+其中 $\lambda_1,\lambda_2,\cdots,\lambda_n$是 $A$的全部特征值.
+\end{theorem}
+对于任一 数域$K$上的n元二次型 $\mathbf{X}'A\mathbf{X}$,可以用配方法将其化为只含平方项的二次型.
+\begin{theorem}
+    数域$K$上任一对称矩阵都合同于一个对角矩阵.
+\end{theorem}
+\begin{theorem}
+    数域$K$上任一n元二次型都等价于一个只含平方项的二次型.
+\end{theorem}
+\begin{definition}
+    先将 $A$第j行的k倍加到第i行上,在此基础上将第j列的k倍加到第i列上,这一过程称为成对初等行列变换.
+    先对 $A$作第i,j行互换,接着作第i,j列互换,也称为初等行列变换;先把 $A$的第i行乘以非零数b,接着把第i列
+    乘以b,这也是成对初等行列变换.
+\end{definition}
+求二次型的标准形的方法之一是:对于 数域$K$上n元二次型 $\mathbf{X}'A\mathbf{X}$,
+\[\begin{pmatrix}
+    A\\
+    I
+\end{pmatrix}
+\xrightarrow[\text{对}I\text{只作其中的初等列变换}]{\text{对}A\text{作成对初等行,列变换}}
+\begin{pmatrix}
+    D\\
+    C\\
+\end{pmatrix},\]
+其中 $D$是对角矩阵 diag$\{d_1,d_2,\cdots,d_n\}$,则
+\[C'AC=D,\]
+令 $X=CY,$则得到 $\mathbf{X}'A\mathbf{X}$的一个标准形:
+\[d_1y^2_1+d_2y^2_2+\cdots+d_ny^2_n.\]
+这种求二次型的标准形的分法称为矩阵的成对初等行,列变换法.
+\begin{theorem}
+    设 $A$,$B$都属 数域$K$上n级矩阵,则 $A$合同于 $B$当且仅当 $A$经过一系列成对初等行,列
+    变换可以变成 $B$,此时对 $I$只作其中的初等列变换得到的可逆矩阵 $C$,就使得 $C'AC=B$.
+\end{theorem}
+\begin{theorem}
+    数域$K$上 n元二次型 $\mathbf{X}'A\mathbf{X}$的任一标准形中,系数不为0的平方项个数等于
+    它的矩阵 $A$的秩.
+\end{theorem}
+二次型 $\mathbf{X}'A\mathbf{X}$的矩阵 $A$的秩就称为二次型 $\mathbf{X}'A\mathbf{X}$的秩.
+\subsection{实二次型的规范形}
+实数域上的二次型简称为实二次型.n元实二次型 $\mathbf{X}'A\mathbf{X}$经过一个适当的
+非退化线性替换 $X=CY$可以化成下述形式的标准形
+\[z_1^2+\cdots+z^2_p-z^2_{p+1}-\cdots-z^2_r.\]
+形如上式的二次型称为 $\mathbf{X}'A\mathbf{X}$的规范形.它的特征是:只含平方项,且平方项的系数为1,-1或0;
+系数为1的平方项都在前面.一个实二次型 $\mathbf{X}'A\mathbf{X}$的规范形可有自然数p和r决定.
+\begin{theorem}{惯性定理}
+    n元实二次型 $\mathbf{X}'A\mathbf{X}$的规范形是唯一的.
+\end{theorem}
+\begin{definition}
+    在实二次型 $\mathbf{X}'A\mathbf{X}$的规范形中,系数为+1的平方项个数p称为 $\mathbf{X}'A\mathbf{X}$
+    的正惯性指数,系数为-1的平方项个数 $r-p$称为 $\mathbf{X}'A\mathbf{X}$的负惯性指数;
+    正惯性指数减去负惯性指数所得的差 $2p-r$称为 $\mathbf{X}'A\mathbf{X}$的符号差.
+\end{definition}
+\begin{definition}
+    任一n级实对称矩阵 $A$合同于对角矩阵diag $\{1,\cdots,1,-1,\cdots,-1,0,\cdots,0\}$,其中
+    1的个数等于 $\mathbf{X}'A\mathbf{X}$的正惯性指数,-1的个数等于 $\mathbf{X}'A\mathbf{X}$的
+    负惯性指数,分别把它们称为 $A$的正惯性指数和负惯性指数,这个对角矩阵称为 $A$的合同规范形.
+\end{definition}
+\begin{theorem}
+    两个n级实对称矩阵合同当且仅当它们的秩相等,并且正惯性指数也相等.
+\end{theorem}
+\begin{theorem}
+    设n元复二次型 $\mathbf{X}'A\mathbf{X}$,其经过一个使得的非退化线性替换后可以变成下述形式的标准形
+    \[z^2_1+z^2_2+\cdots+z^2_r.\]
+    这个标准形叫做复二次型 $\mathbf{X}'A\mathbf{X}$的规范形,它的特征是:只含平方项,且平方项的系数为1或0.
+
+    复二次型 $\mathbf{X}'A\mathbf{X}$的规范形是唯一的.
+\end{theorem}
+\begin{theorem}
+    两个n元复二次型等价
+
+    $\Leftrightarrow $它们的规范形相同,
+     
+    $\Leftrightarrow$它们的秩相同.
+\end{theorem}
+\subsection{正定二次型与正定矩阵}
+\begin{definition}
+    n元实二次型 $\mathbf{X}'A\mathbf{X}$称为正定的,如果对于 $\mathbf{R}^n$中
+    任一非零列向量 $\bm{\alpha}$,都有 $\bm{\alpha}'A \bm{\alpha}>0$.
+\end{definition}
+\begin{theorem}
+    n元实二次型 $\mathbf{X}'A\mathbf{X}$是正定的当且仅当它的正惯性指数等于n.
+\end{theorem}
+\begin{definition}
+    实对称矩阵 $A$称为正定的,如果实二次型 $\mathbf{X}'A\mathbf{X}$是正定的.
+    即对于 $\mathbf{R}^n$中任意非零列向量 $\bm{\alpha}$,有 $\bm{\alpha}'A \bm{\alpha}>0$.
+\end{definition}
+正定的实对称矩阵简称为正定矩阵.
+\begin{theorem}
+    n级实对称矩阵 $A$是正定的
+
+    $\Leftrightarrow$ $A$的正惯性指数等于n,
+
+    $\Leftrightarrow A\simeq I$,
+
+    $\Leftrightarrow$ $A$的合同标准形中主对角元全大于0,
+
+    $\Leftrightarrow$ $A$的特征值全大于零.
+
+    $\Leftrightarrow$ $A$的所有主子式大于零.
+
+    $\Leftrightarrow$ $A$的所有顺序主子式都大于零.
+
+    $\Leftrightarrow$ 有n级实可逆矩阵 $C$使得 $A=C'C$.
+
+    $\Leftrightarrow$ 有可逆实对称矩阵 $C$使得 $A=C^2$.
+
+    $\Leftrightarrow$ 有实上三角矩阵 $B$并且 $B$的主对角元全大于零,使得 $A=B'B$.
+
+    $\Leftrightarrow$ 有 $m\times n$列满秩实矩阵 $P$,使得 $A=P'P.$
+
+    $\Leftrightarrow$ 有 $r\times n$行满秩实矩阵 $Q$,使得 $A=Q'Q$.
+\end{theorem}
+\begin{definition}
+    n元实二次型 $\mathbf{X}'A\mathbf{X}$称为是半正定(负定,半负定)的,如果对于 $\mathbf{R}^n$
+    中任一非零列向量 $\bm{\alpha}$,都有
+    \[\bm{\alpha}'A \bm{\alpha}\geq 0\phantom{111}(\bm{\alpha}'A \bm{\alpha}<0,\bm{\alpha}'A \bm{\alpha}\leq 0).\]
+    如果 $\mathbf{X}'A\mathbf{X}$既不是半正定,又不是半负定的,那么称它是不定的.
+\end{definition}
+\begin{theorem}
+    n元实二次型 $\mathbf{X}'A\mathbf{X}$是半正定的
+
+    $\Leftrightarrow$它的正惯性指数等于它的秩,
+
+    $\Leftrightarrow$它的规范形是 $y^2_1+y^2_2+\cdots+y^2_r(0\leq r\leq n)$,
+
+    $\Leftrightarrow$它的标准形中n个系数全非负.
+
+    $\Leftrightarrow$有实对称矩阵 $C$使得 $A=C^2.$
+\end{theorem}
+\begin{theorem}
+    实对称矩阵 $A$是半正定的当且仅当 $A$的所有主子式全非负.
+\end{theorem}
+\begin{theorem}
+    实对称矩阵 $A$负定的充分必要条件是:它的奇数阶顺序主子式全小于零,偶数阶顺序主子式全大于零.
+\end{theorem}
+\section{多项式环}
+\subsection{一元多项式环}
+\begin{definition}
+    数域$K$上的一元多项式实一个形如下述的表达式:
+    \[a_nx^n+a_{n-1}x^{n-1}+\cdots+a_1x+a_0,\]
+    其中 $x$是一个符号(它不属于 $K$),n是非负整数, $a_i\in K(i=1,2,\cdots,n),$称为
+    系数 , $a_ix^i$称为i次项($i=1,2,\cdots,n$),$a_0$称为零次项或常数项.
+
+    两个这种形式的表达式相等当且仅当它们含有完全相同的项(除去系数为0的项外,系数为0的项允许任意删去和添加).
+    此时,符号 $x$称为不定元.
+\end{definition}
+\begin{remark}
+    系数全为0的多项式称为零多项式,记作0.
+\end{remark}
+\begin{definition}
+    设 $f(x)=a_nx^n+a_{n-1}x^{n-1}+\cdots+a_1x+a_0$,如果 $a_n\neq 0$,那么称 $a_nx^n$是 $f(x)$
+    的首项,称 $n$是 $f(x)$的次数,记作 deg $f(x)$或deg $f$.特别地,零多项式的次数规定为 $-\infty$.
+\end{definition}
+\begin{remark}
+    对于 $\infty$,我们规定
+    \begin{enumerate}
+        \item $(-\infty)+(-\infty):=-\infty,$
+        \item $(-\infty)+n:=-\infty,\forall n \in \mathbf{N},$
+        \item $-\infty < n,\forall n \in  \mathbf{N}.$
+    \end{enumerate}
+    其中 $\mathbf{N}$表示自然数集,其中包含0.
+\end{remark}
+\begin{remark}
+    注意不要将零多项式与零次多项式混淆.
+\end{remark}
+\begin{definition}
+    数域$K$上所有一元多项式组成的集合记作 $K[x]$.
+
+    设 $f(x)=\sum_{i=0}^{m}{a_ix^i},g(x)=\sum_{i=0}^{m}{b_ix^i},$不妨设 $m\leq n,$令
+    \[f(x)+g(x):=\sum_{i=0}^{n}{(a_i+b_i)x^i},\]
+    \[f(x)g(x):=\sum_{s=0}^{n+m}{(\sum_{i+j=s}{a_ib_j})x^s.}\]
+    称 $f(x)+g(x)$是 $f(x)$与 $g(x)$的和,称 $f(x)g(x)$是 $f(x)$与 $g(x)$的积.
+\end{definition}
+\begin{theorem}
+    设 $f(x),g(x)\in K[x],$则
+    \[\deg(f\pm g)\leq \max\{\deg f,\deg g\},\]
+    \[\deg(fg)=\deg f+\deg g.\]
+\end{theorem}
+\begin{definition}
+    环 $R$是具有加法和乘法两种代数运算的非空集合.所谓 $R$上的一个代数运算,是指 $R\times R$到 $R$的一个映射.
+
+    环 $R$的加法满足交换律,结合律,且有一个元素,记作0,它使得
+    \[a+0=a,\forall a \in R,\]
+    称这个元素 0是 $R$的零元素.
+    
+    对于 $a\in R $,有 $d\in R $,使得 $a+d=0$,称 $d$是 $a$的负元素,记作 $-a$.
+
+    环 $R$的乘法满足结合律,以及对于加法的左,右分配律.
+    
+    容易证明, 环 $R$中的零元素司唯一的; $R$中的元素 $a$的负元素是唯一的; $-(-a)=a$.
+
+    环 $R$中可以定义减法:
+    \[a-b:=a+(-b).\]
+    
+    若环 $R$中的乘法还满足交换律,则称 $R$为交换环.
+
+    若环 $R$中有一个元素 $e$具有性质:
+    \[ea=ae=a,\forall a \in R.\]
+    则称 $e$是 $R$的单位元,此时称 $R$是有单位元的环.容易证明,在有单位元的环 $R$中,单位元是唯一的,
+    通常把单位元记成1.
+
+    环 $R$中的元素 $a$称为一个左零因子(右零因子),如果 $R$中有元素 $b\neq 0$,则使得 $ab=0(ba=0).$
+    左零因子和右零因子都简称为零因子.特别地, 称0为平凡的零因子;其余的零因子称为非平凡的零因子.
+
+    如果环 $R$没有非平凡的零因子,那么称 $R$是无零因子环.有单位元 $1(\neq 0)$的无零因子的交换环称为整环.
+    $\mathbf{Z},K,K[x]$都是整环,$M_n(K)$不是整环,因为它不满足乘法交换律,且它有非平凡的零因子.
+
+    设 $R$是一个有单位元 $1(\neq 0)$的环.对于 $a\in R$,如果存在 $b\in R$,使得
+    \[ab=ba=1,\]
+    那么称 $a$是可逆元(或单位),称 $b$是 $a$的逆元,记作 $a^{-1}$.可以证明,如果 $a$是可逆元,则它的逆元唯一.
+\end{definition}
+\begin{definition}
+    如果环 $R$的一个非空子集 $R_1$对于 $R$的加法和乘法也成为一个环,那么称 $R_1$是 $R$的
+    一个子环.
+\end{definition}
+\begin{theorem}
+    环 $R$的一个非空子集 $R_1$为一个子环的充分必要条件是 $R_1$对于 $R$的减法与乘法都封闭.
+\end{theorem}
+\begin{definition}
+    设 $R$是有单位元 $1'$的交换环,如果 $R$有一个子环 $R_1$满足下列条件:
+    \begin{enumerate}
+        \item $1'\in R_1$
+        \item  数域$K$到 $R_1$有一个双射 $\tau$,且 $\tau$保持加法和乘法运算,
+    \end{enumerate}
+    那么 称 $R$可看成是 $K$的一个扩环.
+\end{definition}
+\begin{remark}
+    可以证明, $\tau(1)=1'.$
+\end{remark}
+\begin{theorem}
+    设 $K$是一个数域,$R$是一个有单位元 $1'$的交换环,它可以看成是 $K$的一个扩环,
+    其中 $K$到 $R$的子环 $R_1$的保持加法和乘法运算的双射记作 $\tau$.任意给定 $t \in R$,令
+    \[
+    \begin{array}{rrcl}
+    \sigma_{t} : &  K[x] & \longrightarrow  & \mathbf{R} \\
+                   &  f(x)=\sum_{i=0}^{n}{a_ix^i}  & \longmapsto    & \sum_{i=0}^{n}{\tau(a_i)t^i}=:f(t), \\
+    \end{array}
+    \]
+    则 $\sigma_t$是 $K[x]$到 $R$的一个映射,且它保持加法和乘法运算,即如果在 $K[x]$中,有
+    \[f(x)+g(x)=h(x),\phantom{111}f(x)g(x)=p(x),\]
+    那么在 $R$中,有
+    \[f(t)+g(t)=h(t),\phantom{111}f(t)g(t)=p(t);\]
+    还有 $\sigma_t(x)=t$.映射 $\sigma_t$称为 $x$用 $t$代入.
+\end{theorem}
+\begin{remark}
+    例如, $K[A]$作为 $K$的扩环,其映射 $\sigma_t$便是从 $a$到 $aI$的映射,但是t是可以任选的.
+    这一映射使得代入的过程中不定元的系数不发生改变,直接把 $x$替换为 $t$即可,但是不保证其他映射也是这样的.
+
+    当 $R$取 $K[x]$时,可以把 $x$替换为0次多项式或零多项式,形式上看上去便是把 $x$换为一个具体的数;
+    也可以换为一次多项式,形式上便是把 $x$的系数改变了.
+
+    要注意的是,映射的左边的形式 $K[x]$实际上可能是 $K[\lambda]$或 $K[\lambda^2]$,但必须是一个多项式,如果题目中给的是矩阵多项式,
+    那么也必须是将该定理使用在矩阵多项式对应的多项式上.
+\end{remark}
+\subsection{整除关系与带余除法}
+\begin{definition}
+    设 $f(x),g(x)\in K[x]$,如果存在 $h(x)\in K[x],$使得 $f(x)=h(x)g(x),$那么
+    称 $g(x)$整除 $f(x)$,记作 $g(x)|f(x)$;否则,称 $g(x)$不能整除 $f(x)$,记作 $g(x)\nmid f(x).$
+
+    当 $g(x)$整除 $f(x)$时,称 $g(x)$时 $f(x)$的一个因式,称 $f(x)$是 $g(x)$的一个倍式.
+\end{definition}
+\begin{property}
+    
+\begin{enumerate}
+\item $0|f(x)\phantom{11}\leftrightarrow\phantom{11}f(x)=0$;
+\item $f(x)|0,\forall f(x)\in K[x];$
+\item $b|f(x),\forall b\in K^*,\forall f(x)\in K[x].$
+\end{enumerate}
+\end{property}
+\begin{remark}
+    整除关系实际上是通过乘法来定义的,因此整除0是合法的.
+\end{remark}
+\begin{remark}
+    整除是集合 $K[x]$中的一个二元关系,它具有反身性和传递性,但是不具有对称性.
+\end{remark}
+\begin{definition}
+    在 $K[x]$中 ,如果 $g(x)|f(x)$且 $f(x)|g(x)$,那么称 $f(x)$与 $g(x)$相伴,记作 $f(x)\sim g(x)$.
+\end{definition}
+\begin{theorem}
+    在 $K[x]$中, $f(x)\sim g(x)$当且仅当存在 $c\in K^*$,使得
+    \[f(x)=cg(x).\]
+\end{theorem}
+\begin{theorem}
+    在 $K[x]$中,如果 $g(x)|f_i(x),i=1,2,\cdots,s$,那么对于任意 $u_1(x),\cdots,u_s(x)\in K[x]$,
+    都有 
+    \[g(x)|[u_1(x)f_1(x)+\cdots+u_s(x)f_s(x)].\]
+\end{theorem}
+\begin{theorem}{带余除法}
+    设 $f(x),g(x)\in K[x],$且 $g(x)\neq 0.$则在 $K[x]$中存在唯一的一对多项式 $h(x),r(x)$,
+    使得
+    \[f(x)=h(x)g(x)+r(x),\phantom{111}\deg r(x)<\deg g(x),\]
+    其中 $f(x)$,$g(x)$分别叫做被除式,除式,$h(x),r(x)$分别叫做商式,余式.上式称为除法算式.
+\end{theorem}
+\begin{theorem}
+    设 $f(x),g(x)\in K[x],$数域 $F\supseteq K,$则在 $K[x]$中, $g(x)|f(x)\leftrightarrow$
+    在 $F(x)$中 ,$g(x)|f(x)$.
+\end{theorem}
+\begin{remark}
+    此即整除性不随数域的扩大而改变.
+\end{remark}
+\begin{theorem}
+    任给 $a,b\in \mathbf{Z},b\neq 0,$则存在唯一的一对整数 $q,r$,使得
+    \[a=qb+r,\phantom{1111}0\leq r<\abs{b}.\]
+\end{theorem}
+\subsection{最大公因式}
+\begin{definition}
+    $K[x]$中多项式 $f(x)$与 $g(x)$的一个公因式 $d(x)$如果满足下述条件:对于 $f(x)$
+    与 $g(x)$的任一公因式 $c(x)$,都有 $c(x)|d(x)$,那么称 $d(x)$是 $f(x)$与 $g(x)$的一个最大公因式.
+\end{definition}
+\begin{theorem}
+    在 $K[x]$中,如果有等式
+    \[f(x)=h(x)g(x)+r(x)\]
+    成立,那么
+    \[\{f(x)\text{与}g(x)\text{的最大公因式}\}=\{g(x)\text{与}r(x)\text{的最大公因式}\}.\]
+\end{theorem}
+\begin{theorem}
+    对于 $K[x]$中任意两个多项式 $f(x)$与 $g(x)$,存在它们的一个最大公因式 $d(x)$,
+    并且存在 $u(x),v(x)\in K[x]$,使得
+    \[\{d(x)=u(x)f(x)+v(x)g(x).\}\]
+\end{theorem}
+该定理的证明中运用了辗转相除法.
+\begin{definition}
+    设 $f(x)$,$g(x)\in K[x]$,如果 $(f(x),g(x))=1$,那么称 $f(x)$与 $g(x)$互素.
+\end{definition}
+\begin{theorem}
+    $K[x]$中 两个多项式 $f(x)$与 $g(x)$互素的充分必要条件是,存在 $u(x),v(x)\in K[x],$使得
+    \[u(x)f(x)+v(x)g(x)=1.\]
+\end{theorem}
+\begin{property}
+    在 $K[x]$中,
+\begin{enumerate}
+\item 如果 $f(x)|g(x)h(x),$且 $(f(x),g(x))=1$,那么 $f(x)|h(x).$
+\item 如果 $f(x)|h(x),g(x)|h(x),$且 $(f(x),g(x))=1$,那么 $f(x)g(x)|h(x)$.
+\item 如果 $(f(x),h(x))=1,(g(x),h(x))=1$,那么 $(f(x)g(x),h(x))=1.$
+\end{enumerate}
+\end{property}
+
+\begin{theorem}
+    设 $f(x)$ 与 $g(x)\in K[x]$,数域$F\supseteq K$,则 $f(x)$与 $g(x)$在 $K[x]$中
+    的首一最大公因式等于它们在 $F[x]$中的首一最大公因式.即 $f(x)$与 $g(x)$的首一最大公因式
+    不随数域的扩大而改变.
+\end{theorem}
+\begin{theorem}
+    设 $f(x),g(x)\in K[x],$数域 $F\supseteq K$,则 $f(x)$与 $g(x)$在 $K[x]$中
+    互素当且仅当 $f(x)$与 $g(x)$在 $F[x]$中互素.即互素性不随数域的扩大而改变.
+\end{theorem}
+\begin{definition}
+    $K[x]$中,$f_1(x),f_2(x),\cdots,f_s(x)$的一个公因式 $d(x)$如果满足下述条件:
+    $f_1(x),f_2(x),\cdots,f_s(x)$的任一公因式 $c(x)$都能能整除 $d(x)$,那么称 $d(x)$为 
+    $f_1(x),f_2(x),\cdots,f_s(x)$的一个最大公因式.
+\end{definition}
+\begin{theorem}
+    在 $K[x]$中,对于 $s$个不全为0的多项式 $f_1(x),f_2(x),\cdots,f_s(x),$有多项式 $u_i(x),i=1,2,\cdots,s,$
+    使得
+    \[u_1(x)f_1(x)+\cdots + u_s(x)f_s(x)=(f_1(x),\cdots,f_s(x)).\]
+\end{theorem}
+\begin{definition}
+    在 $K[x]$中, $s$个多项式 $f_1(x),f_2(x),\cdots,f_s(x)$如果满足 $(f_1(x),f_2(x),\cdots,f_s(x))=1,$
+    那么称 $f_1(x),f_2(x),\cdots,f_s(x)$互素.
+\end{definition}
+\begin{theorem}
+    在 $K[x]$中, $f_1(x),f_2(x),\cdots,f_s(x)$互素的充分必要条件是,存在 $u_1(x),u_2(x),\cdots,u_s(x)\in K[x],$
+    使得 
+    \[u_1(x)f_1(x)+\cdots+u_s(x)f_s(x)=1.\]
+\end{theorem}
+\begin{remark}
+    当三个或三个以上的多项式互素时,它们不一定两两互素.
+\end{remark}
+\begin{definition}
+    整数a与b的一个公因数d如果满足下述条件:a与b的任一公因数c都能整除d,那么称d是a与b的
+    一个最大公因数.
+\end{definition}
+\begin{theorem}
+    任给两个整数a与b,都存在它们的一个最大公因数d,并且存在整数u,v,使得
+    \[ua+vb=d\]
+\end{theorem}
+\begin{definition}
+    设 $a,b\in \mathbf{Z}$,如果 $(a,b)=1$,那么 $a$与 $b$互素.
+\end{definition}
+\begin{theorem}
+    两个整数a与b互素当且仅当存在 $u,v\in \mathbf{Z}$,使得
+    \[ua+vb=1\]
+\end{theorem}
+\begin{property}
+    在 $\mathbf{Z}$中,
+\begin{enumerate}
+\item 若 $a|bc$,且 $(a,b)=1$,则 $a|c$.
+\item 若 $a|c,b|c,$且 $(a,b)=1$,则 $ab|c$;
+\item 若 $(a,c)=1,(b,c)=1,$则 $(ab,c)=1$.
+\item 若 $(a_i,c)=1,i=1,2,\cdots,s,$则 $(a_1a_2\cdots a_s,c)=1$.
+\end{enumerate}
+\end{property}
+\begin{definition}
+    在 $\mathbf{Z}$中 ,$a_1,a_2,\cdots,a_s$的一个公因数 $d$如果满足下述条件: $a_1,a_2,\cdots,a_s$
+    的任一公因数 $c$能整除 $d$,那么称 $d$是 $a_1,a_2,\cdots,a_s$的一个最大公因数.
+\end{definition}
+\begin{definition}
+    对于 $s$个整数 $a_1,a_2,\cdots,a_s$,如果 $(a_1,a_2,\cdots,a_s)=1$,那么称 $a_1,a_2,\cdots,a_s$互素.
+\end{definition}
+\begin{theorem}
+    $a_1,a_2,\cdots,a_s$互素当且仅当存在 $u_1,u_2,\cdots,u_s\in \mathbf{Z},$使得
+    \[u_1a_1+u_2a_2+\cdots+u_sa_s=1\]
+\end{theorem}
+\begin{definition}
+    整数 $m$称为 整数 $a$与 $b$的最小公倍数,如果 
+    \begin{enumerate}
+        \item $a|m,b|m$;
+        \item 从 $a|l,b|l$可以推出 $m|l$.
+    \end{enumerate}
+\end{definition}
+可以证明,任意两个整数都有最小公倍数,用 $[a,b]$表示正的那个最小公倍数,若 $a>0,b>0,$则
+$[a,b]=\frac{ab}{(a,b)}.$
+\section{$\lambda$-矩阵}
+\subsection{$\lambda$-矩阵的相抵标准形}
+\begin{definition}
+    设 $R$是一个整环,由 $R$中 $s\times n$个元素排成的 $s$行 $n$列的一张表
+    称为 $R$上的一个 $s\times n$矩阵.
+\end{definition}
+\begin{theorem}
+    $R$上n级矩阵 $A$ 可逆的充分必要条件是 $\abs{A}$为 $R$中的可逆元.
+\end{theorem}
+\begin{definition}
+    设 $A$是 整环 $R$上的一个非零矩阵,如果 $A$有一个 $r$阶子式不为0,而所有 $r+1$
+    阶子式(如果有的话)全为0,那么称 $A$的秩为 $r$.零矩阵的秩规定为0.
+\end{definition}
+\begin{definition}
+    设 $K$是数域,整环 $K[x]$上的矩阵称为 $\lambda-$矩阵.用 $A(\lambda),B(\lambda),\cdots,$
+    来记 $\lambda-$矩阵.
+\end{definition}
+$R$上的矩阵的初等变换,相抵等概念与 数域$K$上的矩阵的对应概念一致,特别的是初等行(列)变换之一变为了
+用 $R$的可逆元乘某一行(列).当 $R$为 $K[x]$时,其可逆元都是 $K$中的非零数.
+\begin{theorem}
+    任意一个非零的n级 $\lambda-$矩阵 $A(\lambda)$一定相抵于对角 $\lambda-$矩阵:
+    \[\text{diag}\{d_1(\lambda),d_2(\lambda),\cdots,d_n(\lambda)\},\]
+    其中 $d_i(\lambda)|d_{i+1}(\lambda),i=1,2,\cdots,n-1$,并且对于非零的 $d_i(\lambda)$,
+    其首项系数为1.满足这些要求的 $\lambda-$矩阵称为 $A(\lambda)$的一个相抵标准形或Smith标准形.
+\end{theorem}
+\begin{theorem}
+    整数环 $\mathbf{Z}$上任一非零的n级矩阵 $A$一定相抵于 $\mathbf{Z}$上的对角矩阵:
+    \[\text{diag}\{d_1,d_2,\cdots,d_n\},\]
+    其中 $d_j\in \mathbf{N}(j=1,2,\cdots,n),$并且 $d_i|d_{i+1},i=1,2,\cdots,n-1$,
+    满足这些要求的矩阵称为 $A$的一个相抵标准形或Smith标准形.
+\end{theorem}
+\subsection{$\lambda-$矩阵的行列式因子}
+\begin{definition}
+    设 $A(\lambda)$是一个 $s\times n\phantom{1}\lambda-$矩阵,对于正整数 $k(1\leq k\leq\min\{s,n\}),$
+    $A(\lambda)$的所有 $k$级子式的首一最大公因式 $D_k(\lambda)$称为 $A(\lambda)$的 $k$阶行列式因子.
+\end{definition}
+\begin{theorem}
+    相抵的 $\lambda-$矩阵,它们的秩相等,并且各阶行列式因子也对应相等. 
+\end{theorem}
+\begin{theorem}
+    n级 $\lambda-$矩阵 $A(\lambda)$的相抵标准形是唯一的.
+\end{theorem}
+\begin{definition}
+    n级 $\lambda-$矩阵 $A(\lambda)$的相抵标准形中主对角线上的非零元 $d_1(\lambda),d_2(\lambda),\cdots,d_r(\lambda)$
+    称为 $A(\lambda)$的不变因子.
+\end{definition}
+\begin{theorem}
+    两个 n级 $\lambda-$矩阵相抵的充分必要条件是它们有相同的不变因子,或者有相同的各阶行列式因子.
+\end{theorem}
+\begin{definition}
+    设 $A$是 数域$K$上的 $n$阶矩阵, $\lambda I-A$称为 $A$的特征矩阵.
+\end{definition}
+\begin{theorem}
+    设 $A(\lambda)$是 $n$级可逆的 $\lambda-$矩阵,则 $\abs{A(\lambda)}=D_i(\lambda)=d_i(\lambda)=1,i=1,2,\cdots,n$.
+    即 $n$级可逆的 $\lambda-$矩阵的相抵标准形为单位矩阵 $I$.
+\end{theorem}
+\begin{definition}
+    由单位矩阵 $I$经过一次 $\lambda-$矩阵的初等行(列)变换得到的矩阵称为初等 $\lambda-$矩阵.
+\end{definition}
+\begin{theorem}
+    对 $\lambda-$矩阵 $A(\lambda)$作一次初等行(列)变换就相当于用一个相应的初等 $\lambda-$矩阵
+    左(右)乘 $A(\lambda)$.
+\end{theorem}
+\end{document}

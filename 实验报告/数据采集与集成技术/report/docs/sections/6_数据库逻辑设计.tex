@@ -1,0 +1,426 @@
+\section{数据库逻辑设计}
+
+\subsection{关系模式设计}
+
+\subsubsection{规范化数据层关系模式}
+
+
+
+
+\begin{enumerate}
+  \item 用户关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+User(
+    id: Integer (PK),
+    username: String(50) NOT NULL UNIQUE,
+    password: String(50) NOT NULL,
+    role: Enum('user', 'admin') NOT NULL DEFAULT 'user',
+    created_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{用户表结构}\label{lst:user_schema}
+  \end{listing}
+
+  \item 公司关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+Company(
+    id: Integer (PK),
+    name: String(500) NOT NULL UNIQUE,
+    industry: String(200),
+    size: String(50),
+    created_at: DateTime NOT NULL,
+    updated_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{公司表结构}\label{lst:company_schema}
+  \end{listing}
+
+  \item 职位关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+Job(
+    id: Integer (PK),
+    title: String(500) NOT NULL,
+    type_level3: String(100),
+    salary: String(100),
+    experience: String(100),
+    education: String(100),
+    skill: Text,
+    benefits: Text,
+    source: String(512),
+    company_id: Integer (FK -> Company.id),
+    raw_job_id: Integer (FK -> StagedRecruitmentData.id),
+    created_at: DateTime NOT NULL,
+    updated_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{职位表结构}\label{lst:job_schema}
+  \end{listing}
+
+  \item 地址关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+Address(
+    id: Integer (PK),
+    address_str: String(200) NOT NULL,
+    latitude: Float,
+    longitude: Float,
+    created_at: DateTime NOT NULL,
+    updated_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{地址表结构}\label{lst:address_schema}
+  \end{listing}
+
+  \item 公司-地址关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+company_address(
+    company_id: Integer (PK, FK -> Company.id),
+    address_id: Integer (PK, FK -> Address.id),
+    created_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{公司-地址关系表结构}\label{lst:company_address_schema}
+  \end{listing}
+
+  \item 职位-地址关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+job_address(
+    job_id: Integer (PK, FK -> Job.id),
+    address_id: Integer (PK, FK -> Address.id),
+    created_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{职位-地址关系表结构}\label{lst:job_address_schema}
+  \end{listing}
+\end{enumerate}
+
+\subsubsection{数据处理层关系模式}
+
+\begin{enumerate}
+  \item BOSS直聘原始数据关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+RawRecruitmentData_Boss(
+    id: Integer (PK),
+    title: String(500),
+    type_level3: String(100),
+    salary: String(255),
+    address_str: String(500),
+    experience: String(255),
+    education: String(255),
+    skill: Text,
+    benefits: Text,
+    company_name: String(500),
+    company_info: Text,
+    source_url: String(1000) UNIQUE,
+    raw_data: JSON,
+    created_at: DateTime NOT NULL,
+    processed: Boolean DEFAULT FALSE
+)
+    \end{minted}
+    \caption{BOSS直聘原始数据表结构}\label{lst:raw_boss_schema}
+  \end{listing}
+
+  \item 猎聘网原始数据关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+RawRecruitmentData_Liepin(
+    id: Integer (PK),
+    title: String(500),
+    address_str: String(500),
+    salary: String(255),
+    tags: JSON,
+    company_name: String(500),
+    company_info: Text,
+    raw_data: JSON,
+    created_at: DateTime NOT NULL,
+    processed: Boolean DEFAULT FALSE
+)
+    \end{minted}
+    \caption{猎聘网原始数据表结构}\label{lst:raw_liepin_schema}
+  \end{listing}
+
+  \item 暂存数据关系模式
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+StagedRecruitmentData(
+    id: Integer (PK),
+    job_title: String(255),
+    job_salary: String(255),
+    job_type_level3: String(100),
+    job_experience: String(255),
+    job_education: String(255),
+    job_skill: Text,
+    job_benefits: Text,
+    address_str: String(255),
+    company_name: String(255),
+    company_listed: String(50),
+    company_industry: Text,
+    company_size: String(50),
+    source: String(512),
+    record_hash_for_linkage: String(64),
+    duplicate_group_id: Integer,
+    is_master_record: Boolean DEFAULT FALSE,
+    linked_record_ids: JSON,
+    processed: Boolean DEFAULT FALSE,
+    created_at: DateTime NOT NULL
+)
+    \end{minted}
+    \caption{暂存数据表结构}\label{lst:staged_data_schema}
+  \end{listing}
+\end{enumerate}
+
+\subsection{规范化分析}
+
+\subsubsection{函数依赖分析}
+
+规范化数据层的函数依赖分析如下。对于每个表,我们需要分析其属性之间的函数依赖关系,以确保数据库设计满足规范化要求。函数依赖表示一个或多个属性的值可以唯一确定另一个属性的值。通过分析这些依赖关系,我们可以评估数据库设计是否存在数据冗余和异常,从而优化表结构。以下将详细分析每个表的函数依赖:
+
+\begin{itemize}
+    \item User表函数依赖：
+    \begin{itemize}
+        \item id $\rightarrow$ \{username, password, role, created\_at\}
+        \item username $\rightarrow$ \{id, password, role, created\_at\}
+    \end{itemize}
+    \item Company表函数依赖：
+    \begin{itemize}
+        \item id $\rightarrow$ \{name, industry, size, created\_at, updated\_at\}
+        \item name $\rightarrow$ \{id, industry, size, created\_at, updated\_at\}
+    \end{itemize}
+    \item Job表函数依赖：
+    \begin{itemize}
+        \item id $\rightarrow$ \{title, type\_level3, salary, experience, education, skill, benefits, source, company\_id, raw\_job\_id, created\_at, updated\_at\}
+        \item \{company\_id, title, created\_at\} $\rightarrow$ \{id, type\_level3, salary, experience, education, skill, benefits, source, raw\_job\_id, updated\_at\}
+    \end{itemize}
+    \item Address表函数依赖：
+    \begin{itemize}
+        \item id $\rightarrow$ \{address\_str, latitude, longitude, created\_at, updated\_at\}
+        \item \{address\_str, latitude, longitude\} $\rightarrow$ \{id, created\_at, updated\_at\}
+    \end{itemize}
+\end{itemize}
+
+数据处理层的函数依赖分析较为简单，由于这些表不需要满足3NF，主要关注主键依赖
+
+\begin{itemize}
+    \item RawRecruitmentData\_Boss: id $\rightarrow$ 所有其他属性
+    \item RawRecruitmentData\_Liepin: id $\rightarrow$ 所有其他属性
+    \item StagedRecruitmentData: id $\rightarrow$ 所有其他属性
+\end{itemize}
+
+\subsubsection{规范化过程说明}
+
+\begin{enumerate}
+  \item 第一范式（1NF）
+  \begin{itemize}
+      \item 所有表的属性都是原子的
+    \begin{itemize}
+      \item 每个字段只包含单一类型的数据，如 username、password 等字段各自独立
+      \item 不存在可以进一步拆分的列，避免出现类似 name\_and\_phone 这样的复合字段
+      \item 每个字段的取值都是单一的，不允许多值
+    \end{itemize}
+    
+    \item 使用JSON类型存储非结构化数据
+    \begin{itemize}
+      \item RawRecruitmentData\_Boss 和 RawRecruitmentData\_Liepin 表中使用 raw\_data (JSON类型) 存储原始爬取数据
+      \item 保持原始数据的完整性，同时不破坏数据库表结构的规范性
+      \item JSON字段便于存储变化的数据结构，适合存放第三方平台的原始数据
+    \end{itemize}
+
+    \item 复杂的多值属性通过关系表处理
+    \begin{itemize}
+      \item 使用 company\_address 表处理公司与地址的多对多关系
+      \item 使用 job\_address 表处理职位与工作地点的多对多关系
+      \item 避免在主表中出现 address1、address2 等多值字段
+    \end{itemize}
+  \end{itemize}
+
+  \item 第二范式（2NF）
+  \begin{itemize}
+    \item 所有非主键属性完全依赖于主键
+    \begin{itemize}
+      \item 确保表中的每个非主键字段都依赖于整个主键，而不是主键的一部分
+      \item 特别注意具有复合主键的表，如 company\_address 表中的 (company\_id, address\_id)
+      \item 避免出现部分依赖，即某些字段只依赖于复合主键中的某一部分
+    \end{itemize}
+
+    \item 通过关系表处理多对多关系，避免部分依赖
+    \begin{itemize}
+      \item 关系表仅包含必要的关联字段（如 company\_id 和 address\_id）
+      \item 添加 created\_at 等必要的时间戳字段用于追踪记录创建时间
+      \item 不在关系表中存储可能导致部分依赖的其他业务字段
+    \end{itemize}
+
+    \item 每个关系表的设计原则
+    \begin{itemize}
+      \item 主键通常是参与关系的两个表的主键组合
+      \item 只包含必要的关联字段和时间戳信息
+      \item 避免添加与单个主键相关的冗余信息
+    \end{itemize}
+  \end{itemize}
+
+  \item 第三范式（3NF）
+  \begin{itemize}
+    \item 消除非主键属性对主键的传递依赖
+    \begin{itemize}
+      \item 确保所有非主键属性直接依赖于主键
+      \item 避免出现 A 依赖 B，B 又依赖主键的情况
+      \item 对于发现的传递依赖，通过建立新表来消除
+    \end{itemize}
+
+    \item 公司信息独立为Company表
+    \begin{itemize}
+      \item 包含公司基本信息：name、industry、size 等字段
+      \item 使用 company\_id 作为主键，在其他表中作为外键引用
+      \item 避免公司信息在职位表等其他表中重复出现
+    \end{itemize}
+
+    \item 地址信息独立为Address表
+    \begin{itemize}
+      \item 存储完整的地址信息：address\_str、latitude、longitude 等
+      \item 通过 company\_address 和 job\_address 关系表与其他实体关联
+      \item 实现地址信息的统一管理和复用
+    \end{itemize}
+
+    \item 职位信息独立为Job表
+    \begin{itemize}
+      \item 只包含与职位直接相关的属性
+      \item 通过外键 company\_id 关联到公司信息
+      \item 通过 job\_address 关系表关联地址信息
+    \end{itemize}
+  \end{itemize}
+
+  \item 规范化设计的优势
+  \begin{itemize}
+    \item 减少数据冗余，提高数据一致性
+    \item 便于数据的维护和更新
+    \item 支持系统的可扩展性
+    \item 为后续的性能优化提供良好基础
+  \end{itemize}
+\end{enumerate}
+
+\subsection{完整性约束设计}
+
+\subsubsection{实体完整性约束}
+
+\begin{enumerate}
+  \item 主键约束
+  \begin{itemize}
+    \item 所有表都使用自增整数id作为主键，确保每条记录的唯一标识
+    \item 关系表使用联合主键：
+    \begin{itemize}
+      \item company\_address表使用(company\_id, address\_id)作为联合主键
+      \item job\_address表使用(job\_id, address\_id)作为联合主键
+      \item 联合主键可以防止重复关联关系的产生
+    \end{itemize}
+  \end{itemize}
+
+  \item 唯一性约束
+  \begin{itemize}
+    \item User表的username字段设置唯一约束，确保用户名不重复
+    \item Company表的name字段设置唯一约束，避免重复录入公司信息
+    \item RawRecruitmentData\_Boss表的source\_url字段设置唯一约束，防止重复爬取
+    \item StagedRecruitmentData表的record\_hash\_for\_linkage字段设置唯一约束，用于数据去重
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{参照完整性约束}
+
+\begin{enumerate}
+  \item 外键约束设计
+  
+  数据库中的外键约束主要体现在三个方面：Job表与Company表及StagedRecruitmentData表的关联、company\_address关系表的双向关联、以及job\_address关系表的双向关联。如\cref{lst:foreign_keys}所示，这些外键约束确保了数据的引用完整性。其中，Job表通过company\_id关联到Company表，通过raw\_job\_id关联到StagedRecruitmentData表；company\_address表通过company\_id和address\_id分别关联到Company表和Address表；job\_address表则通过job\_id和address\_id分别关联到Job表和Address表。
+
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+-- Job表的外键约束
+ALTER TABLE Job ADD CONSTRAINT fk_job_company
+    FOREIGN KEY (company_id) REFERENCES Company(id);
+ALTER TABLE Job ADD CONSTRAINT fk_job_staged
+    FOREIGN KEY (raw_job_id) REFERENCES StagedRecruitmentData(id);
+
+-- company_address表的外键约束
+ALTER TABLE company_address ADD CONSTRAINT fk_company_address_company
+    FOREIGN KEY (company_id) REFERENCES Company(id);
+ALTER TABLE company_address ADD CONSTRAINT fk_company_address_address
+    FOREIGN KEY (address_id) REFERENCES Address(id);
+
+-- job_address表的外键约束
+ALTER TABLE job_address ADD CONSTRAINT fk_job_address_job
+    FOREIGN KEY (job_id) REFERENCES Job(id);
+ALTER TABLE job_address ADD CONSTRAINT fk_job_address_address
+    FOREIGN KEY (address_id) REFERENCES Address(id);
+    \end{minted}
+    \caption{外键约束定义}\label{lst:foreign_keys}
+  \end{listing}
+
+  \item 级联操作策略
+  
+  为了确保数据的安全性和一致性，所有外键约束均采用RESTRICT策略。这意味着当尝试删除被其他表引用的记录时，数据库将阻止该操作（ON DELETE RESTRICT）；同样，当尝试更新被引用的主键值时，也会被阻止（ON UPDATE RESTRICT）。系统不采用级联删除（CASCADE）机制，以防止因误操作导致大规模的数据丢失。所有需要进行的更新操作都通过应用层代码严格控制，以确保数据的一致性和完整性。
+\end{enumerate}
+
+\subsubsection{用户定义完整性约束}
+对于用户定义完整性约束，主要包含三类约束：非空约束、默认值约束和检查约束。非空约束（如\cref{lst:not_null_constraints}所示）主要应用于User表的username、password和role字段，Company表的name字段，Job表的title和company\_id字段，以及Address表的address\_str字段，确保这些关键字段不能为空。默认值约束（如\cref{lst:default_constraints}所示）设置了User表role字段的默认值为'user'，各数据处理表的processed字段默认值为FALSE，以及Company表和User表的时间戳字段默认值为当前时间。检查约束（如\cref{lst:check_constraints}所示）则对数据的有效性进行验证，包括User表role字段的取值范围限制，Address表经纬度的有效范围检查，以及Company表和Job表的时间戳先后顺序验证。
+
+\begin{listing}[htbp]
+    \begin{minted}{sql}
+-- User表非空约束
+ALTER TABLE User MODIFY username VARCHAR(50) NOT NULL;
+ALTER TABLE User MODIFY password VARCHAR(50) NOT NULL;
+ALTER TABLE User MODIFY role ENUM('user', 'admin') NOT NULL;
+
+-- Company表非空约束
+ALTER TABLE Company MODIFY name VARCHAR(500) NOT NULL;
+
+-- Job表非空约束
+ALTER TABLE Job MODIFY title VARCHAR(500) NOT NULL;
+ALTER TABLE Job MODIFY company_id INTEGER NOT NULL;
+
+-- Address表非空约束
+ALTER TABLE Address MODIFY address_str VARCHAR(200) NOT NULL;
+    \end{minted}
+    \caption{非空约束定义}\label{lst:not_null_constraints}
+  \end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{sql}
+-- 角色默认值
+ALTER TABLE User ALTER role SET DEFAULT 'user';
+
+-- 处理状态默认值
+ALTER TABLE RawRecruitmentData_Boss ALTER processed SET DEFAULT FALSE;
+ALTER TABLE RawRecruitmentData_Liepin ALTER processed SET DEFAULT FALSE;
+ALTER TABLE StagedRecruitmentData ALTER processed SET DEFAULT FALSE;
+
+-- 时间戳默认值
+ALTER TABLE User ALTER created_at SET DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE Company ALTER created_at SET DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE Company ALTER updated_at SET DEFAULT CURRENT_TIMESTAMP;
+    \end{minted}
+    \caption{默认值约束定义}\label{lst:default_constraints}
+  \end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{sql}
+-- 角色检查
+ALTER TABLE User ADD CONSTRAINT check_user_role 
+    CHECK (role IN ('user', 'admin'));
+
+-- 经纬度范围检查
+ALTER TABLE Address ADD CONSTRAINT check_latitude
+    CHECK (latitude BETWEEN -90 AND 90);
+ALTER TABLE Address ADD CONSTRAINT check_longitude
+    CHECK (longitude BETWEEN -180 AND 180);
+
+-- 时间戳有效性检查
+ALTER TABLE Company ADD CONSTRAINT check_company_timestamps
+    CHECK (updated_at >= created_at);
+ALTER TABLE Job ADD CONSTRAINT check_job_timestamps
+    CHECK (updated_at >= created_at);
+    \end{minted}
+    \caption{检查约束定义}\label{lst:check_constraints}
+  \end{listing}

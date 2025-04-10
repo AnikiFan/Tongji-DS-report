@@ -1,0 +1,314 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW3}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\begin{problem}{1}
+    求下列序列的生成函数。
+   \begin{enumerate}
+    \item $0,0,0,-1,1,\cdots,(-1)^{n-2},\cdots$;
+    \item $0,1\cdot 3,2\cdot 4,\cdots,n(n+2),\cdots$.
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 生成函数为
+        \[\sum_{i=3}^{\infty}(-1)^{i-2}x^i=x^3\sum_{i=0}^{\infty}(-1)^{i+1}x^i=-\frac{x^3}{1+x}\]
+        \item 生成函数为
+        \[\sum_{i=0}^{\infty}i\cdot(i+2)x^i=\sum_{i=0}^{\infty}i^2x^i+\sum_{i=0}^{\infty}2ix^i=\frac{3x-x^2}{(1-x)^3}\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{2}
+    利用生成函数计算下列和式：
+    \begin{enumerate}
+        \item $1^3+2^3+\cdots+n^3$;
+        \item $1\cdot 3+2\cdot 4+\cdots+n(n+2)$;
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 因为
+        \[G\{k^3\}=\sum_{k=1}^{\infty}k^3x^k=x(\sum_{k=1}^{\infty}k^2x^k)^{\prime}=x[\frac{x(1+x)}{(1-x)^3}]^{\prime}=\frac{x(x^2+4x+1)}{(1-x)^4}\]
+        所以
+        \[G\{\sum_{i=1}^{k}i^3\}=\frac{G\{k^3\}}{1-x}=\frac{x(x^2+4x+1)}{(1-x)^5}=x(x^2+4x+1)\sum_{i=0}^{\infty}\binom{i+4}{i}x^i\]
+        因此
+        \[\sum_{i=1}^{n}i^3=\binom{n+1}{n-3}+4\binom{n+2}{i-2}+\binom{n+3}{n-1}=\frac{1}{4}(n^2+n)^2\]
+        \item \[G\{\sum_{i=1}^ki(i+2)\}=\frac{3x-x^2}{(1-x)^4}=(3x-x^2)\sum_{i=0}^{\infty}\binom{i+3}{i}x^i\]
+        所以
+        \[\sum_{i=1}^ni(i+2)=3\binom{i+2}{i-1}-\binom{i+1}{i-2}=\frac{1}{6}n(n+1)(2n+7)\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{3}
+   序列$\{\frac{1}{n+1}\}$的指数型生成函数为$\frac{1}{x}[e(x)-1]$ 
+   \begin{enumerate}
+    \item 证明：序列$\{\sum_{i=0}^n\frac{n!}{(n-i+1)!(i+1)!}\}$的指数型生成函数为$\frac{1}{x^2}[e(x)-1]^2$;
+    \item 计算$\sum_{i=0}^n\frac{n!}{(n-i+1)!(i+1)!}$.
+   \end{enumerate}
+\end{problem}
+\begin{solution}
+    \[\frac{1}{x^2}[e(x)-1]^2=(\frac{1}{x}[e(x)-1])^2=(\sum_{n=0}^{\infty}\frac{1}{n+1}\frac{x^n}{n!})^2=\sum_{n=0}^{\infty}(\sum_{i+j=n}\frac{1}{i+1}\cdot\frac{1}{i!}\cdot\frac{1}{j+1}\cdot\frac{1}{j!})\frac{x^n}{n!}=\sum_{i=0}^n\frac{n!}{(n-i+1)!(i+1)!}\frac{x^n}{n!}\]
+    \[\sum_{i=0}^n\frac{n!}{(n-i+1)!(i+1)!}=\frac{1}{n(n+1)}(\sum_{i=0}^{n+2}\frac{(n+2)!}{i!(n+2-i)!}-2)=\frac{2^{n+2}-2}{n(n+1)}\]
+\end{solution}
+\begin{problem}{5}
+    由字母$a,b,c,d,e$组成的长为$n$的字中，要求$a$与$b$的个数之和为偶数，问这样的字
+    有多少个？
+\end{problem}
+\begin{solution}
+    根据第 $n$位是否是$a$或$b$进行分类讨论，如果是，则其余$n-1$位中的$a,b$个数之和仍为偶数，否则需要为奇数，所以有递推公式
+    \[h_n=3h_{n-1}+2(5^{n-1}-h_{n-1})=h_{n-1}+\frac{2}{5}\cdot 5^n\]
+    展开后得
+    \[h_n=\frac{2}{5}(5^n+\cdots+5^2)+h_1=2(5^{n-1}+\cdots+5^1)=\frac{5}{2}(5^{n-1}-1)\]
+\end{solution}
+\begin{problem}{7}
+    设多重集合$S=\{\infty\cdot e_1,\infty\cdot e_2,\infty\cdot e_3,\infty\cdot e_4\}$，$a_n$表示集合$S$满足
+    下列条件的$n$组合数，分别求数列$\{a_n\}$的生成函数：
+    \begin{enumerate}
+        \item 每个$e_i(i=1,2,3,4)$出现奇数次；
+        \item 每个$e_i(i=1,2,3,4)$至少出现10次。
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 生成函数为
+        \[(x+x^3+x^5+\cdots)^4=\frac{1}{16}(\frac{1}{1-x}-\frac{1}{1+x})^4=\frac{x^4}{(1-x^2)^4}\]
+        \item 生成函数为
+        \[(x^{10}+x^{11}+\cdots)^4=\frac{x^{40}}{(1-x)^4}.\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{8}
+   用恰好$k$种可能的颜色做旗子，使得每面旗子由$n(n\geq k)$条彩带
+   构成，且相邻两条彩带的颜色不同，求不同的旗子数。 
+\end{problem}
+\begin{solution}
+   第一条彩带的颜色可以任选，有 $k$种选择，其他彩带只能有$k-1$种选择。%其余的彩带的方案个数可以由生成函数确定。在剩余的$n-2$条彩带
+   然后利用容斥原理排除掉至少有一种颜色没有出现过的情况。设$S$为满足相邻彩带颜色不同的方案的集合，第$i$个性质为第$i$种颜色没有出现，则根据容斥原理可知
+   \[N=\sum_{i=0}^k(-1)^k\binom{k}{i}(k-i)(k-i-1)^{n-1}=\sum_{i=2}^k(-1)^k\binom{k}{i}i(i-1)^{n-1}\]
+%    中，有两种颜色可以不出现，其他$k-2$种颜色必须至少出现一次，所以有生成函数
+%    \[(1+x+x^2+\cdots)^2(x+x^2+\cdots)^{k-2}=\frac{x^{k}}{(1-x)^{k-2}}=x^k\sum_{n=0}^{\infty}\binom{k-3+i}{i}x^i\] 
+%    其中$x^{n-2}$的系数为$\binom{n-5}{k-3}$，因此不同的旗子数为
+%    \[k(k-1)\binom{n-5}{k-3}\]
+\end{solution}
+\begin{problem}{10}
+   用生成函数法证明下列等式：
+   \begin{enumerate}
+    \item $\binom{n-1}{r}+\binom{n-1}{r-1}=\binom{n}{r}$
+    \item $\binom{n+2}{r}-2\binom{n+1}{r}+\binom{n}{r}=\binom{n}{r-2}$
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item \[(1+x)^n=(1+x)(1+x)^{n-1}=(1+x)^{n-1}+x(1+x)^{n-1}\]
+        上式左右两边的$x^r$的系数分别为$\binom{n}{r}$和 $\binom{n-1}{r}+\binom{n-1}{r-1}$
+        \item 
+    \end{enumerate}
+\end{solution}
+\begin{problem}{11}
+   设多重集合$S=\{\infty\cdot e_1,\infty\cdot e_2,\cdots,\infty\cdot e_k\}$，$a_n$
+   表示$S$满足下列条件的$n$排列数，分别求数列$\{a_n\}$的指数型生成函数：
+   \begin{enumerate}
+    \item $S$的每个元素至少出现4次；
+    \item $e_i$至多出现$i$次$(i=1,2,\cdots,k)$.
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item \begin{align*}
+            (e(x)-\frac{x^3}{6}-\frac{x^2}{2}-x-1)^k&=\sum_{i=0}^k\binom{k}{i}(-1)^ie(ix)(\frac{x^3}{6}+\frac{x^2}{2}+x+1)^{k-i}\\
+                                                    &=\sum_{i=0}^k\binom{k}{i}(-1)^i\sum_{n=0}^{\infty}\frac{i^n}{n!}x^n(\frac{x^3}{6}+\frac{x^2}{2}+x+1)^{k-i}\\
+                                                    &=\sum_{n=0}^{\infty}\sum_{i=0}^k\binom{k}{i}(-1)^ii^n(\frac{x^3}{6}+\frac{x^2}{2}+x+1)^{k-i}\frac{x^n}{n!}\\
+        \end{align*}
+        \item \[1\cdot(1+x)\cdot(1+x+\frac{x^2}{2!})\cdots(1+x+\frac{x^2}{2!}+\cdots+\frac{x^k}{k!})\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{13}
+   证明：当$m\equiv 0(\mod 6)$时，有
+   \[B(m,3)=\frac{m^2}{12}.\] 
+\end{problem}
+\begin{solution}
+    设划分为$n_1,n_2,n_3,(n_1\geq n_2\geq n_3)$。显然
+    \[m-2\geq n_1\geq \frac{m}{3}\]
+    又因为 $n_1\geq n_2\geq n_3$
+    \[\frac{m-n_1}{2}\geq n_3\geq (m-n_1)-n_1\]
+    因此当 $n_1$为偶数时，合法的$n_3$个数为
+    \[\frac{m-n_1}{2}-m+2n_1+1=\frac{3n_1-m}{2}+1\]
+    当 $n_1$为奇数时，合法的$n_3$个数为
+    \[\frac{m-n_1-1}{2}-m+2n_1+1=\frac{3n_1-m+1}{2}\]
+    从而拆分总数为
+    \[\sum_{i=m/6}^{m/2-1}(\frac{6i-m}{2}+1)+\sum_{m/6}^{m/2-2}\frac{3(2i+1)-m+1}{2}=\frac{m^2}{12}\]
+\end{solution}
+\begin{problem}{14}
+    设将$N$无序分拆成正整数之和且使得这些正整数都小于或等于$m$的方法数
+    为$B^{\prime}(N,m)$。证明
+    \[B^{\prime}(N,m)=B^{\prime}(N,m-1)+B^{\prime}(N-m,m).\]
+\end{problem}
+\begin{solution}
+    显然可以将$N$无序分拆成正整数之和且使得这些正整数都小于或等于$m$的方法按照是否含有等于$m$的分部量划分为两个集合，
+    若有，则属于$A$，否则属于$B$。显然 $\lvert B\rvert = B^{\prime}(N,m-1)$。同时任取$A$中的一个方案，通过去掉其中一个等于$m$的分部量，可以
+    得到一个将$N-m$无序分拆成正整数之和且使得这些正整数都小于或等于$m$的方法，显然这构成一个一一映射，因此$\lvert A\rvert = B^{\prime}(N-m,m)$.
+    综上，
+    \[B^{\prime}(N,m)=B^{\prime}(N,m-1)+B^{\prime}(N-m,m).\]
+\end{solution}
+\begin{problem}{15}
+    设$(N,n,m)$表示将$N$无序拆分成$n$个分部量且每个分部量都小于或等于$m$
+    的分拆数。证明$(N,n,m)$就是$(x+x^2+\cdots+x^m)^n$的展开式中$x^N$的系数。
+\end{problem}
+\begin{solution}
+    $(N,n,m)$就是$(x+x^2+\cdots+x^m)^n$的展开式中$x^N$的系数等于将$x_1+x_2+\cdots+x_n=N$的所有满足$m\geq x_i\geq 1,i=1,\cdots,n$的整数解的个数，
+    同时满足该约束的整数解显然和将$N$无序拆分成$n$个分部量且每个分部量都小于或等于$m$的分拆之间存在一一映射，从而$(N,n,m)$就是$(x+x^2+\cdots+x^m)^n$的展开式中$x^N$的系数。
+\end{solution}
+\begin{problem}{17}
+   假设$a_{n+1}=(n+1)b_n$，且$a_0=b_0=1$，如果$A(x)$是序列$\{a_n\}$的指数生成函数，$B(x)$是
+   序列$\{b_n\}$的指数生成函数，推导$A(x)$和 $B(x)$之间的关系。 
+\end{problem}
+\begin{solution}
+    \begin{align*}
+        A(x)&=\sum_{n=0}^{\infty}a_n\frac{x^n}{n!}\\
+            &=1+\sum_{n=1}^{\infty}a_n\frac{x^n}{n!}\\
+            &=1+x\sum_{n=1}^{\infty}b_{n-1}\frac{x^{n-1}}{(n-1)!}\\
+            &=1+x\sum_{n=0}^{\infty}b_{n}\frac{x^{n}}{n!}\\
+            &=1+xB(x)\\
+    \end{align*}
+\end{solution}
+\begin{problem}{18}
+   令$h_n$表示具有$n+2$条的凸边形区域被其对角线所分成的区域，假设没有三条对角线共点。定义$h_0=0.$ 
+   证明
+   \[h_n=h_{n-1}+\binom{n+1}{3}+n\qquad(n\geq 1).\]
+   然后确定生成函数，并由此得出$h_n$的公式。
+\end{problem}
+\begin{solution}
+    任取其中$n+2$边形中的三个相邻顶点$A,B,C$，则整个$n+2$边多边形可以分为一个三角形和一个$n+1$边多边形，其内部由不从$A,B,C$引出的弦所分成的区域数便是$h_{n-1}$.
+    在此基础之上，在$n+1$边多边形中任取三个顶点组成一个三角形，其中有且仅有一个顶点能和$A,B,C$中的一点形成连线并与对边相交。这样形成的交点数是$\binom{n+1}{3}$。
+    使得$n+1$边多边形中的区域数又增加了$\binom{n+1}{3}$个。假设这个$n+1$边形的顶点包含$B,C$，则其余顶点与点$A$的连线必会交于$BC$，并分割$ABC$，
+    使得$ABC$共被划分为$n$块。因此
+   \[h_n=h_{n-1}+\binom{n+1}{3}+n\qquad(n\geq 1).\]
+   设生成函数
+   \[g(x)=h_0+h_1x+h_2x^2+\cdots\]
+   则
+   \[g(x)-xg(x)=h_0+(h_1-x_0)x+\cdots=\sum_{n=1}^{\infty}(\binom{n+1}{3}+n)x^n\]
+   所以
+   \[g(x)=\frac{1}{1-x}\sum_{n=1}^{\infty}(\binom{n+1}{3}+n)x^n=\sum_{n=1}^{\infty}\sum_{i=1}^{n}(\binom{i+1}{3}+i)x^n=\sum_{n=1}^{\infty}(\binom{n+2}{4}+\frac{n(n+1)}{2})x^n\]
+\end{solution}
+\begin{problem}{19}
+   如果要把棋盘上偶数个方块染成红色，试确定用红色、白色和蓝色对$1\times n$棋盘的方格染色的方法数。 
+\end{problem}
+\begin{solution}
+    如果第一块不染成红色，则剩余红色方块数仍为偶数，否则为奇数，因此有递推公式
+    \[h_n=2 h_{n-1}+(3^{n-1}-h_{n-1})=h_{n-1}+3^{n-1}=(3^{n-1}+\cdots+3^2)+2=\frac{3^n+1}{2}\]
+\end{solution}
+\end{document}

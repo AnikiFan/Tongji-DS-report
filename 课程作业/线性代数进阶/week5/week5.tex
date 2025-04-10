@@ -1,0 +1,34 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW5}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+
+\maketitle
+\begin{problem}{2.4.5}
+   求点$P(2,3,-1)$到直线
+   \[ 
+   \begin{cases}
+    2x-2y+z+3=0\\
+    3x-2y+2z+17=0\\
+   \end{cases} 
+   \] 
+   的距离和垂线方程。
+\end{problem}
+\begin{solution}
+直线的方向向量为$\vec{d}=(2,-2,1)\times(3,-2,2)=(-2,-1,2)$，且点$(-11,-11,-3)$在该直线上。
+设垂足为$M(-11-2t,14+t,2-2t)$，则$\overrightarrow{PM}=(13+2t,14+t,2-2t)$。因为垂直，所以有
+\[\overrightarrow{PM}\cdot\vec{d}=0\]
+解得$t=-4$。所以垂足为$(-3,-7,-11)$，距离为$\sqrt{5^2+10^2+10^2}=15$，垂线方向向量为$\overrightarrow{PM}=(5,10,10)$，
+所以垂线方程为
+\[x-2=\frac{y-3}{2}=\frac{z+1}{2}\]
+\end{solution}
+\end{document}

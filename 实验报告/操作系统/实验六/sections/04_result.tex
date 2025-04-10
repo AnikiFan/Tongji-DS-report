@@ -1,0 +1,99 @@
+\section{实验结果}
+\subsection{修改后的 \texttt{MemoryDescriptor.h}}
+　　修改后的 \texttt{MemoryDescriptor.h}如代码\ref{lst:h}所示。
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+//略去注释
+#ifndef MEMORY_DESCRIPTOR_H
+#define MEMORY_DESCRIPTOR_H
+#include "PageTable.h"
+class MemoryDescriptor
+{
+public:
+    static const unsigned int USER_SPACE_SIZE    = 0x800000; 
+    static const unsigned int USER_SPACE_PAGE_TABLE_CNT = 0x2;
+    static const unsigned long USER_SPACE_START_ADDRESS        = 0x0;
+public:
+    MemoryDescriptor();
+    ~MemoryDescriptor();
+public:
+    void MapToPageTable();
+    unsigned long GetTextStartAddress();
+    unsigned long GetTextSize();
+    unsigned long GetDataStartAddress();
+    unsigned long GetDataSize();
+    unsigned long GetStackSize();
+private:
+    unsigned int MapEntry(unsigned long virtualAddress, unsigned int size, unsigned long phyPageIdx, bool isReadWrite);
+    PageTable*        UserPageTableArray;
+public:
+    unsigned long    m_TextStartAddress;    /* 代码段起始地址 */
+    unsigned long    m_TextSize;            /* 代码段长度 */
+    unsigned long    m_DataStartAddress; /* 数据段起始地址 */
+    unsigned long    m_DataSize;            /* 数据段长度 */
+    unsigned long    m_StackSize;        /* 栈段长度 */
+};
+#endif
+    \end{minted}
+    \caption{MemoryDescriptor.h}\label{lst:h}
+\end{listing}
+\subsection{修改后的 \texttt{MemoryDescriptor.cpp}}
+　　修改后的 \texttt{MemoryDescriptor.cpp}如代码\ref{lst:cpp}所示。
+
+\begin{listing}[!h]
+    \begin{minted}{c}
+// 略去头文件
+unsigned int MemoryDescriptor::MapEntry(unsigned long virtualAddress, unsigned int size, unsigned long phyPageIdx, bool isReadWrite)
+{    
+    unsigned long address = virtualAddress - USER_SPACE_START_ADDRESS;
+    //计算从pagetable的哪一个地址开始映射
+    unsigned long startIdx = address >> 12;
+    unsigned long cnt = ( size + (PageManager::PAGE_SIZE - 1) )/ PageManager::PAGE_SIZE;
+    PageTableEntry* entrys = (PageTableEntry*)this->UserPageTableArray;
+    for ( unsigned int i = startIdx; i < startIdx + cnt; i++, phyPageIdx++ )
+    {
+        entrys[i].m_Present = 0x1;
+        entrys[i].m_ReadWriter = isReadWrite;
+        entrys[i].m_PageBaseAddress = phyPageIdx;
+    }
+    return phyPageIdx;
+}
+// 略去成员访问函数
+void MemoryDescriptor::MapToPageTable()
+{
+    User& u = Kernel::Instance().GetUser();
+    this->UserPageTableArray = Machine::Instance().GetUserPageTableArray();
+    unsigned int textAddress = 0,dataAddress=0,stackAddress=0;
+    if ( u.u_procp->p_textp != NULL )
+    {
+        textAddress = u.u_procp->p_textp->x_caddr;
+    }
+    if ( u.u_procp->p_addr != NULL )
+    {
+        dataAddress = u.u_procp->p_addr + PageManager::PAGE_SIZE;
+    }
+    for (unsigned int i = 0; i < Machine::USER_PAGE_TABLE_CNT; i++)
+    {
+        for ( unsigned int j = 0; j < PageTable::ENTRY_CNT_PER_PAGETABLE; j++ )
+        {
+            this->UserPageTableArray[i].m_Entrys[j].m_Present = 0;   //先清0
+        }
+    }
+    unsigned int phyPageIndex = textAddress>>12;
+    /* 以相对起始地址phyPageIndex为0，为正文段建立相对地址映照表 */
+    this->MapEntry(m_TextStartAddress, m_TextSize, phyPageIndex, false);
+    phyPageIndex = dataAddress >> 12;
+    /* 以相对起始地址phyPageIndex为1，ppda区占用1页4K大小物理内存，为数据段建立相对地址映照表 */
+    phyPageIndex = this->MapEntry(m_DataStartAddress, m_DataSize, phyPageIndex, true);
+    /* 紧跟着数据段之后，为堆栈段建立相对地址映照表 */
+    unsigned long stackStartAddress = (USER_SPACE_START_ADDRESS + USER_SPACE_SIZE - m_StackSize) & 0xFFFFF000;
+    this->MapEntry(stackStartAddress, m_StackSize, phyPageIndex, true);
+    this->UserPageTableArray[0].m_Entrys[0].m_Present = 1;
+    this->UserPageTableArray[0].m_Entrys[0].m_ReadWriter = 1;
+    this->UserPageTableArray[0].m_Entrys[0].m_PageBaseAddress = 0;
+    FlushPageDirectory();
+}
+    \end{minted}
+    \caption{MemoryDescriptor.cpp}\label{lst:cpp}
+\end{listing}

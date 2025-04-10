@@ -1,0 +1,91 @@
+\subsection{三数之和}
+\begin{formal}
+    {\cuhei 问题描述：}
+
+    给你一个整数数组 $nums$ ，判断是否存在三元组 $[nums[i], nums[j], nums[k]]$ 满足 $i \neq j,i \neq k$ 且 $j \neq k$ ，同时还满足 $nums[i] + nums[j] + nums[k] == 0$ 。请你返回所有和为 0 且不重复的三元组，每个三元组占一行。
+\end{formal}
+\begin{formal}
+    {\cuhei 输入要求：}
+
+    2行。第1行一个整数，表示数组元素个数；
+    第2行输入一组整数，中间以空格分隔。
+\end{formal}
+\begin{formal}
+    {\cuhei 输出要求：}
+
+    输出所有和为0的三元组，每个三元组一行，中间以空格分隔。
+    对于每一个三元组，你需要按从小到大的顺序依次返回三个元素；
+    对于所有三元组，你需要按三元组中最小元素从小到大的顺序依次打印每一组三元组。
+\end{formal}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[name=Q1]
+int nums[MAXN];
+int sums[MAXN]; //存储所有2组合之和
+\end{lstlisting}
+\subsubsection{功能描述}
+\begin{function}
+    \SetKwFunction{Swap}{Swap}
+    \SetKwFunction{Heapify}{Heapify}
+    max = i\;
+    \lIf{$2i\leq size$ and nums[2i]>nums[max]}{max = 2i}
+    \lIf{$2i+1\leq size$ and nums[2i+1]>nums[max]}{max = 2i+1}
+    \If{$max\neq i$}
+    {\Swap(nums[max],nums[i])\;
+        \Heapify(nums,max,size) \;
+    }
+    \caption{Heapify(nums,i,size)}
+\end{function}
+\begin{function}
+    \SetKw{downto}{downto}
+    \lFor{i = $\lfloor n/2\rfloor$ \downto 1}
+    {\Heapify(nums,i)}
+    \caption{Build-Heap(nums)}
+\end{function}
+\begin{algorithm}[H]
+    \SetKwFunction{build}{Build-Heap}
+    \build(nums)\;
+    \For{i = nums.length \downto 2}
+    {
+        \Swap(nums[1],nums[i])\;
+        \Heapify(nums,1,i-1)
+    }
+    \caption{Heap-Sort(nums)}
+\end{algorithm}
+\begin{function}[H]
+    \SetKwFunction{Heap}{Heap-Sort}
+    \SetKwFunction{Binary}{Binary-Search}
+    \SetKwFunction{print}{print}
+    \Heap(nums)\;
+    \SetKw{NIL}{NIL}
+    i = 1\;
+    \While{nums[i]$\leq$0}
+    {
+        l = i+1\;
+        r = nums.length\;
+        \While{l<r}
+        {
+            \uIf{nums[i]+num[l]+num[r]==0}
+            {
+                \print(nums[i],num[l],num[r])\;
+                \lWhile(\tcp*[h]{确保不会重复}){nums[l]==nums[l+1]}{l=l+1}
+                l = l+1\;
+                \lWhile(\tcp*[h]{确保不会重复}){nums[r]==nums[r-1]}{r=r-1}
+                r = r-1\;
+            }
+            \uElseIf{nums[i]+nums[l]+nums[r]<0}
+            {
+                l = l +1\;
+            }
+            \Else{r = r-1\;}
+        }
+        \lWhile(\tcp*[h]{确保不会重复}){nums[i]==nums[i+1]}{i=i+1}
+        i = i+1\;
+    }
+    \caption{Triple-Sum(nums)}
+\end{function}
+\subsubsection{调试分析}
+一开始调试遇到的主要问题：即使已经在9，11行处确保了l，r不会重复，但是仍然会输出重复的三元组。经过分析后发现还需要用同样的
+方式确保i，添加了19行后便能正确运行。
+\subsubsection{总结和体会}
+该题的难点在于如何在较低的时间复杂度内求出所有的符合要求的三元组。如果使用暴力枚举，则需要 $O(n^3)$的时间复杂度。这里我使用了
+双指针的方法，使得时间复杂度降为 $O(n^2)$。还有一个难点是满足“不重复”的需求，代码中有三处需要进行相应的修改。

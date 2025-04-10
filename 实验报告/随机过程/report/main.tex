@@ -1,0 +1,119 @@
+\documentclass{beamer}
+\usepackage{amsfonts,amsmath,oldgerm}
+\usetheme{sintef}
+\usepackage{xeCJK}
+
+
+\newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\usefonttheme[onlymath]{serif}
+
+\titlebackground*{assets/background}
+
+\newcommand{\hrefcol}[2]{\textcolor{cyan}{\href{#1}{#2}}}
+
+\title{随机过程}
+\subtitle{报告副标题}
+% \course{Master's Degree in Computer Science}
+\author{作者1 \thanks{Tongji University}、作者2 \thanks{Department of Computer Science and Technology}}
+% \IDnumber{1234567}
+\date{December 21st, 2024}
+
+\begin{document}
+\maketitle
+
+\section{Sparse Gaussian Process}
+\begin{frame}{Gaussian Process with Pseudo Data}
+Snelson and Ghahramani proposes the idea of having pseudo data\cite{NIPS2005_4491777b} , which is later referred to as Fully independent training condition(FITC).
+
+\begin{block}{Key Idea}
+Augment the training data $(\mathbf{X},\mathbf{y})$ with pseudo data $\mathbf{u}$ at location $\mathbf{Z}$.
+% Then try to use $\mathbf{K}_{\mathbf{MM}}$ and  $\mathbf{K}_{\mathbf{NM}}$ to approxiate $\mathbf{K}_{\mathbf{NN}}$
+
+\[
+      p\left(
+            \begin{bmatrix}
+            \mathbf{y} \\ \mathbf{u}
+            \end{bmatrix}
+            \Bigg| 
+            \begin{bmatrix}
+            \mathbf{X} \\ \mathbf{Z}
+            \end{bmatrix}
+            \right)
+            =
+            \mathcal{N}\left(
+            \begin{bmatrix}
+            \mathbf{y} \\ \mathbf{u}
+            \end{bmatrix}\Bigg|
+            \mathbf{0}, 
+            \begin{bmatrix}
+            \mathbf{K}_{\mathbf{NN}}+\sigma^2\mathbf{I}_{\mathbf{N}} & \mathbf{K}_{\mathbf{NM}} \\
+            \mathbf{K}_{\mathbf{NM}}^\top & \mathbf{K}_{\mathbf{MM}}
+            \end{bmatrix}
+            \right)
+\]
+
+where
+$\mathbf{K}_{\mathbf{NN}} = \mathbf{K}(\mathbf{X}, \mathbf{X}),
+\mathbf{K}_{\mathbf{NM}} = \mathbf{K}(\mathbf{X}, \mathbf{Z}),
+\mathbf{K}_{\mathbf{MM}} = \mathbf{K}(\mathbf{Z}, \mathbf{Z})$ and $\mathbf{Z}$ is the cluster centroids returned by the K-means algorithm.
+Assuming that $\mathbf{y}$ and $f(\mathbf{X}_*)$, where $\mathbf{X}_*$ are the test inputs, are conditionally independent given $\mathbf{u}$, we have
+$Cov(f(\mathbf{X}_*),\mathbf{y}) = \mathbf{K}_{*M}\mathbf{K}_{MM}^{-1}\mathbf{K}_{MN}$
+
+\end{block}
+\end{frame}
+\begin{frame}{Gaussian Process with Pseudo Data}
+\begin{itemize}
+      \item Thanks to the marginalization property of Gaussian distribution,
+      \[p(\mathbf{y}|\mathbf{X})=\int_{\mathbf{u}}p(\mathbf{y},\mathbf{u}|\mathbf{X},\mathbf{Z})\]
+      \item Further re-arrange the notation:
+      \[p(\mathbf{y},\mathbf{u}|\mathbf{X},\mathbf{Z})=p(\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z})p(\mathbf{u}|\mathbf{X},\mathbf{Z})=p(\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z})p(\mathbf{u}|\mathbf{Z})\]
+      where 
+      $p (\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z}) = \mathcal{N}(\mathbf{y}|\mathbf{K}_{\mathbf{NM}}\mathbf{K}^{-1}_{\mathbf{MM}}\mathbf{u},\mathbf{K}_{\mathbf{NN}}-\mathbf{K}_{\mathbf{NM}}\mathbf{K}_{\mathbf{MM}}^{-1}\mathbf{K}_{\mathbf{NM}}^{\top}) + \sigma^2\mathbf{I}$,
+      $p(\mathbf{u}|\mathbf{Z})                        = \mathcal{N}(\mathbf{u}|0,\mathbf{K}_{\mathbf{MM}})$
+\end{itemize}
+\end{frame}
+\begin{frame}{FITC Approximation}
+      \begin{block}{Key Idea}
+            The FITC (Fully Independent Training Conditional) approxiamtion assuames 
+      \[\tilde{p} (\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z}) = \mathcal{N}(\mathbf{y}|\mathbf{K}_{\mathbf{NM}}\mathbf{K}^{-1}_{\mathbf{MM}}\mathbf{u},diag[\mathbf{K}_{\mathbf{NN}}-\mathbf{Q}_{\mathbf{NN}}] + \sigma^2\mathbf{I}_{\mathbf{N}}),\]
+      where $\mathbf{Q}_{\mathbf{NN}} = \mathbf{K}_{\mathbf{NM}}\mathbf{K}_{\mathbf{MM}}^{-1}\mathbf{K}_{\mathbf{NM}}^{\top}$
+      \end{block}
+      \begin{itemize}
+            \item Marginalize $\mathbf{u}$ from the model definition:
+      \[\tilde{p} (\mathbf{y}|\mathbf{X},\mathbf{Z}) = \mathcal{N}(\mathbf{y}|0,\mathbf{Q}_{\mathbf{NN}}+diag[\mathbf{K}_{\mathbf{NN}}-\mathbf{Q}_{\mathbf{NN}}] + \sigma^2\mathbf{I}_{\mathbf{N}})=\mathcal{N}(\mathbf{y}|\mathbf{Q}_{\mathbf{NN}}+\mathbf{D}_{\mathbf{N}}):=\mathcal{N}(\mathbf{y}|\mathbf{K}_*).\]
+            where $\mathbf{D}_{\mathbf{N}} = diag[\mathbf{K}_{\mathbf{NN}}-\mathbf{Q}_{\mathbf{NN}}] + \sigma^2\mathbf{I}_{\mathbf{N}}$
+      \end{itemize}
+\end{frame}
+\begin{frame}{FITC Approximation}
+      \begin{itemize}
+            \item Start by considering the Cholesky decomposition $\mathbf{K}_{\mathbf{MM}}=\mathbf{U}_{\mathbf{M}}\mathbf{U}_{\mathbf{M}}^{\top}$.(\textcolor{red}{$\mathcal{O}(M^3)$})
+            \item We have $\mathbf{Q}_{\mathbf{NN}}=\mathbf{V}_{\mathbf{MN}}^{\top}\mathbf{V}_{\mathbf{MN}}$,where $\mathbf{V}_{\mathbf{MN}} = \mathbf{U}_{\mathbf{M}}^{-1}\mathbf{K}_{\mathbf{MN}}$.(\textcolor{red}{$\mathcal{O}(M^2N)$})
+            \item The log-determinant term $\log(\lvert \mathbf{K}_*\rvert)$ can be rewritten as
+            \[
+                  \log(\lvert\mathbf{V}^{\top}\mathbf{V} +\mathbf{D}_{\mathbf{N}}\rvert )= \log(\lvert\mathbf{D}_{\mathbf{N}}\rvert\cdot\lvert \mathbf{I}_{\mathbf{M}}+\mathbf{V}\mathbf{D}_{\mathbf{N}}^{-1}\mathbf{V}^{\top}\rvert)=\sum_i\log(\mathbf{d}_i)+2\sum_i\log(\mathbf{L}_{ii}),
+            \]
+            where $\mathbf{d}_i$ is the $i$th diagonal terms of $\mathbf{D}_{\mathbf{N}}$, $\mathbf{L}_{\mathbf{M}}\mathbf{L}_{\mathbf{M}}^{\top}=\mathbf{I}_{\mathbf{M}}+\mathbf{V}_{\mathbf{MN}}\mathbf{D}_{\mathbf{N}}^{-1}\mathbf{V}_{\mathbf{MN}}^{\top}$.(\textcolor{red}{$\mathcal{O}(M^2N)$})
+            \item Using Woodbury formula, we have:
+            \[
+                  \mathbf{K}_*^{-1} = \mathbf{D}^{-1}-\mathbf{D}^{-1} \mathbf{V}^{\top} (\mathbf{I}_{\mathbf{M}}+\mathbf{V}\mathbf{D}_{\mathbf{N}}^{-1}\mathbf{V}^{\top})^{-1}  \mathbf{V} \mathbf{D}^{-1}
+                   = \mathbf{D}^{-1}-(\underbrace{\mathbf{L}^{-1}\mathbf{V}\mathbf{D}^{-1}}_{\textcolor{red}{\mathcal{O}(M^2N)}})^{\top}(\mathbf{L}^{-1}\mathbf{V}\mathbf{D}^{-1}).
+            \]
+            
+      \end{itemize}
+\end{frame}
+
+\section{Appendix}
+\begin{frame}
+      \frametitle{Reference}
+      \begin{thebibliography}{10}
+            \setbeamertemplate{bibliography item}[text]
+            \bibitem{NIPS2005_4491777b}
+            Snelson, Edward and Zoubin Ghahramani. “Sparse Gaussian Processes using Pseudo-inputs.” Neural Information Processing Systems (2005).
+            \bibitem{BIJL2015703}
+            Hildo Bijl, Jan-Willem van Wingerden, Thomas B. Schön, Michel Verhaegen, Online sparse Gaussian process regression using FITC and PITC approximations
+      \end{thebibliography}
+\end{frame}
+\backmatter
+\end{document}
+

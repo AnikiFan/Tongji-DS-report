@@ -1,0 +1,247 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW2}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\begin{problem}{2}
+    求从1到500的整数中能被3和5整除，但不能被7整除的数的个数。
+\end{problem}
+\begin{solution}
+    \[\lfloor500/3\rfloor=166,\lfloor500/5\rfloor=100,\lfloor500/7\rfloor=71,\lfloor500/15\rfloor=33,\lfloor500/15\rfloor=21,\lfloor500/35\rfloor=14,\lfloor500/105\rfloor=4\]
+    从韦恩图中可知：
+    \[N=\lfloor500/3\rfloor+\lfloor500/5\rfloor-\lfloor500/15\rfloor-\lfloor500/105\rfloor=229\]
+\end{solution}
+\begin{problem}{4}
+   求多重集合 $S=\{\infty\cdot a,3\cdot b,5\cdot c,7\cdot d\}$ 的10组合数。
+\end{problem}
+\begin{solution}
+    记不定方程 $x_1+x_2+x_3+x_4=10$的非负整数解组成的集合为 $S$， 由其中满足 $x_i> a_i$的解组成的子集为 $A_i$，$(i=1,2,3;a_1=3,a_2=5,a_3=7)$
+
+    则所求个数为
+    \[
+    \begin{array}{rl}
+    N&=\lvert S\rvert-\sum_i\lvert A_i\rvert+\sum_{i\neq j}\lvert A_i\cap A_j\rvert+\lvert\bigcap_i A_i\rvert\\
+    &=\binom{10+3}{3}-(\binom{10-4+3}{3}+\binom{10-6+3}{3}+\binom{10-8+3}{3})+(\binom{10-10+3}{3}+0+0)-0\\
+    &=158
+    \end{array}
+\]
+\end{solution}
+\begin{problem}{8}
+   求多重集合 $S = \{3\cdot a,4\cdot b,2\cdot c\}$的全排列数，使得在这些排列中同一个字母的全体不能相邻。 
+\end{problem}
+\begin{solution}
+ 记由 $S$的全排列组成的集合为 $P$，记由其中出现了a、b、c的全体均相邻的情况的元素组成的子集分别为 $A_i$，则由容斥原理可知，所求个数为   
+   \[
+    \begin{array}{rl}
+    N&=\lvert P\rvert-\sum_i\lvert A_i\rvert+\sum_{i\neq j}\lvert A_i\cap A_j\rvert+\lvert\bigcap_i A_i\rvert\\
+    &=\frac{9!}{3!4!2!}-(\frac{7!}{1!4!2!}+\frac{6!}{3!1!2!}+\frac{8!}{3!4!1!})+(\frac{4!}{2!}+\frac{6!}{4!}+\frac{5!}{3!})-3!\\
+    &=871
+    \end{array}
+\]
+其中在计算 $A_i$时，将对应的相邻字母全体视为一个整体来计算全排列。
+\end{solution}
+\begin{problem}{11}
+    定义 $D_0=1$，用组合分析的方法证明
+    \[n! = \binom{n}{0}D_n+\binom{n}{1}D_{n-1}+\binom{n}{2}D_{n-2}+\cdots+\binom{n}{n}D_0.\]
+\end{problem}
+\begin{solution}
+    左右两边都是集合 $\{1,\cdots,n\}$的全排列的个数。
+
+    左侧是根据第 $1,2\cdots,n$位上的可能取值个数，使用乘法法则计算。
+
+    右侧是根据排列中的错位的数字个数进行加法法则， $\binom{n}{i}$为错位的 $i$的数字的可能组合，确定好错位的数字后，$D_i$为使得这 $i$个数字错位的排列个数，即错排数 $D_i$，然后使用乘法法则得到 $\binom{n}{i}D_i$
+\end{solution}
+\begin{problem}{12}
+   计算机系中有三个运动队，每人一套运动服。现计算机系中有足球服38套，篮球服15套，排球服20套。三个运动队共有58人，
+   其中只有3人同时是三个队的队员，问恰好参加两个队的人数以及至少参加两个队的人数。 
+\end{problem}
+\begin{solution}
+    设由这三个运动队中的队员组成的集合为 $S$，其中由足球队、篮球队、排球队队员组成的子集分别为 $A_1,A_2,A_3$。
+
+    设 $\lvert A_iA_{i+1}\rvert=x_i,i=1,2,\lvert A_1A_3\rvert=x_3$.
+
+    则
+    \[
+        \lvert S\rvert=38+15+20-(x_1+x_2+x_3)+3=58\\
+    \]
+    从而恰好参加两个队的人数为 
+    \[x_1+x_2+x_3-3\cdot 3=9\]
+    至少参加两队的人数为
+    \[9+3=12\]
+\end{solution}
+\begin{problem}{17}
+    一书架有 $m$层，分别放置 $m$类不同种类的书，每层 $n$册。现将书架上的图书全部取出清理，清理过程中要求不打乱图书所在的类别，试问：
+    \begin{enumerate}
+        \item  $m$类图书全不再各自原来层次上的方案数有多少？
+        \item 每层的 $n$本书都不在原来位置上的方案数有多少？
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 将每一类书视为整体，则有 $D_m$
+        \item 先将各类书视为整体，按照不在原来各自层次上的类数使用加法法则。确定好每类所在层后，如果某一类的书不在原来层次，则该类图书在该层的放置方法无限制，可取全排列；否则，要满足错排要求。所以有：
+        \[N=\sum_{i=0}^{m}\binom{m}{i}D_i(n!)^iD^{m-i}_{n}\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{19}
+   试求由 $\sum_{d\mid n}g(d)=5$所定义的数论函数 $g(n)$. 
+\end{problem}
+\begin{solution}
+    令 $f(n)=5$，则 
+    \[g(n)=\sum_{d\mid n}\mu(d)f(\frac{n}{d})=5\sum_{d\mid n}\mu(d)\]
+    所以 
+    \[g(n)=\begin{cases}
+        5&n=1,\\
+        0&n>1
+    \end{cases}\]
+\end{solution}
+\begin{problem}{25}
+   5名旅客 $P_1,\cdots,P_5$要去5个地方 $C_1,\cdots,C_5$，其中， $P_1$不愿意去 $C_1,C_3$； $P_2$不愿意去 $C_4$； $P_3$不愿意去 $C_2,C_5$；
+   $P_4$不愿意去 $C_2$； $P_5$不愿意去 $C_1,C_3$。问 $P_1$去 $C_5$的概率有多少？ 
+\end{problem}
+\begin{problem}{28}
+   利用容斥原理证明
+   \[\sum_{k=0}^m(-1)^k\binom{m}{k}\binom{n+m-k-1}{n}=\binom{n-1}{m-1}\quad(n\geq 1,m\geq 1).\] 
+\end{problem}
+\begin{solution}
+    右侧 $\binom{n-m+(m-1)}{m-1}=\binom{n-1}{m-1}$即不定方程 $x_1+\cdots+x_m=n$的正整数解的个数。
+
+    左边则是运用容斥原理。记该不定方程的非负整数解集为 $S$，由其中满足 $x_i=0$的解组成的子集为 $A_i,i=1,\cdots,m$.下面求 $\lvert\bigcap_i \bar{A_i}\rvert$，即不定方程 $x_1+\cdots+x_m=n$的正整数解的个数。
+
+    令$\bigcap_{i\in \varnothing}A_i=S$.  当指标集 $I\subseteq\{1,\cdots,m\},\lvert I\rvert=k$时， $\lvert \bigcap_{i\in I}A_i\rvert$为 $y_1+\cdots+y_m=n-k$的非负整数解的个数 $\binom{n-k+m-1}{m-1}$，其中
+    $y_i=x_i-1,i\in I,y_j=x_j,j\notin I$.而 $\binom{m}{k}$即为满足上述要求的指标集个数。所以结合容斥原理有左式
+    \[ \lvert\bigcap_i \bar{A_i}\rvert=\sum_{k=0}^m(-1)^k\sum_{\lvert I\rvert=k}\lvert\bigcap_{i\in I}A_i\rvert=\sum_{k=0}^m(-1)^k\binom{m}{k}\binom{n+m-k-1}{n}\]
+\end{solution}
+\begin{problem}{30}
+   利用容斥原理证明
+   \[\sum_{k=0}^{m}(-1)^k\binom{m}{k}\binom{n-k}{r}=\binom{n-m}{r-m}\quad (n\geq r\geq m\geq 0).\] 
+\end{problem}
+\begin{solution}
+    等式右侧是集合 $\{1,\cdots,n\}$的包含 $\{1,\cdots,m\}$的 $r$元子集的个数。
+
+    左侧是根据 $\{1,\cdots,r\}$中的各个元素是否在所挑选的子集中使用容斥原理。
+
+    记由集合 $\{1,\cdots,n\}$的 $r$元子集组成的集合为 $S$，由其中满足性质“不包含 $\{i\}$ ”的元素所组成的子集为 $A_i,i=1,\cdots,m$.
+     令$\bigcap_{i\in \varnothing}A_i=S$. 从而等式右边也等于 
+    \[ \lvert\bigcap_i \bar{A_i}\rvert=\sum_{k=0}^m(-1)^k\sum_{\lvert I\rvert=k}\lvert\bigcap_{i\in I}A_i\rvert=\sum_{k=0}^m(-1)^k\binom{m}{k}\lvert\bigcap_{i\in I}A_i\rvert\]
+    其中
+    \[\lvert\bigcap_{i\in I}A_i\rvert=\binom{n-k}{r}\]
+    这是因为 $n$个元素中已经有 $k$个元素被确定不包含在 $r$元子集中，所以等于从 $n-k$个元素中取 $r$元子集的个数。从而等式成立。
+\end{solution}
+\end{document}

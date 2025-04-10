@@ -1,0 +1,144 @@
+\documentclass[11pt,
+  % twoside,
+  logo = {example-image},
+  % logo height = 1cm,  % logo width = 2cm,
+  title in boldface,
+  % title in sffamily,
+  theorem in new line,
+  % remove qed,
+  colored solution,
+]{homework}
+
+%% For highlighting the code in this document
+\usepackage{newverbs}
+\newverbcommand{\cverb}{\color{red!50!orange}}{}
+
+%% Below is the main document
+
+
+\UseLanguage{Traditional Chinese}
+
+
+\title{學科名稱，第一周}
+\author{作者}
+% \date{\today，地點}
+% \date{\today[only-year-month]，地點}
+\date{\TheDate{2024-01-01}，地點}
+
+
+\begin{document}
+
+
+\textcolor{gray!55}{（如果你打算直接寫出解答…）}
+
+\begin{problem}
+    這裡是解答/證明。
+\end{problem}
+
+
+\bigskip\textcolor{gray!55}{（如果你打算先陳述問題後再寫出解答…）}
+
+\begin{problem}[問題簡介]
+    你可以把問題陳述在這裡…
+\end{problem}
+
+\begin{solution}
+    …然後把解答寫在這裡…
+\end{solution}
+
+\bigskip\textcolor{gray!55}{（如果比起\textquote{解}，你更希望寫\textquote{證明}…）}
+
+\begin{solution}[證明]
+    …或者寫一個這樣的證明…
+    \begin{lemma}[你可以在這裡寫一些註釋]\label{lem}
+        一些輔助結果。
+    \end{lemma}
+    \begin{proof}
+        這是\cref{lem}的證明，其中用到下面的公式（注意使用 \cverb|\qedhere|）：
+        \[
+            \infty = \infty + 1
+            \makebox[0pt][l]{\,。} % 句尾的句號
+            \qedhere               % 用來把 Q.E.D. 符號放在正確的位置
+        \]
+    \end{proof}
+    \begin{fact}[這個結論無須證明]
+        \proofless
+        使用 \cverb|\proofless| 可以將標記定理結束的空心方框變成實心方框。
+    \end{fact}
+    …剩餘的步驟…
+\end{solution}
+
+\bigskip\textcolor{gray!55}{（寫\textquote{答}也是可以的…）}
+
+\begin{answer}
+    \verb|answer| 環境的用法和 \verb|solution| 是完全相同的。
+\end{answer}
+
+
+\enlargethispage*{\baselineskip}
+
+
+\bigskip\textcolor{gray!55}{（或者如果你更喜歡傳統的證明樣式…）}
+
+\begin{proof}
+    \verb|proof| 環境仍可使用。
+\end{proof}
+
+
+\bigskip\textcolor{gray!55}{（如果你想為一個大問題中的每個小問題分別撰寫解答…）}
+
+\begin{problem}[一個由許多小問題構成的大問題]
+    \begin{enumerate}
+        \item 第一個問題。
+
+        \begin{solution}
+            第一個問題的解答。
+        \end{solution}
+
+        \item 第二個問題。
+
+        \begin{enumerate}
+            \item 第一個小問。
+
+            \begin{solution}
+                第一個小問的解答。
+            \end{solution}
+
+            \item 第二個小問。
+
+            \begin{solution}
+                第二個小問的解答。
+            \end{solution}
+
+        \end{enumerate}
+
+        \item 第三個問題。
+
+        \begin{solution}
+            第三個問題的解答。
+        \end{solution}
+
+    \end{enumerate}
+    在末尾使用 \cverb|\noqed|（或 \cverb|\noQED|）可以取消用於標記當前問題結束的方框。
+    \noQED
+\end{problem}
+
+
+\bigskip\textcolor{gray!55}{（如果你希望手動編號一個習題…）}
+
+\ManualNumbering{exercise}{A.1.1}
+\begin{exercise}[一個手動編號的習題]
+    使用 \cverb|\ManualNumbering| 以手動對某個習題進行編號。 這個編號只會影響下一個被指定的環境。
+\end{exercise}
+
+\begin{exercise}
+    之後編號便會恢復正常。
+\end{exercise}
+
+
+\bigskip\textcolor{gray!55}{（如果你有暫時解決不出來的問題…）}
+
+\DNF<一些描述>
+
+
+\end{document}

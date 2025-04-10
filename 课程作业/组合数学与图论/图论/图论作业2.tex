@@ -1,0 +1,220 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{图论作业2}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\begin{problem}{1}
+   对$\lvert V\rvert$进行数学归纳。当$\lvert V\rvert=0,1$时，显然命题成立。假设当$\lvert V\rvert\leq k$时命题成立，
+   当$\lvert V\rvert=k+1$时，由于至少有一个叶子结点$v$，设它与顶点$u$相邻。若对于该树存在完全匹配$P_{V}$，显然$P_{V}=P_{V\backslash{\{u,v\}}}\cup\{uv\}$ ，且由于归纳假设$P_{V\backslash\{u,v\}}$是唯一的，所以$P_V$也是唯一的。
+
+   因此，任何树至多有一个完美匹配。
+\end{problem}
+\begin{problem}{2}
+   只需证明当$\lvert E\rvert = \lfloor n^2/4\rfloor +1$时，$t(G)\geq \lfloor n/2\rfloor$即可。 
+
+    当$n\geq 3$时，无论$n$的奇偶性，均有$\lfloor n/2\rfloor\lceil n/2\rceil = \lfloor n^2/4\rfloor$。因此，
+    取完全二部图$K_{\lfloor n/2\rfloor,\lceil n/2\rceil}$，因为此时$\lceil n/2\rceil\geq 2$，所以可以在顶点数$\lceil n/2\rceil$的一侧
+    取两个点，并将它们连接起来，得到一个$m=\lfloor n^2/4\rfloor +1$的图，同时，由于该图是在完全二部图的基础上得到的，选取的两个点都与
+    另一侧的顶点相邻，从而有$t(G)\geq \lfloor n/2\rfloor$
+\end{problem}
+\begin{problem}{3}
+   由于图\ref*{q31}中的着色方案的存在，所以$R(P_3,C_4)\geq 5$。下面证明$R(P_3,C_4)\leq 5$。只需证明对于任意一个$K_5$的红蓝二着色，必能得到一个
+   蓝色的$P_3$或红色的$C_4$。
+
+   \begin{figure}[!h]
+    \centering
+    \includegraphics*[scale = 0.3]{q31.png}
+    \caption{$K_4$的一种二着色方案}\label{q31}
+   \end{figure} 
+
+   $K_5$中，必存在一个顶点，有偶数个蓝边与其邻接。事实上，如果不存在，则蓝边与顶点相邻接的次数为奇数，与握手定理矛盾。不妨设这个顶点为$v_1$。
+
+   当有$4$条蓝边与其邻接时，若不存在蓝色的$P_3$，则没有蓝边与$v_2,v_3,v_4,v_5$邻接，从而它们形成一个红色的$C_4(v_2\rightarrow v_5\rightarrow v_3\rightarrow v_4 \rightarrow v_2)$。
+     \begin{figure}[!h]
+    \centering
+    \includegraphics*[scale = 0.3]{q32.png}
+    \caption{有四条蓝边与$v_1$邻接}\label{q32}
+   \end{figure} 
+
+   当有$2$条蓝边与其邻接时，若不存在蓝色的$P_3$，则没有蓝边与$v_2,v_5$邻接，从而它们形成一个红色的$C_4(v_2\rightarrow v_5\rightarrow v_3\rightarrow v_4 \rightarrow v_2)$。
+  \begin{figure}[!h]
+    \centering
+    \includegraphics*[scale = 0.3]{q33.png}
+    \caption{有两条蓝边与$v_1$邻接}\label{q33}
+   \end{figure} 
+
+   当有$0$条蓝边与其邻接时，若不存在红色的$P_3$，显然对于$v_2,v_3,v_4,v_5$，在图\ref*{q34}的基础上至多分别新增一条红边与它们邻接。但是如果
+   只与两条红色边邻接，则回到了上一种情况。所以在图\ref*{q34}中，其余边都是蓝边，但是这时显然存在蓝色$P_3$。
+  \begin{figure}[!h]
+    \centering
+    \includegraphics*[scale = 0.3]{q34.png}
+    \caption{有零条蓝边与$v_1$邻接}\label{q34}
+   \end{figure} 
+
+   综上，$R(P_3,C_4)\geq 5$，因此$R(P_3,C_4)=5$。
+\end{problem}
+\begin{problem}{4}
+    
+\end{problem}
+\begin{problem}{22}
+    若一条边为某个三角形的最长边，则将其染为红色，剩余边染为蓝色。由于$R(3,3)=6$，所以必有一个蓝色三角形或红色三角形。但是因为每个三角形必有一条最长边，即
+    必有一条红边，所以一定能得到一个红色三角形。该红色三角形的最短边便是另一个三角形的最长边。
+\end{problem}
+\begin{problem}{23}
+    对于$K_{n(r_{n-1}-1)+2}$中的任一顶点$v$，由鸽笼原理可知，至少存在一种颜色$\alpha$，有$r_{n-1}$条这种颜色的边与其邻接。
+    记这些边的另一端的顶点为$v_1,\cdots,v_{r_{n-1}},\cdots$。若存在$1\leq i<j$，使得$v_iv_j$的颜色也为$\alpha$，则
+    得到一个同色三角形$vv_iv_j$。否则，$v_1,\cdots,v_{r_{n-1}}$的诱导子图中边的颜色至多有$n-1$种，因此其中必有一个同色三角形。综上，$r_n\leq n(r_{n-1}-1)+2$。
+
+    因此
+    \begin{align*}
+        r_n&\leq n(r_{n-1}-1)+2\\
+           &\leq n[(n-1)(r_{n-2}-1)+1]+2\\
+           &= n(n-1)(r_{n-2}-1)+n+2\\
+           &\leq \cdots\\
+           &\leq n(n-1)\cdots 2(r_1-1)+n(n-2)\cdots 3+\cdots +n+2\\
+           &= 2n!+\frac{n!}{2!}+\cdots+\frac{n!}{(n-1)!}+1\\
+           &= n![\frac{1}{n!}+\frac{1}{(n-1)!}+\cdots+\frac{1}{2!}+\frac{1}{1!}+\frac{1}{0!}]+1\\
+           &\leq \lfloor en!\rfloor +1=\lceil en!\rceil\\
+    \end{align*}
+
+    在三着色的$K_{17}$中，任取一个顶点$v$，至少有6条与它邻接的边同色，记该颜色为$\alpha$，这些边另一端上的顶点为$v_1,\cdots,v_6,\cdots$。
+    若存在$1\leq i<j$，使得$v_iv_j$的颜色也为$\alpha$，则$vv_iv_j$为同色三角形。否则，$v_1,\cdots,v_6$的诱导子图中边的颜色至多有$2$种， 
+    而$r(3,3)=6$，所以必有一个同色三角形。综上，三着色的$K_{17}$中必有一个同色三角形，所以$r_3\leq 17$.
+\end{problem}
+\begin{problem}{25}
+    $\{1,2,\cdots,s_{n-1}-1\}$可以划分为$n-1$个子集，各子集中没有$x+y=z$的解。
+    记这些子集为$A_1,\cdots,A_{n-1}$。
+
+    下面把$\{1,2,\cdots,3s_{n-2}-2\}$划分为不满足要求的$n$个子集。
+
+    令$B_{i} = \{j\mid j\in A_i\lor j-(2s_{n-1}-1)\in A_i\},i=1,\cdots,n-1;B_{n} = \{s_{n-1},s_{n-1}+1,\cdots,2s_{n-1}-1\}$.
+
+    因为任取$i,j\in B_n,i+j\geq 2s_{n-1}$，所以$B_n$中没有$x+y=z$的解。
+    对于$B_i,i\neq n$，任取$a,b\in B_i$，若$a,b\in B_i-A_i$，则$a+b\geq 4s_{n-1}$，所以$a+b\notin B_i$；
+    若$a,b\in A_i$，$a+b\leq 2s_{n-1}-2$，所以$a+b\notin B_i-A_i$又因为$A_i$中没有$x+y=z$的解，所以$a+b\notin B_i$；若$a,b$一个属于$A_i$，
+    令一个属于$B_i-A_i$，不妨设$x\in B_i-A_i,y\in A_i$若存在$z\in B_i,s.t.x+y=z$，则$(x-(2s_{n-1}-1))+y=z-(2s_{n-1}-1)$，而$x-(2s_{n-1}-1)\in A_i$，$z\leq 2s_{n-1}-2$，所以$z\in A_i$，
+    而这与$A_i$的构造相矛盾。
+
+    因此，可以把$\{1,2,\cdots,3s_{n-2}-2\}$划分为不满足要求的$n$个子集。从而$s_n\geq 3s_{n-1}-1$。
+
+    当$n=1$时，$s_1=2\geq \frac{1}{2}(3+1)$。假设当$n=k$时不等式成立，则当$n=k+1$时有 
+    \[s_{k+1}\geq 3s_k-1\geq \frac{3}{2}(3^n+1)-1=\frac{1}{2}(3^{n+1}+1)\]
+    因此不等式成立。
+\end{problem}
+\end{document}

@@ -1,0 +1,30 @@
+\chapter{可行性分析}
+\thispagestyle{empty}
+\section{技术可行性}
+从技术需求角度来看，本项目中所需的功能中比较具有挑战性的有：
+
+\begin{enumerate}
+    \item 利用地图进行可视化；
+    \item 基于角色的鉴权；
+    \item 在数据库中存储图片以及坐标数据。
+\end{enumerate}
+
+由于本项目使用基于\href{https://react.dev/}{React}的\href{https://nextjs.org/}{Next.js}框架，因此可以使用React生态来实现上述功能。\href{https://deck.gl/}{Deck.gl}提供了强大的地图可视化功能，\href{https://www.mapbox.com/}{mapbox}则提供了基础地图；
+利用Next.js提供的cookies辅助函数可以方便地实现基于JWT的鉴权系统，从而实现基于角色的鉴权；PostGIS 是一个为 PostgreSQL 数据库提供地理信息系统（GIS）功能的扩展。
+它将空间数据类型（如点、线、面等）和空间操作（如计算距离、面积、缓冲区分析等）引入 PostgreSQL。同时，Postgres支持TEXT类型的数据，因此我们可以将图片转为经Base64编码的字符串后
+再存储至Postgres数据库中。
+
+从技术需求方面来看，本项目涉及大量数据库的使用。为了尽可能地简化操控数据库的流程，同时提高数据的安全性，本项目使用\href{https://orm.drizzle.team/}{DrizzleORM}来访问数据库。
+该ORM支持对于Point类型，适用于本项目。同时，本项目的另一挑战在于前端的设计。为此，本项目在使用Next.js的框架基础上，使用\href{https://tailwindcss.com/}{Tailwind CSS}和\href{https://nextui.org/}{NextUI}组件库，
+大大提高网页开发的效率。
+
+从开发周期上看，本项目有充足的时间以供增量式开发。
+
+从技术风险角度来看，本项目使用的Next.js框架以及其他第三方方库均为最新版本，相对不稳定。但是Next.js以及本项目所采用的第三方库都拥有活跃的社区和积极
+维护的开发人员，因此遇到的问题往往能够及时得到解决。
+
+\section{应用可行性}
+
+从部署角度上看，Next.js框架与\href{https://vercel.com/}{Vercel}部署平台深度绑定。项目开发完成后即可“一键”部署至云端。
+
+从安全角度上看，该平台采用基于角色的鉴权方式，符合企业运营模式。同时，本项目中采用数据访问层（DAL），提高了数据访问的安全性，从而提高了该应用投入使用的可行性。

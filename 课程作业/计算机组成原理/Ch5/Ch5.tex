@@ -1,0 +1,88 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{第五章}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+\begin{document}
+\maketitle
+\begin{problem}{5.1}
+\end{problem}
+\begin{solution}
+    理论上最多可以有$2^4$条双操作数指令，多余的$2^4-K$条用于扩展为单操作数指令，最多可以有$(2^4-K)\times 2^{6}$条单操作数指令，使用了$x$条后，
+    剩余的用于拓展为无操作数指令，最多有$((2^4-K)\times 2^{6}-x)\times 2^6$条。因此
+    \[((2^4-K)\times 2^{6}-x)\times 2^6\geq L\]
+    解得
+    \[x\leq 2^6\times(2^4-K)-\frac{L}{2^6}\]
+    所以最多有$\lfloor 2^6\times(2^4-K)-\frac{L}{2^6}\rfloor$条。
+\end{solution}
+\begin{problem}{5.2}
+\end{problem}
+\begin{solution}
+    2000H+03A0H+3FH=23DFH.
+
+    2B00H+3FH=2B3FH
+
+    所以变址编址和相对编址的访存有效地址分别为23DFH和2B3FH。
+\end{solution}
+\begin{problem}{5.3}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 取出的数据为2800H，转移地址为2B3FH
+        \item 取出的数据为2300H
+    \end{enumerate}.
+\end{solution}
+\begin{problem}{5.4}
+\end{problem}
+\begin{solution}
+    加法指令会根据运算结果改变状态位NZVC。如果结果为零，则将Z置1；如果为无符号数相加，若最高位产生进位或借位，则将C置1；如果为有符号数相加，如果结果为负数，则将N置1，如果溢出，则将V置1.
+\end{solution}
+\begin{problem}{5.11}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item CISC指令系统复杂庞大，指令数目一般有200-300条；RISC优先选取使用频率最高的一些简单指令，和一些很有用但不复杂的指令，避免复杂指令，且指令条数较少，一般小于100条
+        \item CISC寻址方式多，指令格式多，指令长度不固定；RISC指令长度固定，指令格式种类少，寻址方式种类少，指令之间各字段的划分比较一致，各字段的功能也比较规整
+        \item CISC可访存指令不受限制；RISC只有取数/存数指令访问存储器，其余指令都在寄存器之间进行
+        \item CISC各种指令使用频率和执行时间相差很大；RISC大部分指令在一个或小于一个机器周期内完成
+        \item CISC大多数采用微程序控制器；RISC以硬布线控制逻辑为主，不用或少用微指令码控制
+    \end{enumerate}
+    .
+\end{solution}
+\begin{problem}{5.12}
+\end{problem}
+\begin{solution}
+    X+Y = 01111，结果为正数，无溢出和进位，状态位NZVC为0000
+    
+    X-Y = X+(-Y)= 00101+10110=11011结果为负数，无溢出和进位。状态位NZVC为1000
+\end{solution}
+\begin{problem}{5.13}
+\end{problem}
+\begin{solution}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{cc}
+           指令&编码\\
+           \hline $I_1$&00\\
+           $I_2$&10\\
+           $I_3$&010\\
+           $I_4$&110\\
+           $I_5$&0110\\
+           $I_6$&0111\\
+            $I_7$&1110\\
+            $I_8$&11110\\
+            $I_9$&111110\\
+            $I_{10}$&111111\\
+        \end{tabular}
+    \end{table}
+
+    平均长度为
+    \[2\times  0.55+3\times 0.2+4\times 0.19+5\times 0.03+6\times 0.03=2.79\]
+\end{solution}
+\end{document}

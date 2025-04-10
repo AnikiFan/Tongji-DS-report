@@ -1,0 +1,15 @@
+\usepackage[ruled,algosection,lined,longend,fillcomment,linesnumbered,resetcount,titlenotnumbered]{algorithm2e}
+%参数解释：带框，按section编码，有竖线，end前带if等关键词，注释占满整行，代码部分编号（不包括输入输出、注释），每个代码块重新编号，可以调用TitleOfAlgo来打印算法标题但不作为单独的算法编码
+%附带algorithm,function,procedure环境,其中function,procedure环境下，设置caption时，必须带有()，
+%()之前的字符会被视为宏，可以在接下来的部分用\名字()来调用，所以推荐辅助函数用function，其中的某些展开部分用procedure，描述算法整体使用algorithm
+\DontPrintSemicolon
+\SetAlCapSkip{2ex}
+\SetSideCommentRight
+\SetFillComment
+\newcommand{\forcond}{$i=0$ \KwTo $n$}
+\SetKw{macro}{text}%自定义关键词
+\SetKwFunction{funcmacro}{text}%自定义函数名，实际上function环境是在定义宏的同时说明了其内容
+\SetKwProg{procedmacro}{text}{begin text}{end text}%自定义步骤，和function类似，但是后面两个参数可以设置开始和结尾的标志，和if等环境一样
+\SetKwData{datamacro}{text}%可以用于突出特殊的变量，例如数据结构
+\SetKwFunction{FRecurs}{FnRecursive}
+\SetKwProg{Fn}{Function}{begin}{end}

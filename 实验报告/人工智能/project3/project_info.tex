@@ -1,0 +1,66 @@
+\chapter{项目概述}
+\section{主要内容与目标}
+本次项目的主要内容为基于逻辑推理的智能体实现，要求我们用逻辑语句来对吃豆人游戏规则进行建模，并帮助吃豆人完成路径规划、定位、
+建立地图以及SLAM这四个任务。
+
+本项目的八个问题可以分为三部分。
+
+第一部分旨在熟悉该项目中所用到的Expr和PropSymbolExpr类的使用，同时考察了命题逻辑的基本内容。
+
+第二部分的任务是利用逻辑语句吃豆人的游戏规则进行建模，并帮助吃豆人完成路径规划以及收集所有食物这两项目标。
+
+第三部分的任务围绕SLAM问题展开，要求先分别帮助吃豆人完成定位和建立地图的任务，然后综合在一起，实现SLAM的功能。
+\section{已有代码}
+下面对已有代码中与本项目的具体实现相关的代码进行分析。
+\subsection{logic.py}
+该文件中提供了以下有关逻辑的类：
+\begin{enumerate}
+    \item Expr：是关于谓词逻辑表达式的类
+    \item PropSymbolExpr：用于构造谓词逻辑表达式中的符号
+    \item SpecialExpr：用于构造一些可能用到的常项
+\end{enumerate}
+
+同时还提供了以下在本项目中需要调用的函数：
+\begin{enumerate}
+    \item parseExpr：用于解析谓词逻辑表达式中的符号
+    % \item is\_symbol：判断对象是否是符号
+    % \item is\_var\_symbol：判断对象是否是变量
+    % \item is\_prop\_symbol：判断对象是否是谓词逻辑中的符号
+    % \item vairable：从给定表达式中提取出来所有变量
+    % \item is\_definite\_clause：判断给定表达式是否为definite clause
+    % \item prop\_symbol：返回给定表达式中包含的所有谓词逻辑中的符号
+    \item pl\_true：判断所给表达式是否满足给定模型，这里要求模型对所有命题赋值。
+    \item to\_cnf：将给定表达式转换为合取式
+    % \item associate：指定一个具有结合律的连接符，并同它来减少所给语句的语法树的高度
+    \item conjoin：用合取将所给语句连接为合取式
+    \item disjoin：用析取将所给语句连接为析取式
+    % \item dissociate：给定一个连接符，将所给语句按照该连接符拆分开来
+    % \item conjunct：将所给语句按照合取连接符拆分开来
+    % \item disjunct：将所给语句按照析取连接符拆分开来
+    % \item is\_valid\_cnf：判断所给表达式是否为合法的合取式
+    % \item pycoSAT：用于判断给定表达式是否可满足
+    % \item mapSymbolAndIndices：将所给语句中的符号编号，返回一个双向字典
+    % \item exprClausesToIndexClause：将所给合取式中的符号替换为对应的编号
+    % \item indexModelToExprModel：将一个由编号组成的模型转化为由所给字典中对应的符号所组成的模型
+\end{enumerate}
+\subsection{logicPlan.py}
+该文件用于存储各种有关逻辑的功能的实现，已有代码中给出了以下函数
+
+\begin{enumerate}
+    \item findModel：将给定的表达式转化为合取式，并通过SAT求解出一个满足的模型
+    \item SLAMSuccessorAxiomSingle：该继承公理是SLAM独有的，用于表示智能体在给定时刻位于给定位置的可能原因。
+    返回的逻辑语句分为两部分：1）上一时刻成功移动，则上一时刻不在给定位置，且给定位置没有墙壁，同时移动行为使得智能体移动到该位置
+    2）上一时刻移动失败，则上一时刻吃豆人便在该位置，且移动方向上有墙壁阻挡
+    \item SLAMSuccessorAxioms：遍历所有的非墙壁位置，对给定时刻调用SLAMSuccessorAxiomSingle
+    \item sensorAxioms：返回语句的语义是“被某个方向上的墙壁阻挡了等价于吃豆人在某个无墙壁的位置且在这个方向上紧邻着墙壁”
+    \item fourBitPerceptRules：将智能体的感知解析为逻辑语句，输入的感知是四个方向上墙壁存在与否
+    \item numAdjWallsPerceptRules：将智能体的感知解析为逻辑语句，这是SLAM特有的，输入的感知是三个方向上的墙壁数量
+    \item SLAMsensorAxioms：SLAM所特有的公理，所增加的部分的语义是“感知到了四周有若干处墙壁等价于四周有相同数量的墙壁”，这里利用所有可能的组合来涵盖各种可能
+    \item allLegalSuccessorAxioms：遍历所有的非墙壁位置，对给定时刻调用pacmanSuccessorAxiomSingle
+\end{enumerate}
+\subsection{searchAgents.py}
+该文件中存储的是关于智能体相关的代码。在项目中，需要使用智能体类的以下成员：
+\begin{enumerate}
+    \item actions：这里存储的是智能体在各个时刻所规划的动作
+    \item moveToNextState：让智能体执行指定动作
+\end{enumerate}

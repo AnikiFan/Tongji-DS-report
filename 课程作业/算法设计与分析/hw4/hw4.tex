@@ -1,0 +1,232 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW4}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\usepackage[ruled,lined,longend,fillcomment,linesnumbered,resetcount,titlenotnumbered]{algorithm2e}
+%参数解释：带框，按section编码，有竖线，end前带if等关键词，注释占满整行，代码部分编号（不包括输入输出、注释），每个代码块重新编号，可以调用TitleOfAlgo来打印算法标题但不作为单独的算法编码
+%附带algorithm,function,procedure环境,其中function,procedure环境下，设置caption时，必须带有()，
+%()之前的字符会被视为宏，可以在接下来的部分用\名字()来调用，所以推荐辅助函数用function，其中的某些展开部分用procedure，描述算法整体使用algorithm
+\DontPrintSemicolon
+\SetAlCapSkip{2ex}
+\SetSideCommentRight
+\SetFillComment
+\newcommand{\forcond}{$i=0$ \KwTo $n$}
+\SetKw{macro}{text}%自定义关键词
+\SetKwFunction{funcmacro}{text}%自定义函数名，实际上function环境是在定义宏的同时说明了其内容
+\SetKwProg{procedmacro}{text}{begin text}{end text}%自定义步骤，和function类似，但是后面两个参数可以设置开始和结尾的标志，和if等环境一样
+\SetKwData{datamacro}{text}%可以用于突出特殊的变量，例如数据结构
+\SetKwFunction{FRecurs}{FnRecursive}
+\SetKwProg{Fn}{Function}{begin}{end}
+\begin{document}
+\maketitle
+\begin{problem}{4-1}
+按$l_1\geq l_2\geq\cdots\geq l_n$的次序来考虑程序时的一个反例输入为：10,2,6,6。
+
+如果按照贪心算法，会将10分配给A，然后将2，6，6都分配给B。此时$\max\{\sum_{i\in A}l_i,\sum_{i\in B}l_i\}=14$。但是最优解之一为$A=\{10,2\},B=\{6,6\}$，使得
+$\max\{\sum_{i\in A}l_i,\sum_{i\in B}l_i\}=12$。
+
+按$l_1\leq l_2\leq\cdots\leq l_n$的次序来考虑程序时的一个反例输入为：1,1,2。
+
+如果按照贪心算法，会将1分配给A，然后将1都分配给B，最后将2分配给A。此时$\max\{\sum_{i\in A}l_i,\sum_{i\in B}l_i\}=3$。但是最优解之一为$A=\{1,1\},B=\{2\}$，使得
+$\max\{\sum_{i\in A}l_i,\sum_{i\in B}l_i\}=2$。
+
+显然，对于给定输入，$\sum_{1\leq i\leq n}l_i$是定值，又由于对称性，不失一般性，可以只考虑使得$\sum_{i\in A}l_i\leq\sum_{i\in B}l_i$的解。此时，
+$\sum_{1\leq i\leq n}l_i=\sum_{i\in A}l_i+\sum_{i\in B}l_i\geq 2\sum_{1\in A}l_i$，不妨设$l_i$为整数，记$\sum_{1\leq i\leq n}l_i=M$则
+\[\sum_{i\in A}l_i\leq \lfloor\frac{M}{2}\rfloor\]
+又因为
+\[\max\{\sum_{i\in A}l_i,\sum_{i\in B}l_i\}=\max\{\sum_{i\in A}l_i,M-\sum_{i\in A}l_i\}=M-\sum_{i\in A}l_i\]
+所以原问题等价于，求$A\subseteq\{1,2,\cdots,n\}$
+\[\text{minimize}\quad M-\sum_{i\in A}l_i\]
+\[\text{subject to}\quad \sum_{i\in A}l_i\leq \lfloor\frac{M}{2}\rfloor,l_i\in \mathbb{Z}^+ \]
+也等价于
+\[\text{maximize}\quad \sum_{i\in A}l_i\]
+\[\text{subject to}\quad \sum_{i\in A}l_i\leq \lfloor\frac{M}{2}\rfloor,l_i\in \mathbb{Z}^+ \]
+
+将问题“使得$\sum_{i\in A}l_i\leq x$
+且$\sum_{i\in A}l_i$尽可能地大($A\subseteq\{1,2,\cdots,y\}$)”的最优解对应的$\sum_{i\in A}l_i$记为$m[x,y]$，则有
+\[m[i,j] = \begin{cases}
+    m[i,j-1]&v_{j}>i\\
+    \max \{m[i-v_j,j-1]+v_j,m[i,j-1]\}&else\\
+\end{cases}\]
+显然，当$l_j>i$时，m[i,j]中不可能包含$l_j$，因为这违反了不等式约束，从而m[i,j]与m[i,j-1]对应的合法的解相同，
+最优解也相同，从而m[i,j]=m[i,j-1]。
+当$l_j\leq i$时，由反证法易得，若$j\notin A$，则$A\subseteq\{1,2,\cdots,j-1\}$，对应的最优解为$m[i,j-1]$的最优解；若$j \in A$，则对应的最优解为$\{j\}\cup A^{\prime}$，
+其中$A^{\prime}$对应$m[i-l_j,j-1]$的最优解。
+
+ 原问题的最优解对应的和便是$m[\lfloor\frac{M}{2}\rfloor,n]$。想要计算得到$m[\lfloor\frac{M}{2}\rfloor,n]$，共需计算$\lfloor\frac{M}{2}\rfloor\cdot n$个值，所以时间复杂度为$\Theta(nM)$。
+
+为了回溯还原最优解，需要保存过程中计算得到的$m[i,j]$值。回溯过程从$m[\lfloor\frac{M}{2}\rfloor,n]$开始，若$m[x,y]==m[x,y-1]$，则说明$m[x,y]$的最优解的构成和$m[x,y-1]$相同。
+否则，说明$m[x,y]$对应的最优解中，$l_y\in A$，剩余部分由是$m[x-l_y,y-1]$对应的最优解。回溯过程所需要的时间复杂度为$\Theta(M+n)$
+
+当$j=0$时，说明$m[i,j]$对应的最优解中$A=\varnothing$，所以$m[i,0]=0$。当$i=0$时，由于$v_k>0$，最优解中$A=\varnothing$，
+从而$m[0,j]=0$。
+
+\begin{algorithm}[H]
+    \SetKw{sum}{sum}
+    \SetKw{max}{max}
+    \SetKw{len}{len}
+    \SetKw{in}{in}
+    \SetKw{range}{range}
+    \SetKw{break}{break}
+    \tcp*[h]{values下标从1开始}\;
+    M = $\lfloor$\sum(values)/2$\rfloor$\;
+    l = \len(values)\;
+    初始化一个(M+1)$\times$(l+1)的全零数组dp\;
+    \For{i \in [1..M]}
+    {
+        \For{j \in [1..l]}
+        {
+            \eIf{values[j]>i}
+            {
+                dp[i][j] = dp[i][j-1]\;
+            }{
+                dp[i][j] = max(dp[i][j-1],dp[i-values[j]][j-1]+values[j])
+            }
+        }
+    }
+    A=[]\tcp*[h]{开始回溯}\;
+    x = M\;
+    y = l\;
+    \While{
+        x and y
+    }
+    {
+        \lWhile{y and dp[x][y] == dp[x][y-1]}
+        {
+            y -= 1
+        }
+        \lIf{y==0}{\break}
+        A.append(y)\;
+        x -= values[y-1]\;
+        y -= 1\;
+    }
+    \Return{A}
+    \caption{DynamicProgrammingApproach(values)}
+\end{algorithm}
+% 对于该问题的一个最优解，其中$A=\{i_1,i_2,\cdot,i_r\},i_1<i_2<\cdots<i_r$，
+% $A^{\prime}=\{i_1,i_2,\cdot,i_{r}\}\backslash\{n\}$也构成问题
+% “使得$\lfloor\frac{1}{2}\sum_{i\leq n-1}v_i\rfloor\geq\sum_{i\in A^{\prime}}v_i$
+% 且$\sum_{i\in A^{\prime}}v_i$尽可能地大($A^{\prime}\subseteq\{1,\cdots,n-1\}$)”的最优解。事实上，如果
+% $A^{\prime\prime}\neq A^{\prime}$在该子问题上比$A^{\prime}$更优，那么显然$A^{\prime\prime}\cup\{i_r\}$在原问题上
+% 比$A=A^{\prime}\cup\{i_r\}$还要优，从而产生矛盾。因此该问题具有最优子结构性质，可以采用动态规划方法解决。
+
+% 记“使得$\lfloor\frac{1}{2}\sum_{i\leq n}v_i\rfloor\geq\sum_{i\in A}v_i$
+% 且$\sum_{i\in A}v_i$尽可能地大($A\subseteq\{1,2,\cdots,n\}$)”的最优解为$A_n$。显然，
+% 如果$v_n$
+\end{problem}
+\end{document}

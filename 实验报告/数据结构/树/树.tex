@@ -1,0 +1,743 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{ctex}%提供中文支持
+\usepackage{graphicx}%用于插入图片
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{makecell}%允许表格的单元格内换行
+%伪代码
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+%伪代码
+%代码块
+\usepackage{ listings}
+\usepackage[x11names]{xcolor}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+	backgroundcolor=\color{white},      % choose the background color
+	basicstyle=\footnotesize\ttfamily,  % size of fonts used for the code
+	columns=fullflexible,
+	tabsize=4,
+	breaklines=true,               % automatic line breaking only at whitespace
+	captionpos=b,                  % sets the caption-position to bottom
+	commentstyle=\color{mygreen},  % comment style
+	escapeinside={\%*}{*)},        % if you want to add LaTeX within your code
+	keywordstyle=\color{blue},     % keyword style
+	stringstyle=\color{mymauve}\ttfamily,  % string literal style
+	frame=single,
+	rulesepcolor=\color{red!20!green!20!blue!20},
+	% identifierstyle=\color{red},
+	language=c,
+}
+%代码块
+%引用
+\usepackage{framed}
+\usepackage{quoting}
+ \colorlet{shadecolor}{Turquoise1!20}
+\newenvironment{shadedquotation}
+ {\begin{shaded*}
+  \quoting[leftmargin=0pt, vskip=0pt]
+ }
+ {\endquoting
+ \end{shaded*}
+}
+%引用
+%跨页伪代码
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+   \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+       {\raggedright\textbf{\ALG@name~\thealgorithm} ##2\par}%
+       \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+       \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+       \fi
+       \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+%跨页伪代码
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+\author{姓名: 范潇\phantom{11}学号: 2254298}
+\title{作业 HW3 试验报告}
+\date{2023年 11月 12日}
+\begin{document}
+\maketitle
+\lstset{breaklines}%这条命令可以让LaTeX自动将长的代码行换行排版
+		\lstset{extendedchars=false}%这一条命令可以解决代码跨页时，章节标题，页眉等汉字不显
+		%示的问题
+		\lstset{numbers=left,numberstyle=\tiny,keywordstyle=\color{blue!70},
+			commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+			rulesepcolor=\color{red!20!green!20!blue!20},escapeinside=``,
+			%xleftmargin=-10em,xrightmargin=-23em,
+            aboveskip=1em} 
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+% 实验报告格式要求按照模板（使用Markdown等也请保证报告内包含模板中的要素）
+% 对字体大小、缩进、颜色等不做强制要求（但尽量代码部分和文字内容有一定区分，可参考vscode配色）
+% 实验报告要求在文字简洁的同时将内容表示清楚
+% 报告内不要大段贴代码，尽量控制在20页以内
+\section{涉及数据结构和相关背景}
+本次实验主要涉及到的数据结构为树和二叉树。
+
+树是由 $n(n\geq 0)$个结点组成的有限集合。如果 $n=0$，称为空树；如果 $n>0$，则有一个特定的称为根的结点，它只有后继，没有前驱。除根以外的其他结点划分为 $m(m\geq 0)$个互不相交的有限集合 $T_0,T_1,\cdots,T_{m-1}$，每个集合本身又是一棵树，并且称之为根的子树。每棵子树的根节点有且仅有一个直接前驱，但可以有0个或多个后继。
+
+一颗二叉树则是结点的一个有限集合，该集合或者为空，或者是由一个根节点加上两棵分别称为左子树和右子树的、互不相交的二叉树组成。
+
+二叉树的物理存储结构主要分为顺序存储结构和链式存储结构。前者是借助数组来实现，缺点是会造成存储空间的浪费，后者又可以进一步分为二叉链表和三叉链表。
+
+二叉树的生成和遍历十分重要。二叉树的遍历方式可以分为先序，中序和后序。
+给定二叉树的先序遍历序列和中序遍历序列或者给定后序遍历序列和中序遍历序列，都可以还原出另外一个未给定的遍历序列。
+
+二叉树相关的算法一般用递归实现。这样实现的算法通常较为简洁。但是当应用环境资源受限，或者有特殊需求时，则采用栈来模拟递归程序。
+
+树的存储结构可以分为定长和不定长结构。一般采用定长结构，和不定长结构相比，指针的利用率不高，但是算法更加简单。当定长结构未二叉树时，指针利用效率最高。
+树和二叉树之间可以进行相互转换。当从树转换至二叉树时，应该遵循“左孩子，右兄弟”的规则来进行转换。
+\section{实验内容}
+\subsection{二叉树的非递归遍历}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    如果已知中序遍历的栈的操作序列，就可唯一地确定一棵二叉树。请编程输出该二叉树的后序遍历序列。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第一行一个整数n，表示二叉树的结点个数。
+接下来2n行，每行描述一个栈操作，格式为：push X 表示将结点X压入栈中，pop 表示从栈中弹出一个结点。
+(X用一个字符表示)
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    一行，后序遍历序列。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef char ElemType;
+typedef struct Node{
+    ElemType data;
+    struct Node *lchild,*rchild;
+}Node,*Tree;
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{递归后序遍历}
+    \begin{algorithmic}[1]
+        \Require 待遍历树Tree\,T,访问函数visit
+        \Ensure 后序遍历输出
+        \Function {PosOrderTraverse}{Tree\,T,Status(*visit)(Tree)}
+        \If {树是空树}
+        \State 树为空
+        \State \Return OK
+        \EndIf
+        \State 访问左子树
+        \State 访问右子树
+        \State 访问根节点
+        \State \Return OK
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+//根据二叉树中序遍历的栈的操作序列还原二叉树
+int main()
+{
+	int n,flag=0;//用于判断是否已经读入了push
+	char opt[MAXOPTSIZE];//存储操作指令
+	ElemType val ;//存储输入数据
+	scanf("%d",&n);//获取待还原结点个数
+	std::stack<Tree> s;
+	Tree p=(Tree)malloc(sizeof(Node)),T = p,temp;//工作指针初始化
+	if(!T)
+	  OVERFLOW;
+	while(n){
+		while(flag||((scanf("%s",opt)==1&&!strcmp(opt,"push")))){
+			flag =0;
+			p ->lchild =(Tree)malloc(sizeof(Node));
+			p ->rchild =(Tree)malloc(sizeof(Node));
+			scanf(" %c",&val);
+			p->data = val;
+			s.push(p);
+			p = p->lchild;//沿左链下降
+		}
+		//此时读入了一个pop,应该释放左节点,同时修改栈顶结点的左节点为NULL
+		free(p);
+		p = s.top();//回溯
+		s.pop();
+		p->lchild = NULL;
+		n--;
+		while(n&&(scanf("%s",opt)==1&&!strcmp(opt,"pop"))){
+			//每循环一次说明有一个右孩子结点为NULL
+			free(p->rchild);
+			p->rchild = NULL;
+			p = s.top();
+			s.pop();
+			n--;
+		}
+		//此时读入了一个push
+		flag = 1;//用于判断是否已经读入了一个push
+		if(!n){//处理边际情况
+			free(p->rchild);
+			p->rchild = NULL;
+		}
+		p = p->rchild;
+	}
+	PosOrderTraverse(T,visit);
+	return 0;
+}
+\end{lstlisting}
+\subsubsection{调试分析}
+调试时采用输出日志的方式来辅助查找出错的位置。在遇到内存泄漏的问题时，则使用VS调试模式中的自动变量窗口来
+查看哪里出现泄露，并根据泄露位置倒推原因。
+\subsubsection{总结与体会}
+本题的易错点之一是读入存储的值时，应该使用" \%c"，而非"\%c"。另外一个易错点，同时也是难点的是
+内存的管理。压入栈的结点的左右子树不应该置NULL，否则最后所形成的二叉树只是一个个结点。
+为此，在创建一个新结点的同时，便要为其左右子树申请内存空间，然后根据后续的栈操作序列来判断是否需要
+释放。释放完成后还需注意要进行置NULL。
+\subsection{二叉树的同构}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    给定两棵树T1和T2。如果T1可以通过若干次左右孩子互换变成T2，则我们称两棵树是“同构”的。
+    现给定两棵树，请你判断它们是否是同构的。并计算每棵树的深度。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第一行是一个非负整数N1，表示第1棵树的结点数；
+随后N行，依次对应二叉树的N个结点（假设结点从0到N−1编号），每行有三项，分别是1个英文大写字母、其左孩子结点的编号、右孩子结点的编号。如果孩子结点为空，则在相应位置上给出“-”。给出的数据间用一个空格分隔。
+接着一行是一个非负整数N2，表示第2棵树的结点数；
+随后N行同上描述一样，依次对应二叉树的N个结点。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    共三行。
+第一行，如果两棵树是同构的，输出“Yes”，否则输出“No”。
+后面两行分别是两棵树的深度。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct {
+    char data;
+    int lchild;
+    int rchild;
+}ElemType;
+typedef struct {
+    ElemType* elem;
+    int root;
+} Tree;
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{判断两棵树是否同构}
+    \begin{algorithmic}[1]
+        \Require 树T1,T2,根节点root1,root2
+        \Ensure 是否相同的判断
+        \Function {valid}{Tree\,T1,int\,root1,Tree\,T2,int\,root2}
+        \If{两个根节点均为空}
+        \State \Return FALSE
+        \EndIf 
+        \If {两个根节点一个为空，另一个不为空}
+        \State \Return FALSE
+        \EndIf
+        \If{两个根节点中的数据不一样}
+        \State \Return FALSE
+        \EndIf 
+        \State \Return (valid(T1, T1.elem[root1].lchild, T2, T2.elem[root2].lchild) 
+
+        \&\& valid(T1, T1.elem[root1].rchild, T2, T2.elem[root2].rchild)
+
+        $||$ valid(T1, T1.elem[root1].lchild, T2, T2.elem[root2].rchild) 
+
+        \&\& valid(T1, T1.elem[root1].rchild, T2, T2.elem[root2].lchild));
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{非递归求二叉树深度}
+    \begin{algorithmic}[1]
+        \Require 树T
+        \Ensure 深度Depth
+        \Function {Depth}{Tree\,T}
+        \State 初始化分别用于存储结点以及对应结点深度的栈s1,s2 
+        \State 初始化工作指针p，指向树T的根节点
+        \State 初始化记录深度的变量depth和maxdepth为1
+        \While{s1不为空且工作指针不为空}
+        \While{工作指针不为空}
+            \State s1.push(p)
+            \State p更新为其左孩子结点
+            \State s2.push(depth)
+            \State depth++
+        \EndWhile
+        \State s1.pop(p)
+        \State p更新为右孩子结点
+        \If {p不为空}
+        \State depth=s2.top()+1
+        \Else 
+        \State depth= s2.top
+        \EndIf
+        \State maxdepth = max(depth,maxdepth)
+        \EndWhile
+        \State \Return maxdepth
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+
+\subsubsection{调试分析}
+在本题的调试上我花费了很长时间。一开始OJ的反馈是能够通过前4个样例，而后6个样例是TLE。再优化了初始化树的算法以及递归算法后，仍然没有任何改变，有些时候后面6个样例变成了
+MLE。后来我下载了数据生成文件后，发现运行时判断的结果很快就能给出，而深度的结果虽然正确，但是要等待相当长一端时间，因此判断是由于求深度时采用了递归算法。修改为非递归算法后，
+发现OJ仍反馈错误，经过排查后发现是因为读入左右孩子结点时使用的是getchar，当结点个数超过一位数时，便会产生错误。后来采用了scanf和atoi配合进行数据读入。
+\subsubsection{总结与体会}
+易错点之一是读取数据是的函数选择，数据域始终为1个字母，可以选择用getchar，而左右孩子结点可能是一个字符‘-’，也可能是一位或多位数字，需要多加注意。
+另一个易错点是求深度的方法选择，由于深度可能高达30层左右，如果选择递归方式的话将肯定超时，应该选用非递归方式。
+难点之一是用于判断同构函数的编写，需要覆盖所有的可能，并且设置好中止条件。
+\subsection{感染二叉树需要的时间}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    给你一棵二叉树的根节点 root ，二叉树中节点的值 互不相同 。另给你一个整数 start 。在第 0 分钟，感染 将会从值为 start 的节点开始爆发。
+每分钟，如果节点满足以下全部条件，就会被感染：
+\begin{enumerate}
+    \item 节点此前还没有感染。
+    \item 节点与一个已感染节点相邻。
+\end{enumerate}
+返回感染整棵树需要的分钟数。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第一行包含两个整数n和start。
+接下来包含n行，描述n个节点的左、右孩子编号。0号节点为根节点。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    一个整数，表示感染整棵二叉树所需要的时间。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct{//三叉
+	int val;//为真代表还未被感染
+	int lchild;//左孩子结点
+	int rchild;//右孩子结点
+	int parent;//双亲结点
+}Node;
+typedef Node Tree[MAXN];//用静态数组实现
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+//初始化树
+scanf("%d%d",&n,&start);
+for(int i =0;i<n;i++){
+    T[i].val = 1;//未被感染
+    scanf("%d%d",&T[i].lchild,&T[i].rchild);//设置左右孩子结点
+    T[T[i].lchild].parent= i;//设置左孩子结点的双亲结点
+    T[T[i].rchild].parent= i;//设置右孩子结点的双亲结点
+}
+T[start].val = 0;//感染起始点
+T[0].parent = -1;//将根节点的双亲结点置空
+\end{lstlisting}
+\begin{breakablealgorithm}
+    \caption{感染}
+    \begin{algorithmic}[1]
+        \Require 感染起始处start,待感染树T
+        \Ensure 感染所需时间count
+        \Function {infect}{int start,Tree T}
+        \State 初始化队列p,q
+        \State 将start压入p中
+        \While{1}
+            \While{p不为空}
+            \State{p出队}
+            \If{双亲结点不为空，且未被感染}
+            \State{将双亲结点标记为感染，并进入q中}
+            \EndIf
+           \If{左孩子结点不为空，且未被感染}
+            \State{将左孩子结点标记为感染，并进入q中}
+            \EndIf
+            \If{右孩子结点不为空，且未被感染}
+            \State{将右孩子结点标记为感染，并进入q中}
+            \EndIf
+            \EndWhile
+            \State{将q中的元素依次出队，并进入p中}
+            \If {p为空}
+            \State break
+            \EndIf
+            \State count++
+        \EndWhile
+        \State \Return count
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+采用输出中间变量的方式进行调试，关键的中间变量为count的不同值之间进入q的结点的序号。
+\subsubsection{总结与体会}
+在处理“不重复地从某一位置像周围扩展”这一类问题时，可以采用队列配合辅助标记的方式来解决。
+\subsection{树的重构}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    一般而言， 有序树由有限节点集合T组成，并且满足：
+    \begin{enumerate}
+        \item 其中一个节点置为根节点，定义为root(T);
+        \item 其他节点被划分为若干子集T1,T2,...Tm,每个子集都是一个树.
+    \end{enumerate}
+同样定义root(T1),root(T2),...root(Tm)为root(T)的孩子，其中root(Ti)是第i个孩子。节点root(T1),...root(Tm)是兄弟节点。
+通常将一个有序树表示为二叉树是更加有用的，这样每个节点可以存储在相同内存空间中。有序树到二叉树的转化步骤为：
+\begin{enumerate}
+    \item 去除每个节点与其子节点的边
+    \item 对于每一个节点，在它与第一个孩子节点（如果存在）之间添加一条边，作为该节点的左孩子
+    \item 对于每一个节点，在它与下一个兄弟节点（如果存在）之间添加一条边，作为该节点的右孩子
+\end{enumerate}
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    输入由多行组成，每一行都是一棵树的深度优先遍历时的方向。其中d表示下行(down)，u表示上行(up)。输入的截止为以\#开始的行。
+可以假设每棵树至少含有2个节点，最多10000个节点。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    对每棵树，打印转化前后的树的深度，采用以下格式 Tree t: h1 $=>$ h2。其中t表示样例编号(从1开始)，h1是转化前的树的深度，h2是转化后的树的深度。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+char input[MAXINFOLENGTH]
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{根据深度优先遍历序列求顺序树深度}
+    \begin{algorithmic}[1]
+        \Require 深度优先遍历序列input
+        \Ensure 顺序树深度
+        \Function {SqDepth}{char\,input[]}
+        \State 工作指针p指向input起始位置
+        \State SqDepth，SqMaxDepth置零
+        \While{p不指向尾零}
+        \If{p指向d}
+        \State SqDepth++
+        \Else 
+        \State SqDepth- -
+        \EndIf
+        \State SqMaxDepth = max(SqDepth,SqMaxDepth)
+        \State 工作指针p后移
+        \EndWhile
+        \State \Return SqMaxDepth
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{根据深度优先遍历序列求二叉树深度}
+    \begin{algorithmic}[1]
+        \Require 深度优先遍历序列input
+        \Ensure 顺序树深度
+        \Function {BiDepth}{char\,input[]}
+        \State 工作指针p指向input起始位置
+        \State BiDepth，BiMaxDepth置零
+        \State 初始化辅助栈s，并将0压入栈中
+        \While{p不指向尾零}
+        \If{p指向d}
+        \State BiDepth++
+        \State s.push(BiDepth)
+        \Else 
+        \State s.pop(BiDepth)
+        \EndIf
+        \State BiMaxDepth = max(BiDepth,BiMaxDepth)
+        \State 工作指针p后移
+        \EndWhile
+        \State \Return SqMaxDepth
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+采用输出关键中间变量的方式来调试，关键的中间变量是当前深度优先遍历序列中的各个位置所对应的深度。
+\subsubsection{总结与体会}
+一开始我设计的算法是先根据深度优先遍历序列把顺序树给构造出来，然后使用递归来求对应的二叉树的深度。但是这种方法不仅编写时较为复杂，容易出错，而且
+时间复杂度较大。
+
+在编写与遍历序列相关的树的程序时，要利用好遍历序列中蕴含的信息，以便编写出原地算法等复杂度较低的算法。
+\subsection{最近公共祖先}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    给出一颗多叉树，请你求出两个节点的最近公共祖先。
+    一个节点的祖先节点可以是该节点本身，树中任意两个节点都至少有一个共同祖先，即根节点。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    输入数据包含T个测试样本，每个样本i包含Ni个节点和Ni-1条边和Mi个问题，树中节点从1到Ni编号
+输入第一行是测试样本数T。
+每个测试样本i第一行为两个整数Ni和Mi。
+接下来Ni-1行，每行2个整数a、b，表示a是b的父节点。
+接下来Mi行，每行两个整数x、y，表示询问x和y的共同祖先。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    对于每一个询问输出一个整数，表示共同祖先的编号
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef int Tree[MAXN];//静态数组实现，存放的是对应序号的结点的父节点
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{search}
+    \begin{algorithmic}[1]
+        \Require 树T，询问序列，询问序列个数N
+        \Ensure 最近公共祖先编号
+        \Function {search}{Tree\,T,int\,N}
+        \While{还有未处理的询问}
+        \State 获取带查询结点x，y
+        \State 初始化辅助栈s1，s2
+        \State x压入s1
+        \State y压入s2
+        \While{x的父节点非空}
+        \State x更新为其父节点
+        \State x压入s1中
+        \EndWhile
+        \While{y的父节点非空}
+        \State y更新为其父节点
+        \State y压入s2中
+        \EndWhile
+        \While{s1，s2均非空，且栈顶元素相同}
+        \State ans更新为栈顶元素
+        \State s1出栈
+        \State s2出栈
+        \EndWhile
+        \State 打印ans
+        \EndWhile
+        \State \Return OK
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+通过输出中间变量来辅助查询漏洞，并且结合提供的输入输出来倒退漏洞。关键的中间变量为
+进出辅助栈的元素值。
+\subsubsection{总结与体会}
+该题的一个易错点在于每个测试样本中的关系的个数不是N，而是N-1 。同时，由于涉及到多个测试样本的处理，
+要注意样本前后之间不能相互影响，即当切换到新样本时，相关的变量应该要初始化。
+\subsection{求树的后序}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    给出二叉树的前序遍历和中序遍历，求树的后序遍历。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    输入包含若干行，每一行有两个字符串，中间用空格隔开。
+    同行的两个字符串从左到右分别表示树的前序遍历和中序遍历，由单个字符组成，每个字符表示一个节点。
+    字符仅包括大小写英文字母和数字，最多62个。
+    输入保证一颗二叉树内不存在相同的节点。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    每一行输入对应一行输出。
+若给出的前序遍历和中序遍历对应存在一棵二叉树，则输出其后序遍历，
+否则输出Error
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct Node{
+    char data;//数据域
+    Node* lchild;//左孩子结点
+    Node* rchild;//右孩子结点
+}*Tree,Node;
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{重构二叉树}
+    \begin{algorithmic}[1]
+        \Require 前序遍历序列pre，中序遍历序列in，待重构树T
+        \Ensure 重构后的树T
+        \Function {Pos}{string\,pre,string\,in,Tree\,\&T}
+        \If{前序遍历序列和中序遍历序列的长度不相等}
+        \State\Return ERROR 
+        \EndIf
+        \If {前序遍历序列和中序遍历序列均为空}
+        \State 将树T置为空
+        \State \Return OK
+        \EndIf 
+        \State 在中序遍历序列中寻找前序遍历序列的第一个结点，即根节点root，并置于T的数据域中
+        \State \Return Pos(pre.substr(1,root),in.substr(0,root),T-$>$lchild)
+        
+        *Pos(pre.substr(root+1),in.substr(root+1),T-$>$rchild)
+        \EndFunction 
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+调试时出现的问题集中在递归时子序列的起止点的计算上。我通过VS调试模式中的临时变量窗口来辅助修改。
+\subsubsection{总结与体会}
+给定特定的遍历方式的遍历序列，我们可以从中得到树的结构等其他有用的信息，这一点在其他题目中也有体现。
+\subsection{表达式树}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    给你一个中缀表达式，这个中缀表达式用变量来表示（不含数字），请你将这个中缀表达式用表达式二叉树的形式输出出来。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    输入分为三个部分。
+    第一部分为一行，即中缀表达式(长度不大于50)。
+    中缀表达式可能含有小写字母代表变量（a-z），也可能含有运算符（+、-、*、/、小括号），
+    不含有数字，也不含有空格。
+    第二部分为一个整数n(n <= 10)，表示中缀表达式的变量数。
+    第三部分有n行，每行格式为C　x，C为变量的字符，x为该变量的值。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    输出分为三个部分，第一个部分为该表达式的逆波兰式，即该表达式树的后根遍历结果。占一行。
+第二部分为表达式树的显示，如样例输出所示。
+如果该二叉树是一棵满二叉树，则最底部的叶子结点，分别占据横坐标的第1、3、5、7……个位置（最左边的坐标是1），
+然后它们的父结点的横坐标，在两个子结点的中间。
+如果不是满二叉树，则没有结点的地方，用空格填充（但请略去所有的行末空格）。
+每一行父结点与子结点中隔开一行，用斜杠（/）与反斜杠（\\）来表示树的关系。
+/出现的横坐标位置为父结点的横坐标偏左一格，\\出现的横坐标位置为父结点的横坐标偏右一格。
+也就是说，如果树高为m，则输出就有2m-1行。
+第三部分为一个整数，表示将值代入变量之后，该中缀表达式的值。需要注意的一点是，除法代表整除运算，即舍弃小数点后的部分。
+同时，测试数据保证不会出现除以0的现象。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct Node{
+    char ch;//存放变量名的数据域
+    int data;//存放变量值的数据域
+    Node* lchild;
+    Node* rchild;
+}Node,*Tree;
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{中缀表达式转后缀表达式}
+    \begin{algorithmic}[1]
+        \Require 中缀表达式in，待转换的后缀表达式pos
+        \Ensure 转换后的后缀表达式pos
+        \Function {in\_to\_pos}{string\,in,string\,\&pos}
+        \While{遍历中缀表达式}
+        \If {当前字符为运算符}
+        \While{运算符栈非空且栈顶运算符优先级更高}
+        \If {栈顶元素不为左括号}
+        \State 栈顶元素接到pos尾部
+        \EndIf
+        \State 栈顶元素出栈
+        \EndWhile
+        \If{当前字符不为右括号}
+        \State {当前字符入栈}
+        \EndIf
+        \Else 
+        \State 当前字符接到pos尾部
+        \EndIf
+        \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{根据后缀表达式生成表达式树}
+    \begin{algorithmic}[1]
+        \Require 后缀表达式pos，变量值映射关系map$<$char,int$>$val
+        \Ensure 表达式树T
+        \Function {make\_tree}{string\,pos,map$<$char,int$>$val}
+        \State 初始化用于存储结点的辅助栈
+        \While{遍历后缀表达式pos}
+            \State 初始化新结点
+            \If{当前字符是运算符}
+            \State{弹出结点栈中的两个结点，依次赋给新结点的左右孩子结点}
+            \State{当前字符赋给新结点的变量域}
+            \State{将左右孩子的变量值域中的值分别作为左右运算数，执行当前字符对应的运算并赋给新结点的变量值域}
+            \State 将新结点压入栈中
+            \Else 
+            \State 将读入的变量赋给新结点的变量域
+            \State 将新结点的左右孩子结点置空
+            \State 根据map将读入变量对应的变量值赋给新结点的变量值域
+            \State 将新结点压入栈中
+            \EndIf
+        \EndWhile
+        \State \Return 栈顶元素 
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{打印表达式树}
+    \begin{algorithmic}[1]
+        \Require 表达式树T
+        \Function {display}{Tree\,T}
+        \State 求树的深度depth
+        \State for(int i = 0;i$<$depth-1;i++);offset = 2*offset+1;
+        \State 初始化队列to\_display,temp
+        \State T进入to\_display
+        \While{1}
+            \State 输出offset个空格
+            \State 初始化用于判断是否结束的flag，置1
+            \While{to\_display非空}
+            \If {队首元素不为空}
+            \State {to\_display队首元素出队，并将其左右子树进入temp}
+            \State {flag置0}
+            \Else 
+            \State 将两个空指针进入temp
+            \EndIf
+            \State{打印队首元素中的字符，若为空则为空格，后跟2*offset+1个空格}
+            \EndWhile
+            \If{flag为1}
+            \State \Return OK
+            \EndIf 
+            \State{输出回车后跟offet-1}个空格
+            \State 初始化计数器c=1
+            \While{temp非空}
+            \State 取temp队首结点后将其出队，然后再进入to\_display
+            \If{该结点非空}
+            \If{c为偶数}
+            \State 打印$/$
+            \Else 
+            \State 打印\,$\backslash$后跟offset*2-1个空格 
+            \EndIf
+            \Else 
+             \If{c为偶数}
+            \State 打印三个空格
+            \Else 
+            \State 打印offset*2-1个空格 
+            \EndIf
+            \State c++
+            \EndIf
+            \EndWhile
+            \State offset=(offset-1)/2
+        \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+该程序要实现的功能较为复杂，但是可以拆分成“求后缀表达式”，“求值”，“构造表达式树”，“打印表达式树”这四大部分。调试程序时，各个部分分别调试。
+\subsubsection{总结与体会}
+当程序要实现的目标较为复杂时，常常会涉及到多种数据结构之间的相互组合。例如在本题中，打印表达式树时采用了层次遍历，这就需要队列来辅助。因此在学习数据结构的时候，不仅仅要
+掌握其结构，也要熟悉其应用场景。
+\section{实验总结}
+与树相关的问题常常采用递归的方式来解决。在设计递归函数的时候，重点在于终止条件的设置，以及确保程序逐步“靠近”中止条件。
+对于和树相关的递归函数，常常使用树为空来作为终止条件，这样通常相比于使用条件语句来判断是否继续递归要来得更加简洁。
+但是，递归函数也不是万能的，由于递归的特性，其时间复杂度高，在设计递归函数时，要避免在一次递归中调用多次自身，因为这会使得大幅度增加时间复杂度。
+同时，如果数据的规模较大，那么也应考虑使用栈辅助来模拟递归程序。
+
+此外，二叉树以及树的结点设计对于顺利解决问题至关重要。例如，在感染二叉树需要的时间中，采用三叉链表便可以通过已被的结点轻松找到下一个时刻被感染的结点；
+在最近公共祖先这道题中，采用双亲表示法的设计和题目的目标相匹配，使得最终的程序较为简单。
+
+在解决和树相关的问题时，常常需要栈和队列来进行辅助，应该要抓住所要相关元素在特定遍历方法下的特性，即是FIFO还是FILO来选取相应的辅助数据结构。
+\end{document}

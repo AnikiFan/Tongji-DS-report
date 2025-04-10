@@ -1,0 +1,197 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW2}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\usepackage[ruled,lined,longend,fillcomment,linesnumbered,resetcount,titlenotnumbered]{algorithm2e}
+%参数解释：带框，按section编码，有竖线，end前带if等关键词，注释占满整行，代码部分编号（不包括输入输出、注释），每个代码块重新编号，可以调用TitleOfAlgo来打印算法标题但不作为单独的算法编码
+%附带algorithm,function,procedure环境,其中function,procedure环境下，设置caption时，必须带有()，
+%()之前的字符会被视为宏，可以在接下来的部分用\名字()来调用，所以推荐辅助函数用function，其中的某些展开部分用procedure，描述算法整体使用algorithm
+\DontPrintSemicolon
+\SetAlCapSkip{2ex}
+\SetSideCommentRight
+\SetFillComment
+\newcommand{\forcond}{$i=0$ \KwTo $n$}
+\SetKw{macro}{text}%自定义关键词
+\SetKwFunction{funcmacro}{text}%自定义函数名，实际上function环境是在定义宏的同时说明了其内容
+\SetKwProg{procedmacro}{text}{begin text}{end text}%自定义步骤，和function类似，但是后面两个参数可以设置开始和结尾的标志，和if等环境一样
+\SetKwData{datamacro}{text}%可以用于突出特殊的变量，例如数据结构
+\SetKwFunction{FRecurs}{FnRecursive}
+\SetKwProg{Fn}{Function}{begin}{end}
+\begin{document}
+\maketitle
+\begin{problem}{主元素问题}
+    设$T[0..n-1]$是$n$个元素的数组。对任一元素$x$，设$S(x)=\{i|T[i]=x\}$。当$|S(x)|>n/2$时，称$x$为$T$的主元素。
+    \begin{enumerate}
+        \item 如果T中元素是有序的，按分治策略设计并实现一个线性时间算法，确定$T[0..n-1]$中是否有主元素；
+        \item 若$T$中元素不是有序的，试设计并实现一个$O(n\log n)$有效算法，确定$T$是否有主元素。进一步，能找到一个线性时间算法吗？
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 因为$n-\lceil n/2\rceil\leq\lceil (n+1)/2\rceil\leq\lceil (n+1)/2\rceil$，所以若$T$存在主元素，则$T[\lceil (n+1)/2\rceil]$一定等于该主元素。
+        因此只需要根据定义判断$T[\lceil (n+1)/2\rceil]$是否为主元素即可。由于$T$保证是有序的，从而相同的元素连在一起，可以利用二分查找来获取值为$T[\lceil (n+1)/2\rceil]$的
+        元素下标的最值，从而可以直接得到对应的元素数量，然后再根据定义进行判断即可。伪代码在第2页中给出。时间复杂度为$\Theta(\log n)$.
+        \begin{procedure}
+            \SetKw{in}{in}
+            \KwIn{升序数组T}
+            \tcp*[h]{下标从0开始}\;
+            pivot = T[$\lceil (n+1)/2\rceil$]\;
+            l = 0\;
+            r = n-1\;
+            \While{l<r}
+            {
+                mid = $\lfloor (l+r)/2\rfloor$\;
+                \leIf{T[mid]$\geq$pivot}{r = mid}{l = mid+1}
+            }
+            left = l\;
+            l = 0\;
+            r = n-1\;
+            \While{l<r}
+            {
+                mid = $\lfloor (l+r+1)/2\rfloor$\;
+                \leIf{T[mid]$\leq$pivot}{l = mid}{r = mid-1}
+            }
+            right = l\;
+            \eIf{right-left+1 > n/2}{\Return{True}}{\Return{False}}
+            \caption{checkPivotElementRecursively(T)}
+        \end{procedure}
+    \item 若$T$不保证有序，只需要先对其排序后再输入至\checkPivotElementRecursively 即可得到$O(n\log n)$的有效算法，伪代码在第2页中给出。如果想要进一步得到线性时间算法，可以使用线性选择函数
+        来直接从$T$中选取第$\lceil (n+1)/2\rceil+1$大的元素，从而避免了排序，使得时间复杂度降为$\Theta(n)$，伪代码在第3页中给出。
+        \begin{algorithm}
+            \SetKw{in}{in}
+            \SetKwFunction{Sort}{Sort}
+            \KwIn{任意数组T}
+            \Sort(T)\tcp*[h]{任意高效排序算法，如堆排序}\;
+            \Return{\checkPivotElementRecursively(T)}\;
+            \caption{checkPivotElement(T)}
+        \end{algorithm}
+         \begin{algorithm}
+            \SetKw{in}{in}
+            \SetKwFunction{linearSelect}{linearSelect}
+            \KwIn{任意数组T}
+          \tcp*[h]{下标从0开始}\;
+            pivot = \linearSelect(T,$\lceil (n+1)/2\rceil+1$)\tcp*[h]{选取第$\lceil (n+1)/2\rceil+1$大的元素}\;
+            cnt = 0\;
+            \ForEach{x \in T}
+            {\lIf{x == pivot}{cnt += 1}}
+            \eIf{cnt > n/2}{\Return{True}}{\Return{False}}
+            \caption{linearCheckPivotElement(T)}
+        \end{algorithm}
+    \end{enumerate}
+\end{solution}
+\end{document}

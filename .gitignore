@@ -1,0 +1,51 @@
+# LaTeX intermediate files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.nav
+*.snm
+*.bbl
+*.blg
+*.xdv
+*.vrb
+
+# XeLaTeX & LuaLaTeX output
+*.dvi
+
+# Temp files
+*.tmp
+*.bak
+*~
+*.backup
+
+# Editors & OS-specific
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+*.kate-swp
+
+# Latexmk
+latexmkrc
+*.lbx
+*.run.xml
+
+# TikZ externalization
+*.dpth
+*.dep
+*.pdfpc
+*.tikz
+
+# arara
+*.run
+
+# output folder (optional: if you compile into a subfolder)
+output/
+build/

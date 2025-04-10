@@ -1,0 +1,64 @@
+\section{实验步骤}
+\subsection{了解Flask框架的使用方法}
+在本次实验过程中，我主要通过Flask官方文档\url{https://flask.palletsprojects.com/en/3.0.x/}来学习Flask框架，重点学习
+Tutorial这一节中提供的示范样例，并以此为基础开发本实验所需的网站。
+\subsection{搭建Flask开发环境}
+本次使用所用IDE为PyCharm 2024.2.3 (Professional Edition)。使用的Python环境如下图\ref{env}所示。
+\begin{figure}
+    \centering
+ \begin{verbatim}
+    name: flask
+channels:
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/main/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/msys2/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/menpo/
+  - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/pytorch/
+  - defaults
+  - conda-forge
+dependencies:
+  - blinker=1.8.2=pyhd8ed1ab_0
+  - bzip2=1.0.8=h2466b09_7
+  - ca-certificates=2024.8.30=h56e8100_0
+  - click=8.1.7=win_pyh7428d3b_0
+  - colorama=0.4.6=pyhd8ed1ab_0
+  - flask=3.0.3=pyhd8ed1ab_0
+  - importlib-metadata=8.5.0=pyha770c72_0
+  - itsdangerous=2.2.0=pyhd8ed1ab_0
+  - jinja2=3.1.4=pyhd8ed1ab_0
+  - libexpat=2.6.3=he0c23c2_0
+  - libffi=3.4.2=h8ffe710_5
+  - libsqlite=3.46.1=h2466b09_0
+  - libzlib=1.3.1=h2466b09_2
+  - markupsafe=2.1.5=py312h4389bb4_1
+  - openssl=3.3.2=h2466b09_0
+  - pip=24.2=pyh8b19718_1
+  - python=3.12.7=hce54a09_0_cpython
+  - python_abi=3.12=5_cp312
+  - setuptools=75.1.0=pyhd8ed1ab_0
+  - tk=8.6.13=h5226925_1
+  - tzdata=2024b=hc8b5060_0
+  - ucrt=10.0.22621.0=h57928b3_0
+  - vc=14.3=h8a93ad2_21
+  - vc14_runtime=14.40.33810=ha82c5b3_21
+  - vs2015_runtime=14.40.33810=h3bf8584_21
+  - werkzeug=3.0.4=pyhd8ed1ab_0
+  - wheel=0.44.0=pyhd8ed1ab_0
+  - xz=5.2.6=h8d14728_0
+  - zipp=3.20.2=pyhd8ed1ab_0
+\end{verbatim}   
+    \caption{Python环境配置}\label{env}
+\end{figure}
+\subsection{利用Flask框架开发网站}
+本次实验所开发的网站是在Flask提供的Tutorial中的代码的基础上进行修改得到的。具体而言，我采用了db.py、style.css和base.html中的主要部分。
+同时，我也和Tutorial中的项目一样采用工厂模式进行开发。
+
+本实验开发的网站主要有两部分组成：主页和展示页。主页主要用于展示作者的个人信息；展示页用于展示书籍数据，同时也支持用户通过上传txt文件来添加数据。
+
+页面之间的导航由导航栏来完成，这一部分被写入base.html中，便于复用。
+
+在路由方面，我和Tutorial中的项目一样，使用Flask框架的蓝图功能来进行管理。
+
+在数据存储方面，我使用SQLITE进行数据管理，将数据存储至book表中，其中有id,book\_name,category三个域。

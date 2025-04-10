@@ -1,0 +1,98 @@
+\documentclass[a4paper]{article}
+\usepackage{xcolor}%颜色支持
+\definecolor{vscode_backgroundcolor}{rgb}{0.15, 0.2, 0.22}
+\definecolor{vscode_localvariablecolor}{rgb}{0.93,1,0.89}
+\definecolor{vscode_keywordcolor}{rgb}{0.57, 0.52, 1}
+\definecolor{vscode_commentcolor}{rgb}{0.2, 0.34, 0.45}
+\definecolor{vscode_stringcolor}{rgb}{0.76, 0.91, 0.55}
+\definecolor{vscode_semicolomncolor}{rgb}{1,1,1}
+\definecolor{vscode_headerfilecolor}{rgb}{0.93,1,0.89}
+\definecolor{vscode_linenumbercolor}{rgb}{0.2, 0.34, 0.45}
+\definecolor{vscode_numbercolor}{rgb}{0.96, 0.54, 0.42}
+\definecolor{vscode_parametercolor}{rgb}{0.96, 0.54, 0.42}
+\definecolor{vscode_operatorcolor}{rgb}{0.53, 0.85, 0.99}
+\definecolor{vscode_callablecolor}{rgb}{0.36, 0.62, 0.96}
+\definecolor{vscode_rulecolor}{rgb}{0.22, 0.28, 0.31}
+\definecolor{vscode_classcolor}{rgb}{1, 0.8, 0.42}
+\definecolor{vscode_selfcolor}{rgb}{0.97, 0.31, 0.43}
+
+\usepackage{listings}%高亮代码块支持
+\lstloadlanguages{Python}
+\lstdefinestyle{MyPython}{
+    extendedchars=false,
+    numbers=left,
+    firstnumber=auto,
+    frame=leftline,
+    backgroundcolor=\color{vscode_backgroundcolor},
+    framerule=0.5ex,
+    columns=fixed,
+    language=Python,
+    basicstyle=\ttfamily\color{vscode_localvariablecolor},
+    % commentstyle=\color{vscode_commentcolor},
+    keywordstyle=\color{vscode_keywordcolor},
+    stringstyle=\color{vscode_stringcolor},
+    morecomment=[l][\color{vscode_commentcolor}]{\#},
+    morecomment=[s][\color{vscode_headerfilecolor}]{"""}{"""},
+    numberstyle=\code\color{vscode_linenumbercolor},
+    morekeywords={
+        None,
+        True,
+        yield,
+        False,
+    },
+    alsoletter={
+        =+-*<>^&
+        % ;0123456789
+        % 0,1,2,3,4,5,6,7,8,9
+    },%把;设置为可以识别的letter，也可以使用otherkeywords，但是无法将其和其他keywords区分开来
+    emph={=,+,-,*,>,<,<<,>>,^,+=,&},emphstyle=\color{vscode_operatorcolor},
+    % alsoletter={!,\%,&,*,-,+,=,/,<,>},
+    emph={[2]%一些全局的函数和可调用对象
+    DataFrame,
+    arange,
+    interp2d,
+    f,
+    subplots,
+    contour,
+    show,
+    clabel,
+    getWalls,
+    AnyFoodSearchProblem,
+    print,
+    range,
+    scatter,
+    spline,
+    UnivariateSpline,
+    diff,
+    len
+    },emphstyle={[2]\color{vscode_callablecolor}},
+    emph={[5]
+    self},emphstyle={[5]\color{vscode_selfcolor}},
+    % emphstyle={[3]\color{vscode_parametercolor}}
+     % emph={[3]0,1,2,3,4,5,6,7,8,9},emphstyle={[3]\color{yellow}},
+    tabsize=4,
+    rulecolor=\color{vscode_rulecolor},
+    breaklines=true,
+}
+\lstset{
+    style=MyPython,
+}
+\input{header.tex}
+
+\title{作业{\hspace{1ex}}lecture 6}
+\author{姓名：范潇{\quad}学号：2254298{\quad}日期：\today}
+\date{}
+\begin{document}
+\maketitle
+\section{(7.1)}
+得到的置信区间为$[1065,1255]$。
+我在MATLAB的实时编辑器中完成了该题的求解，具体代码和输出在下一页中给出。
+\newpage
+\section{(7.2)}
+调用chi2gof返回的卡方统计量为5.0318，而通过查表可得临界量为$\chi_{0.05}^2=9.4877$，因此服从正态分布$N(15.0780,0.4325^2)$。
+我在MATLAB的实时编辑器中完成了该题的求解，具体代码和输出在下一页中给出。
+\newpage
+\section{(7.4)}
+调用anova函数得到的统计量F的值为4.735，而通过查表可得临界量为$F_{0.05}(2.12)=3.8853$，因此有显著差异。
+我在MATLAB的实时编辑器中完成了该题的求解，具体代码和输出在下一页中给出。
+\end{document}

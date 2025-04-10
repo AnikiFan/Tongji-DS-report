@@ -1,0 +1,40 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW6}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{2.5.7}
+    将圆
+    \[\varGamma =\begin{cases}
+        (y-b)^2 +z^2 =a^2,\\
+        x=0\\
+    \end{cases}\quad (b>a>0)\]
+    绕 $z$轴旋转一周，求所得旋转曲面的方程。
+\end{problem}
+\begin{solution}
+    任取曲面上一点 $(x,y,z)$，其由 $\varGamma$上一点 $(x_0,y_0,z_0)$旋转而得。因此有
+   \[\begin{cases}
+        (y_0-b)^2 +z_0^2 =a^2,\\
+        x_0=0\\
+    \end{cases}\]
+    又因为两点到旋转轴的距离相等，且连线应该垂直于旋转轴，即 $z$轴。所以又有
+    \[
+    \begin{cases}
+        x^2+y^2=x_0^2+y_0^2\\
+        z=z_0\\
+    \end{cases}    
+    \]
+    由于 $b>a>0$，所以 $y_0>0$，因此解得曲线方程为
+    \[(\sqrt{x^2+y^2}-b)^2+z^2=a^2.\]
+\end{solution}
+\maketitle
+\end{document}

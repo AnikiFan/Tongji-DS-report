@@ -1,0 +1,574 @@
+\section{逻辑设计}\label{sec:logic}
+\subsection{实体集模式}
+\subsubsection{模式设计}
+通过转换上述实体集，我们可以得到以下实体集模式：
+\begin{table}[!hpt]
+    \caption{实体集模式}
+    \label{tab:entityschema}
+    \centering
+    \begin{tabular}{l} \toprule
+         \textit{bike}(\textit{\underline{bike\_ID},production\_date,coordinate,valid})\\
+         \textit{collection}(\textit{\underline{collection\_ID},time})\\
+         \textit{reallocation}(\textit{\underline{reallocation\_ID},\underline{bike\_ID},start\_time,start\_coordinate,end\_time,end\_coordinate})\\
+         \textit{release}(\textit{\underline{release\_ID},coordinate,time})\\
+         \textit{trace}(\textit{\underline{trace\_ID},start\_time,start\_coordinate,end\_time,end\_coordinate})\\
+         \textit{type}(\textit{\underline{type\_ID},name,release\_date})\\
+         \textit{user}(\textit{\underline{user\_ID}})\\
+         \textit{warehouse}(\textit{\underline{warehouse\_ID},capacity,load,coordinate}) \\ \bottomrule
+    \end{tabular}
+  \end{table}
+
+  在转换过程中，我们认为坐标、日期以及时间都是不可分割的单元。在实际应用场景中，也常常将它们作为整体来进行使用。
+
+  对于弱实体集\textit{reallocation}，它的模式的主码由它自身的识别器\textit{reallocation\_ID}和
+  识别集\textit{bike}的主码\textit{bike\_ID}组成；对于其余强实体集，它们的模式的主码和原来的主码保持一致。
+\subsubsection{属性类型设计}
+图\ref{tab:bike}-\ref{tab:warehouse}为各实体集模式中属性的类型。
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike}模式属性类型}
+      \label{tab:bike}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \textit{production\_date}&\textbf{date}\\
+       \textit{coordinate}&\textbf{point}\\
+       \textit{valid}&\textbf{int}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{collection}模式属性类型}
+      \label{tab:collection}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{collection\_ID}&\textbf{char}(20)\\
+       \textit{time}&\textbf{timestamp}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{reallocation}模式属性类型}
+      \label{tab:reallocation}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{reallocation\_ID}&\textbf{char}(20)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \textit{start\_time}&\textbf{timestamp}\\
+       \textit{start\_coordinate}&\textbf{point}\\
+       \textit{end\_time}&\textbf{timestamp}\\
+       \textit{end\_coordinate}&\textbf{point}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{release}模式属性类型}
+      \label{tab:release}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{release\_ID}&\textbf{char}(20)\\
+       \textit{coordinate}&\textbf{point}\\
+       \textit{time}&\textbf{timestamp}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{trace}模式属性类型}
+      \label{tab:trace}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{trace\_ID}&\textbf{char}(20)\\
+       \textit{start\_time}&\textbf{timestamp}\\
+       \textit{start\_coordinate}&\textbf{point}\\
+       \textit{end\_time}&\textbf{timestamp}\\
+       \textit{end\_coordinate}&\textbf{point}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{type}模式属性类型}
+      \label{tab:type}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{type\_ID}&\textbf{char}(5)\\
+       \textit{name}&\textbf{varchar}(50)\\
+       \textit{release\_date}&\textbf{date}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.45\textwidth}
+      \centering
+      \caption{\textit{user}模式属性类型}
+      \label{tab:user}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{user\_ID}&\textbf{char}(20)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.45\textwidth}
+      \centering
+      \caption{\textit{warehouse}模式属性类型}
+      \label{tab:warehouse}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{warehouse\_ID}&\textbf{char}(10)\\
+       \textit{capacity}&\textbf{int}\\
+       \textit{load}&\textbf{int}\\
+       \textit{coordinate}&\textbf{point}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+
+对于设计过程，有以下几点说明：
+\begin{itemize}
+    \item 使用MySQL等数据库所支持的\textbf{point}类型来表示坐标信息；
+    \item 假设\textit{bike\_ID}等识别码是定长的，所以将它们的类型设为\textbf{char}。由于单车类型和仓库的数量较少，所以\textit{type\_ID,warehouse\_ID}分别的类型分别设为\textbf{char(5)},\textbf{char(10)}。
+\end{itemize}
+\subsection{关系集模式}
+\subsubsection{模式设计}
+通过转换上述关系集，我们可以得到以下关系集模式：
+\begin{table}[!hpt]
+    \caption{关系集模式}
+    \label{tab:relationschema}
+    \centering
+    \begin{tabular}{l} \toprule
+         \textit{bike\_collection}(\textit{\underline{bike\_ID},\underline{collection\_ID}})\\
+         \textit{collection\_warehouse}(\textit{\underline{collection\_ID},warehouse\_ID})\\
+        %  \textit{bike\_reallocation}(\textit{\underline{reallocation\_ID},\underline{bike\_ID}})\\
+         \textit{bike\_release}(\textit{\underline{bike\_ID},\underline{release\_ID}})\\
+         \textit{release\_warehouse}(\textit{\underline{release\_ID},warehouse\_ID})\\
+         \textit{bike\_type}(\textit{\underline{bike\_ID},type\_ID})\\
+         \textit{stored\_in}(\textit{\underline{bike\_ID},warehouse\_ID})\\
+         \textit{usage}(\textit{\underline{trace\_ID},user\_ID,bike\_ID})\\
+         \textit{user\_feedback}(\textit{\underline{user\_ID},\underline{bike\_ID},\underline{time}})\\
+         \textit{feedback\_component}(\textit{\underline{user\_ID},\underline{bike\_ID},\underline{time},\underline{component}})\\
+         \bottomrule
+    \end{tabular}
+  \end{table}
+
+  在转换的过程中，联系弱实体集\textit{reallocation}和其识别集\textit{bike}的关系集\textit{bike\_reallocation}被略去，因为这是冗余的\cite{dbconcept2}。
+  同时，我将三元关系集\textit{bike\_collection,bike\_release}分别拆分为了两个模式，这是为了保证模式满足第二范式，否则，属性\textit{warehouse}将会部分依赖于主码\textit{collection\_ID,bike\_ID}中的\textit{collection\_ID}和主码\textit{release\_ID,bike\_ID}中的\textit{release\_ID}。
+
+  对于“多对一”和“一对多”的二元关系集，它的模式的主码为“多”那一侧的实体集模式的主码；对于“多对多”的二元关系集，它的主码是它关联起来的实体集模式的主码与它的描述属性的并集；对于“一对一”的二元关系集，
+  它的主码可以是它关联起来的任一实体集的主码\cite{dbconcept3}。表\ref{tab:relationschema}中模式的主码便是按照上述标准进行选取的。
+
+  对于三元关系集\textit{usage}，我则是按照函数依赖来选择它们的模式的主码。
+
+  对于关系集\textit{user\_feedback}，它的描述属性之一\textit{component}是多值属性。为此，转换为模式时，额外创建一个模式\textit{feedback\_component}，
+  其属性由\textit{user\_feedback}的主码以及属性\textit{component}组成。
+\subsubsection{属性类型设计}
+关系集模式中属性的类型与实体集中的相应属性类型保持一致。图\ref{tab:bikecollection}-\ref{tab:feedbackcomponent}为各实体集模式中属性的类型。
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_collection}模式属性类型}
+      \label{tab:bikecollection}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{collection\_ID}&\textbf{char}(20)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{collection\_warehouse}模式属性类型}
+      \label{tab:collectionwarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{collection\_ID}&\textbf{char}(20)\\
+       \textit{warehouse\_ID}&\textbf{char}(10)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_release}模式属性类型}
+      \label{tab:bikerelease}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \textit{release\_ID}&\textbf{char}(20)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+\end{figure}
+
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{release\_warehouse}模式属性类型}
+      \label{tab:releasewarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{release\_ID}&\textbf{char}(20)\\
+       \textit{warehouse\_ID}&\textbf{char}(10)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_type}模式属性类型}
+      \label{tab:biketype}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{type\_ID}&\textbf{char}(5)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{stored\_in}模式属性类型}
+      \label{tab:storedin}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{warehouse\_ID}&\textbf{char}(10)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{usage}模式属性类型}
+      \label{tab:usage}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{trace\_ID}&\textbf{char}(20)\\
+       \textit{user\_ID}&\textbf{char}(20)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{user\_feedback}模式属性类型}
+      \label{tab:userfeedback}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{user\_ID}&\textbf{char}(20)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \textit{time}&\textbf{timestamp}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{feedback\_component}模式属性类型}
+      \label{tab:feedbackcomponent}
+      \begin{tabular}{ll}\toprule
+        属性&类型\\\midrule
+       \textit{user\_ID}&\textbf{char}(20)\\
+       \textit{bike\_ID}&\textbf{char}(20)\\
+       \textit{time}&\textbf{timestamp}\\
+       \textit{component}&\textbf{varchar}(50)\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\subsection{约束设计}
+约束设计主要分为两部分：外码约束和其他约束。
+
+\paragraph{外码约束}
+外码约束主要有三个来源：
+\begin{enumerate}
+    \item 关系集转化为关系集模式时所产生的；
+    \item 转化复杂类型时所产生的；
+    \item 转化弱实体集时所产生的。
+\end{enumerate}
+
+在本数据库中，关系集\textit{user\_feedback}的多值描述属性\textit{component}要求我们在将该关系集转化为模式时，需额外生成模式\textit{feedback\_component}，
+同时，\textit{feedback\_component}中的属性\textit{user\_ID,bike\_ID,time}遵循外码约束，引用\textit{user\_feedback}的主码。
+
+在本数据库中，弱实体集\textit{reallocation}转换为模式\textit{reallocation}，该模式中的属性\textit{bike\_ID}需遵循外码约束，引用模式\textit{bike}的主码。
+
+其余外码约束均来自于由关系集转化而来的关系集模式。这些模式需要引用它对应的关系集所联系起来的实体集的主码。%特别地，对于由三元关系集\textit{bike\_collection}转化成的
+% 模式\textit{bike\_collection}和\textit{collection\_warehouse}，以及由三元关系集\textit{bike\_release}转化成的
+% 模式\textit{bike\_release}和\textit{release\_warehouse}，我们要求\textit{bike\_collection}需要引用\textit{collection\_warehouse}，\textit{bike\_release}需要引用\textit{release\_warehouse}。
+
+\paragraph{其他约束}
+本数据库中的其他约束包括主码约束（非空且唯一）、非空约束、唯一约束，check约束。
+
+由于本数据库中除了用户反馈外的其他所有数据理论上都可以由相应的设备自动生成，如行车轨迹，又或者是必不可少的一部分，例如仓库的坐标，所以所有属性都遵循非空约束。
+
+对于坐标、时间戳等数据，我们不作唯一约束要求。
+
+在本数据库中，check约束主要用于以下两处：
+\begin{enumerate}
+    \item 因为对于\textit{bike}中的\textit{valid}属性，我们用\textbf{int}类型来代替布尔类型，所以需要用check约束来确保该属性的取值为0或1；
+    \item 理论上需要用check约束来确保用户反馈中填写的\textit{component}值是合法的，即属于给定的集合之中。但是这也可以在应用层面实现，例如只允许用户通过勾选的方式来进行反馈。
+\end{enumerate}
+
+图\ref{tab:constraintbike}-\ref{tab:cfeedbackcomponent}为各模式中的属性所需遵循的约束。
+  图\ref{tab:cfeedbackcomponent}中的\textit{valid\_component}为一个常量，含义是合法的单车部件。
+
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike}模式属性约束}
+      \label{tab:constraintbike}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{bike\_ID}&\textbf{primary key}\\
+       \textit{production\_date}&\textbf{not null}\\
+       \textit{coordinate}&\textbf{not null}\\
+       \textit{valid}&\textbf{check}(valid \textbf{in} (0,1))\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{collection}模式属性约束}
+      \label{tab:constraintcollection}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{collection\_ID}&\textbf{primary key}\\
+       \textit{time}&\textbf{not null}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{reallocation}模式属性约束}
+      \label{tab:constraintreallocation}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{reallocation\_ID}&\textbf{primary key}\\
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \textit{start\_time}&\textbf{not null}\\
+       \textit{start\_coordinate}&\textbf{not null}\\
+       \textit{end\_time}&\textbf{not null}\\
+       \textit{end\_coordinate}&\textbf{not null}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{release}模式属性约束}
+      \label{tab:constraintrelease}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{release\_ID}&\textbf{primary key}\\
+       \textit{coordinate}&\textbf{not null}\\
+       \textit{time}&\textbf{not null}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{trace}模式属性约束}
+      \label{tab:constrainttrace}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{trace\_ID}&\textbf{primary key}\\
+       \textit{start\_time}&\textbf{not null}\\
+       \textit{start\_coordinate}&\textbf{not null}\\
+       \textit{end\_time}&\textbf{not null}\\
+       \textit{end\_coordinate}&\textbf{not null}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{type}模式属性约束}
+      \label{tab:constrainttype}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{type\_ID}&\textbf{primary key}\\
+       \textit{name}&\textbf{not null}\\
+       \textit{release\_date}&\textbf{not null}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{user}模式属性约束}
+      \label{tab:constraintuser}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{user\_ID}&\textbf{primary key}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{warehouse}模式属性约束}
+      \label{tab:constraintwarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{warehouse\_ID}&\textbf{primary key}\\
+       \textit{capacity}&\textbf{not null}\\
+       \textit{load}&\textbf{not null}\\
+       \textit{coordinate}&\textbf{not null}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_collection}模式属性约束}
+      \label{tab:cbikecollection}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{collection\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{collection}}\\
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+ \end{figure}
+  \begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{collection\_warehouse}模式属性约束}
+      \label{tab:ccollectionwarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{collection\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{collection}}\\
+       \textit{warehouse\_ID}&\makecell[l]{\textbf{not null}\\\textbf{references} \textit{warehouse}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_release}模式属性约束}
+      \label{tab:cbikerelease}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{release\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{release}}\\
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{release\_warehouse}模式属性约束}
+      \label{tab:creleasewarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{release\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{release}}\\
+       \textit{warehouse\_ID}&\makecell[l]{\textbf{not null}\\\textbf{references} \textit{warehouse}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_type}模式属性约束}
+      \label{tab:cbiketype}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \textit{type\_ID}&\makecell[l]{\textbf{not null}\\\textbf{references} \textit{type}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{stored\_in}模式属性约束}
+      \label{tab:cstoredin}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \textit{warehouse\_ID}&\makecell[l]{\textbf{not null}\\\textbf{references} \textit{warehouse}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{usage}模式属性约束}
+      \label{tab:cusage}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{trace\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{trace}}\\
+       \textit{user\_ID}&\makecell[l]{\textbf{not null}\\\textbf{references} \textit{user}}\\
+       \textit{bike\_ID}&\makecell[l]{\textbf{not null}\\\textbf{references} \textit{bike}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+  \begin{figure}
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{user\_feedback}模式属性约束}
+      \label{tab:cuserfeedback}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{user\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{user}}\\
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \textit{time}&\textbf{primary key}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.6\textwidth}
+    \centering
+      \caption{\textit{feedback\_component}模式属性约束}
+      \label{tab:cfeedbackcomponent}
+      \begin{tabular}{ll}\toprule
+        属性&约束\\\midrule
+       \textit{user\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{user}}\\
+       \textit{bike\_ID}&\makecell[l]{\textbf{primary key}\\\textbf{references} \textit{bike}}\\
+       \textit{time}&\textbf{primary key}\\
+       \textit{component}&\makecell[l]{\textbf{primary key}\\(\textbf{check} \textit{component} \textbf{in} \textit{valid\_component})}\\
+    %    \bottomrule
+       (\textit{user\_ID,bike\_ID,time})&\makecell[l]{\textbf{references} \textit{user\_feedback}}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+  \subsection{范式分析}
+  \subsubsection{第一范式}
+  在从E-R图转换至模式的过程中，我已经将复杂属性拆分开来，所以所有模式满足第一范式。
+  \subsubsection{第二范式}
+  各个模式的函数依赖集的正则覆盖如下：
+  \begin{table}[!hpt]
+    \caption{各模式中的函数依赖的正则覆盖}
+    \label{tab:functiondependency}
+    \centering
+    \begin{tabular}{l} \toprule
+        $FC_{bike}=\{bike\_ID\rightarrow production\_date,coordinate,valid\}$\\
+        $FC_{collection}=\{collection\_ID\rightarrow time\}$\\
+        $FC_{reallocation}=\{reallocation\_ID,bike\_ID\rightarrow start\_time,start\_coordinate,end\_time,end\_coordinate\}$\\
+        $FC_{release}=\{release\_ID\rightarrow coordinate,time\}$\\
+        $FC_{trace}=\{trace\_ID\rightarrow start\_time,start\_coordinate,end\_time,end\_coordinate\}$\\
+        $FC_{type}=\{type\_ID\rightarrow name,release\_date\}$\\
+        $FC_{user}=\varnothing$\\
+        $FC_{warehouse}=\{warehouse\_ID\rightarrow capacity,load,coordinate\}$\\
+        $FC_{bike\_collection}=\varnothing$\\
+        $FC_{collection\_warehouse}=\{collection\_ID\rightarrow warehouse\_ID\}$\\
+        $FC_{bike\_release}=\varnothing$\\
+        $FC_{release\_warehouse}=\{release\_ID\rightarrow warehouse\_ID\}$\\
+        $FC_{bike\_type}=\{bike\_ID\rightarrow type\_ID\}$\\
+        $FC_{stored\_in}=\{bike\_ID\rightarrow warehouse\_ID\}$\\
+        $FC_{usage}=\{trace\_ID\rightarrow user\_ID,bike\_ID\}$\\
+        $FC_{user\_feedback}=\varnothing$\\
+        $FC_{feedback\_component}=\varnothing$\\
+         \bottomrule
+    \end{tabular}
+ \end{table}
+
+    经过验证，各个模式中不存在部分函数依赖，即所有模式满足第二范式。
+    \subsubsection{第三范式}
+    经过验证，各个模式中不存在传递依赖的关系，即所有模式满足第三范式。
+    \subsubsection{BC范式}
+    经过验证，所有模式满足BC范式。
+ 
+    

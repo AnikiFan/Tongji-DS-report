@@ -1,0 +1,1237 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\usepackage{slashed}%支持字母上加斜线
+\theoremstyle{remark}
+\newtheorem*{remark}{remark}
+\theoremstyle{definition}
+\newtheorem{theorem}{theorem}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{definition}
+\theoremstyle{plain}
+\newtheorem*{property}{性质}
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}
+\author{Fan}
+\title{Set Theory}
+\date{2023.7.21}
+\begin{document}
+\maketitle
+\tableofcontents
+\begin{abstract}
+    This is a reading note for Robert's \emph{Set Theory}. It is my first 
+    reading note written in English, so you may see many grammar mistakes. 
+    This note consists of some important point that I am not familiar with 
+    or considered worthing remembered and my answer to the question following
+    each lesson, whose correctness are not guranteened, but I will point out
+    where can be refined.
+\end{abstract}
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+\begin{longtable}{cc}
+        \caption{various notation} \\
+       \multicolumn{1}{c}{notations}&\multicolumn{1}{c}{meanings}\\
+       \hline
+       \endfirsthead
+       \multicolumn{1}{c}{notations}&\multicolumn{1}{c}{meanings}\\
+       \hline\endhead
+ $\sim$& \emph{not, or it is not the case that}\\
+$\lor$&  \emph{or}\\
+$\land $&  \emph{and}\\
+$A\rightarrow B$&  \emph{if} A \emph{then } B\\
+$A\leftrightarrow B$ &  A \emph{if and only if } B (Also:`iff')\\
+$\forall xA$ &  \emph{for all x such that } A\\
+$\exists xA$ &  \emph{there exists an x such that } A\\
+$\exists!xA$ &  \emph{there exists exactly one x such that }A\\
+$\iota xA$& \emph{the unique x such that }A\\
+$x=y$&  \emph{x equals y, or x and y are identical}\\
+$A)(B$& $A$ and $B$ are disjointed\\
+   $ A \cup B$ & $  \{x:x\in A \text{or} x \in B\}$\\
+   $ A \cap B $& $ \{x:x\in A \text{and} x \in B\}$\\
+    $A - B $&  $ \{x:x\in A \text{and} x \notin B\}$\\
+   $ A \circleddash  B$ &$   (A-B)\cup(B-A)$\\
+    $\varnothing $&$   \{x:x \neq x\}$\\
+    $A\times B$& $\{(a,b):a\in A \text{and} b\in B\}$\\
+    $f\upharpoonright C$& the restriction of $f$ to $C$\\
+    $\Breve{R}$& $R$ converse\\
+    $R/S$&relative product\\
+    $R\circ S$&the composition of R and S\\
+    $R[U]$&the R-image of $U$\\
+    $Id_A$&the identity function for $A$\\
+    $A\underset{f}{\sim} B$&$f$ is a one-to-one function on $A$ onto $B$\\
+    $A \sim B$& $A$ and $B$ are equivalent\\
+    $B^C$& the set of all functions on $C$ to $B$\\
+    $\prod_{i\in I}\mathfrak{a}_i$&Cartesian product\\
+    $P(A)$&power set of $A$\\ 
+    $c_B$&characteristic function of B\\
+    $\underbar{A}\underset{f}{\cong }\underbar{A}'$&an isomorphism between $\underbar{A}$ and $\underbar{A}'$\\
+    $\underbar{A}|B$& the substructures of $\underbar{A}$\\
+    $\sup A$& the least upper bound of $A$\\
+    $\inf A$& the greatest lower bound of $A$\\ 
+    $\bar{\bar{A}}$& the cardinal number of $A$\\
+    $\hat{n} $& hyperexponentiation to the base 2 at n\\
+\end{longtable}
+\newpage
+\section{SETS AND RELATIONS AND OPERATIONS AMONG THEM}
+    Logical symbols and abbreviations are easy to write, but 
+they are not meant to use throughout the whole proof. Even mathematics
+only sometimes use them in theorems'writing. When writing a proof,
+it is recommended to use ordinary language to explain your idea whenever it is
+necessery.
+\subsection{Set algebra and the set-builder}
+In this textbook, we assume that non-set doesn't exists. In 
+other words, we only consider what is so-called pure set.
+\begin{axiom}[Axiom of Extensionality]
+If, for any $x$,$x\in A$ if and only if $x\in B$,then $A=B$ .
+\end{axiom}
+All expression in language can be classified into 3 groups, namely 
+asserting expression, naming expression and others. 
+Asserting expression is a kind of expression that can specify the range or 
+value of some variable, for example, an inequility.
+Name expression is a kind of expression that describle some forms, for example,
+a function.
+When using set builder 
+$\{x:---\}$, ---should always be replaced by asserting expression.
+When using set buider $\{...:---\}$,...should be replaced by a naming expression,
+and --- should be replaced by a asserting expression.
+
+We defined following Boolean operations:
+\[
+\begin{cases}
+    A \cup B & =  \{x:x\in A \text{or} x \in B\},\text{called the union of} A \text{and} B.\\
+    A \cap B & =  \{x:x\in A \text{and} x \in B\},\text{called the intersection of} A \text{and} B.\\
+    A - B & =  \{x:x\in A \text{and} x \notin B\},\text{called } A \text{minus} B.\\
+    A \circleddash  B & =  (A-B)\cup(B-A),\text{called the symmetric difference of} A \text{and} B.\\
+    \varnothing & =  \{x:x \neq x\}, \text{the empty set}\\
+\end{cases}
+\]
+Particularly, $X-A$is also written as $\tilde{A}^{(X)}$, called the complement of $A$ with respect to $X$.
+
+When we are discussing sets, we always assume that they are included in a set $X$ called `temporary universe'.
+In this case, we write $\tilde{A}^{(X)}$as $\tilde{A}$.
+However, there is no absolute universe.
+
+If a law only involves $\sim,\cup,\cap,\varnothing,X$,not $\circleddash$,etc,its dual 
+is obtained simply by replacing these,respectively by $\sim,\cap,\cup,X,\varnothing$.
+
+\begin{theorem}
+    Assume $A$,$B$,$C\subseteq X$and write $\tilde{U}$for $X-U$.
+\[
+\begin{cases}
+    A \cup B = B \cup A & \text{and dual}\\
+    A \cup (B \cup C)=(A\cup B)\cup C& \text{and dual}\\
+    A \cup \varnothing =A & \text{and dual}(A\cap X =A)\\
+    A \cap \varnothing=\varnothing& \text{and dual}.\\
+    \tilde{\tilde{A}}=A & \\
+    A \subseteq B \text{if and only if} \tilde{A}\supseteq \tilde{B}& \\
+    A-B = A \cap \tilde{B}& \\
+    A\cap B =\varnothing \text{if and only if} A \subseteq \tilde{B}& \\
+\end{cases}    
+\]
+$A$ and  $B$ are called disjoint, written $A)(B$,if $A\cap B =\varnothing$.
+\[A\cap(B\cup C)=(A\cap B)\cup (A\cap C),\text{and dual}\]
+\[\widetilde{A\cup B}=\tilde{A}\cap \tilde{B},\text{and dual} \]
+\[A\cap(B-C)=(A\cap B)-(A\cap C)\]
+\end{theorem}
+\begin{theorem}
+    The family of all subsets of $X $,under $\circleddash$for+,and $\cap$for $\cdot$,
+    with $\varnothing$for 0, and $X$ for 1,forms a communicative ring with unit.
+    the ring also satisfies the two additional laws :$A+A=0$(every element is of order 2)
+    and $A\cdot A=A$($\cdot$ is idempotent).(Such ring is called a Boolean ring with unit.)
+\end{theorem}
+\begin{remark}
+    To remember this kind of equation, I think you can regarded them as difference translations
+    for one same thing. For instance, $A-B=A\cap \tilde{B}$, this equation's both side 
+    means that remove B from A, or the part of A that doesn't belong to B.
+\end{remark}
+\subsection{Russell's paradox}
+\begin{remark}
+    $\{x:x\notin x\}$ does not exist.
+\end{remark}
+In our intuitive set theory, we now accept these two axiom, namely:
+\begin{axiom}[Separation Axiom]
+   $ \{x:x\in B \text{ and}\mathfrak{S} x\}$always exists.
+\end{axiom}
+\begin{axiom}[Replacement Axiom]
+    $\{\mathfrak{C} :x \in B\}$always exists.
+\end{axiom}
+\begin{theorem}
+    There is no universe set, i.e., for any set $C$ there exists $t$ such that $t \notin C$.
+\end{theorem}
+\subsection{Infinite unions and intersections}
+\begin{theorem}
+    Assume $\mathfrak{G} \subseteq X$ for all $i\in I$, and write $\tilde{U}$
+    for $X-U$ and take any intersection of the form $\bigcap _{i\in \varnothing}B_i$ 
+    to be $X$. Then:
+    \begin{enumerate}
+        \item (de Morgan's law) $\widetilde{\bigcup _{i\in I}\mathfrak{G}_i }=\bigcap_{i\in I}\tilde{\mathfrak{G}_i}$and $\widetilde{\bigcap _{i\in I}\mathfrak{G}_i }=\bigcup_{i\in I}\tilde{\mathfrak{G}_i}$
+        \item (distributive laws) $B\cap \bigcup _{i\in I }\mathfrak{G}_i=\bigcup_{i\in I}(B\cap \mathfrak{G}_i)$ and its dual
+    \end{enumerate}
+\end{theorem}
+\begin{remark}
+    The varible i in the expression $\bigcap_{i\in I}\mathfrak{G}_i$ is called 
+    bound variable, and this kind of notation with bound variable is called 
+    bound variable notation. For any family $K$ of sets, we write $\bigcup (K)$ for $\bigcup_{A\in K}A$,
+    which is free of bound variables. Although the notations without bound variables seem
+    to be more elegent, but sometimes when we have to point out various property of one 
+    element, using bound varialbles may be more convenient.
+\end{remark}
+\subsection{Ordered couples and Cartesian products}
+We read $\{a\}$ the singleton of a.
+
+\begin{definition}
+    $(a,b)=\{\{a\},\{a,b\}\}$
+\end{definition}
+\begin{theorem}
+    If $(a,b)=(c,d)$,then $a=c$ and $ b=d$.
+\end{theorem}
+
+The set $A\times B=\{(a,b):a\in A \text{and} b\in B\}$ is called the Cartesian product of
+the arbitrary sets $A$ and $B$.
+
+\begin{theorem}
+    \begin{enumerate}
+        \item $A\times \bigcup_{i\in I}\mathfrak{B}_i=\bigcup_{i\in I}(A\times \mathfrak{B}_i)$
+        \item $\bigcup_{i\in I}\mathfrak{B}_i\times A=\bigcup_{i\in I}(\mathfrak{B}_i\times A)$
+        \item $A\times \bigcap_{i\in I}\mathfrak{B}_i=\bigcap_{i\in I}(A\times \mathfrak{B}_i)$
+        \item $A\times (B-C)=A\times B-A\times C$
+        \item $(A\cap B)\times (C\cap D)=(A\times C)\cap(B\times D)$
+    \end{enumerate}
+\end{theorem}
+\subsection{Relations and functions}
+We say $R$ is a relation if $R$ is a set of ordered couples. We write $Rxy$
+(or $xRy$), and say $R$ holds betweem x and y, if $(x,y)\in R$.
+
+The domain of a relation $R$,Dom $R$, is defined to be $\{x:for some y, xRy\}$ and
+the range, Rng $R$,is $\{y:for some x, xRy\}$.
+
+We say $f$ is a function if $f$ is a relation and for any $x,y,z$ if
+$(x,y),(x,z)\in f$ then $y=z$.
+
+`$f$ is on $A$' means Dom $f=A$;`$f$is to,or into $B$' means Rng $f\subseteq B$;
+`$f$is onto $B$' means Rng $f=B$;`$f:A\rightarrow B$'means $f$ is a function 
+on $A$ to $B$.
+
+Taking $f=((x,\mathfrak{a}x):x\in A):$
+\begin{theorem}
+    There exists exactly one function $f$ on $A$ such that for each $x\in A,f(x)\in \mathfrak{a}_x.$
+\end{theorem}
+For the unique function $f$ on $X$ such that, for all $x\in X$, $f(x)\in \mathfrak{a}_x$,
+all of the following are in use:
+\[(\mathfrak{a}_x:x\in X)\phantom{111}(\lambda x\in X)\mathfrak{a}_x\phantom{111}x \in X \mapsto \mathfrak{a}_x.\]
+
+The function $f=(\mathfrak{a}_x:x\in X)$ is sometimes called an indexed family (of sets).
+The (plain) family $\{\mathfrak{a}_x:x\in X\}$has `less information'.
+
+If $C\subseteq $Dom $f$, we write $f\upharpoonright C$(called the restriction of f to C)
+for the function $g$ on $C$ such that, for any $x\in C,g(x)=f(x)$.
+
+We take $\Breve{R}$($R$ converse) to be the set of all $(y,x)$ such that $(x,y)\in R$.
+The converse of a function which is not one-to-one is a relation but not a function.
+$f$ is one-to-one if and onlly if $\Breve{f}$ is a function. In this case,
+the function $\Breve{f}$is called the inverse function (of $f$) and written $f^{-1}$.
+
+If $R$ and $S$ are relations, the relative product $R/S$ is defined to
+be $\{(x,y):\text{for some }z,(x,z)\in R \text{and }(z,y)\in S\}$.We also define
+$R\circ S$to be $S/R$
+\begin{theorem}
+    \[R/(S/T)=(R/S)/T\]
+\end{theorem}
+\begin{theorem}
+    \[\Breve{R/S}=\Breve{S}/\Breve{R}\]
+\end{theorem}
+We take $R[U]$ to be the set of all $y$ such that for some $x\in U,(x,y)\in R$.
+A special case is the $f-$image of $U$,$f[U]$. Given a function $f$ (not necessery one-to-one),
+we can form  the relation $\Breve{f}$ and the image set $\Breve{f}[V]$; this set is called the $f-$
+inverse image of $V$, and is written $f^{-1}[V]$.
+\begin{theorem}
+    Suppose for all $i\in I,\mathfrak{a}_i\subseteq X$.Then
+    \begin{enumerate}
+        \item $R[\bigcup_{i\in I}\mathfrak{a}_i]=\bigcup_{i\in I}R[\mathfrak{a}_i]$
+        \item $f^{-1}(A-B)=f^{-1}A-f^{-1}B.$
+        \item $f^{-1}(\bigcap_{i\in I}\mathfrak{a}_i)=\bigcap_{i\in I}f^{-1}\mathfrak{a}_i,$if $I\neq \varnothing$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item $A\underset{Id_A}{\sim}A$
+        \item if $A\underset{f}{\sim}B,$then $B\underset{f^{-1}}{\sim}A$
+        \item if $A\underset{f}{\sim}B$ and $B\underset{g}{\sim}C$,then $A\underset{g\circ f}{\sim}C$.
+    \end{enumerate}
+\end{theorem}
+We write $A\sim B$,if, for some $f$, $A\underset{f}{\sim}B$.
+\begin{theorem}
+\begin{enumerate}
+    \item $A\sim A$
+    \item if $A\sim B$, then $B\sim A$
+    \item if $A\sim B$ and $B\sim C$ then $A\sim C$.
+\end{enumerate}
+\end{theorem}
+A notion like $\sim $for which satisfies previous three equations is called an `equivalence'.
+\subsection{Sets of sets,power set, arbitrary Cartesian product}
+We denote by $B^C$ the set of all function on $C$ to $B$. We will prove that,
+if $C$ has n elements and B has m, then $B^C$ has $m^n$.
+
+Cartesian product $\prod_{i\in I}\mathfrak{a}_i$ is defined to be the set of
+all $f$ on $I$ such that, for each $i\in I,f(i)\in \mathfrak{a}_i$.If $\mathfrak{a}_i=B$,
+then
+\[\prod_{i\in I}\mathfrak{a}_i=\prod_{i\in I}B=B^I\]
+
+The set $P(A)$ is the set of all subsets of the set $A$. It is also called the 
+power set of $A$.
+
+We form the `characteristic function ' $c_B$ of $B$ as follows:
+$c_B$ is the function on $A$ such that, for any $x\in A,c_B(x)=u$ if $x\in B$,
+and $c_B(x)=v$ if $x\neq B$. Then define $H(B)=c_B$.
+\begin{theorem}
+    \[P(A)\underset{H}{\sim}\{u,v\}^A\]
+\end{theorem}
+\begin{theorem}
+    Consider sets $\mathfrak{a}_{ij}\subseteq X$ and take any $\bigcap_{t\in\varnothing}B_t=X$
+    \[\bigcap_{i\in I}\bigcup_{j\in  J_i}\mathfrak{a}_{ij}=\bigcup_{f\in\prod_{i\in I} J_i}\bigcap_{i\in I}\mathfrak{a}_{if(i)}.\]
+    (The dual follows by applying de Morgan's law.)
+\end{theorem}
+\begin{axiom}[The Axiom of Choice]
+    Let $F$ be a function on $I$ such that for each $i\in I$,$F(i)$ is
+    a non-empty set. Then there is a function $f$ on $I$ such that for each
+    $i\in I$, $f(i)\in F_i$.
+\end{axiom}
+\begin{remark}
+    Such an $f$ is called a choice function (or selector) for the indexed family
+    $(F(i):i\in I).$
+\end{remark}
+\begin{remark}
+    The Axiom of Choice is identical to the statement: If for each $i\in I,F(i)\neq\varnothing,$
+    then $\prod_{i\in I}\neq\varnothing$.
+\end{remark}
+When we are proving, we should try to avoid using the Axiom of Choice directly.
+\begin{theorem}
+    Assume all $\mathfrak{a}_{ij}\subseteq x$ and take $\bigcap_{t\in \varnothing}\mathfrak{B}_t=X$
+    \[\prod_{i\in I}\bigcup_{j\in J_i}\mathfrak{a}_{ij}=\bigcup_{f\in \prod_{i\in I} J_i}\prod_{i\in I}\mathfrak{a}_{if(i)}\]
+\end{theorem}
+\subsection{Structures}
+We say $\circ$ is a binary operation over $A$ if $\circ:A\times A\rightarrow A$.
+(As usual, $\circ((x,y))$ is written $x\circ y$). $R$ is called a binary relation over $A$ if $R\subseteq A\times A.$
+A typical (algebraic) structure is something of the form $\underbar{A}=(A,R,\circ)$ where $\circ$ 
+and $R$ are over $A$. The set $A$ is called the universe of $\underbar{A}$. A structure can have any number of $R$'s and
+$\circ$'s and these can have any number of places, and there cam also be distinguished elements.
+
+Let $\underbar{A}=(A,R),\underbar{A}'=(A',R')$. We say that $f$ is an $(\underbar{A},\underbar{A}')-$
+isomorphism (or isomorphism between $\underbar{A}$ and $\underbar{A}'$), provided that $A\underset{f}{\sim}A'$ for any 
+$x,y\in A,xRy$ if and only if $f(x)R'f(y)$(If instead $\underbar{A}=(A,\circ),\underbar{A}'=(A',\circ'),$one has instead the 
+familiar condition: $f(x\circ y)=f(x)\circ'f(y)$).
+
+We write $\underbar{A}\cong\underbar{A}'$ and say that $\underbar{A}$ is isomorphic to 
+$\underbar{A}'$ if for some $f$,$\underbar{A}\underset{f}{\cong}\underbar{A}'$.
+\begin{theorem}
+    The theorem 1.11 and 1.12 about $A\underset{f}{\sim}B$ and $A\sim B$
+    extend at once to $\underbar{A}\underset{f}{\cong}\underbar{B}$and $\underbar{A}\cong \underbar{B}$.
+\end{theorem}
+
+If $B\subseteq A$, we call $(B,R\cap(B\times B))$ the substructures of $\underbar{A}$,
+written $\underbar{A}|B$.
+
+We say that $f$ is an isomorphism of $\underbar{A}=(A,R)$ into $\underbar{A}'=(\underbar{A}',\underbar{R}')$
+if $f$ is one-to-one on $A$ into $A'$ and for any $x,y\in A$, $xRy$ if and only if $f(x)R'f(y)$.
+\begin{theorem}
+    $f$ is an isomorphism of $\underbar{A}$ into $\underbar{A}'$ if and only if $f$
+    is an isomorphism between $\underbar{A}$ and some substructures of $\underbar{A}'$.
+\end{theorem}
+\subsection{Partial orders and orders}
+Let $\underbar{A}=(A,R)$ be a structure. $\underbar{A}$ is called reflective if
+for any $x\in A,xRx$; otherwise it is called irreflective. $\underbar{A}$ is transitive if $xRz$
+whenever $xRy$ and $yRz$;symmetric if $yRx$ whenever $xRy$; antisymmetric if $x=y$
+whenever $xRy$ and $yRx$ and asymmetric if $y\slashed{R}x$ whenever $xRy.$Finally, $\underbar{A}$
+is connected if for any $x,y\in A,xRy$ or $yRx$ or $x=y$.
+
+Relation $R$ is said to be equivalence if $(A,R)$ is reflective,symmetric,and transitive.
+
+A structure $\underbar{A}=(A,R)$ is called a partial order if it is reflective, transitive,and antisymmetric;
+$\underbar{A}$ is called a strict partial order(a variant) if $\underbar{A}$ is irreflective and transitive.
+$\underbar{A}$ is called an order if it is a partial order and is connected.
+As a variant, $\underbar{A}$ is called a strict order if it is a strict partial order and is connected.
+
+In a familiar way, we often use $\leq$ as a variable, instead of $R$, when $(A,R)$ is reflective,
+and $<$ when $(A,R)$ is irreflective. Moreover, if we start with $(A,<)$, then we write $x\leq y$
+to mean : $x<y$ or $x=y$; and if we start with $(A,\leq)$ , then we write $x<y$
+to mean $x\leq y$ and $x\neq y$.
+
+If $\underbar{A}=(A,\leq)$ is a partial order ( or order), then $(A,<)$ is 
+a strict partial order (resp.,strict order). On the other hand, if $(A,<)$ is a strict partial 
+order (or strict order), then $(A,\leq)$ is a partial order(resp., order).
+
+ For any family  $Q$ of sets, consider the inclusion relation cut down to $Q$, i.e., the 
+ relation $\subseteq_Q=\{(A,B):A,B\in Q \text{and} A \subseteq B\}.$
+
+ \begin{theorem}
+    $(Q,\subseteq_Q)$ is a partial order.
+ \end{theorem}
+
+ A family $Q$ of sets which is ordered by $\subseteq_Q$ is called a chain.
+
+\begin{theorem}
+    Suppose $(A,R)$ and  $(A',R')$ are strict orders, $f$ is on $A$ 
+    onto $A$' and `order preserving', i.e., $f(x)R'f(y)$ whenever $xRy$. 
+    Then $(A,R)\underset{f}{\cong}(A',R')$
+\end{theorem}
+
+If $\underbar{B}$ is a substructure of $\underbar{A}$ and $\underbar{A}$
+is a partial order, strict partial order, order, ore strict order, then so is $\underbar{B}$.
+If $(A,R)$ is a partial order, etc., as above, then so is $(A,\Breve{R})$.
+
+If $B\subseteq A$ and $x\in A$, we say that $x$ is a minimal element of $B$ if $x\in B$
+and for all $y\in B,y\slashed{<}x$. On the other hand, we say $x$ is a minimum
+element if $x\in B$ and for all $y\in B,x\leq y$. Also, $x$ is called a lower bound for $B$
+if for all $y\in B,x\leq y$. The notions maximal, maximum, upper bounde are obtained by passing 
+$\leq$ to $\geq$.
+\begin{theorem}
+    Let $\underbar{A}=(A,\leq)$ be a partial order, and $B\subseteq A$.
+    \begin{enumerate}
+        \item `minimum' implies `minimal'(i.e., if $x$ is a minimum element of $B$, then $x$ is a minimal element of $B$)
+        \item $\underbar{B}$ has at most one minimum element.
+        \item If $\underbar{A}$ is an order, then `minimum' = `minimal'.(i.e., $x$ is a minimum element of $B$ if and only if $x$ is a minimal element of $B$).
+    \end{enumerate}
+\end{theorem}
+\begin{remark}
+    There are incredible number of synonyms for `minimum' in common usage - 
+    for example, least, smallest, first, leftmost...
+\end{remark}
+In a partial order $(A,\leq)$, one says that $x$ precedes $y$(or $y$ succeed $x$)if $x<y$.
+In an order $(A<\leq)$, to say that $y$ is an immediate successor of $x$ means of course that $y$ is a 
+minimum (or equivalently, minimal) element of the set $B$ of all successors of $x$.
+If it exists, then it is unique and $x$ is then the immediate predecessor of $y$.
+$x$ is a least upper bound (also called a `supremum' or  `sup' for $B$ )means that 
+$x$ is a least member of the set $C$ of all bounds for $B$. Such an x is unique if it exists. One also write
+$x=\sup B=\sup_{u\in B}u$. Similarly $B$ may have a greatest lower bound, or infimum, called $\inf B.$
+
+Let $\underbar{A}=(A,\leq)$ be an order. By an initial segment of $\underbar{A}$ we mean any subset
+$B$ of $A$ such that for any $x,y$, if $x<y$ and $x\in B$ then $y\in B$. Each element of a of $A$
+determines two initial segments of $\underbar{A}$, namely Pred$a$(in full, Pred $^{<}_{\underbar{A}}a)=\{x:x< a\}$,and Pred$^{\leq}_{\underbar{A}}a=\{x:x\leq a\}$.
+The substructures of $\underbar{A}$ whose universe is Pred $a$ will be called $\underbar{A}_a$. An inital segment is 
+called proper if $B\neq A$. 
+
+Given $U,V\subseteq A$ we say that $U$ and $V$ are cofinal( or confinal or coterminal,or that
+$U$ is cofinal with $V$ or that $V$ is with $U$,) all in the sense of the order $\underbar{A}$,
+if for any $x\in U$ there is a $y\in V$ such that $x\leq y$ and if $x\in V$
+then for some $y\in U$, $x\leq y$.
+
+$\underbar{A}$ is called dense if it has at least two elements and for any
+$x$ an $y$, if $x<y$, then for some $z$: $x<z<y$. $\underbar{A}$ is called discrete
+if every element not a last element has an immediate successor and every element not a first
+has an immediate predecessor. $\underbar{A}$ is called a well-order if every non-empty subset of 
+$A$ has a first element. Any substructures of a well-order is a well-order.
+\begin{theorem}
+    Let $\underbar{A}=(A,\leq)$ be a well-order 
+    \begin{enumerate}
+        \item If $A$ is not empty, there is a first element.
+        \item Every element not a last has an immediate successor
+        \item Every proper initaial segment is of the form Pred a(for some a)
+    \end{enumerate}
+\end{theorem}
+\section{CARDINAL NUMBERS AND FINITE SETS}
+\subsection{Cardinal numbers,+,and $\leq$}
+Cardinals or cardinal numbers are denoted by $\kappa,\lambda$ and $\mu$.
+It is common to say sometimes `the power of $A$' instead of `the cardinal number of $A$'.
+We can now define $0,1,2$ by putting $0=\bar{\bar{\varnothing}}=0;1=\overline{\overline{\{x\}}},2=\overline{\overline{\{x,y\}}}$ if
+$x\neq y$.
+\begin{theorem}
+    $\bar{\bar{A}}=\bar{\bar{B}}$ if and only if $A\sim B$.
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+    \item If $A\sim A',B\sim B',A)(B,and A')(B',$then $A\cup B\sim A'\cup B'$
+    \item For any $X,Y$ there exists $X',Y',$ disjoint, such that $X\sim X'$ and $Y\sim Y'$.
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    $\kappa+\lambda=$the unique $\mu$ such that for some $A,B,\bar{\bar{A}}=\kappa,\bar{\bar{B}}=\lambda,A)(B,$
+    and $\bar{\bar{A\cup B}}=\mu$
+\end{definition}
+\begin{theorem}
+    \begin{enumerate}
+        \item $\kappa+\lambda=\lambda+\kappa$
+        \item $\kappa+(\lambda+\mu)=(\kappa+\lambda)+\mu$
+        \item $\kappa+0=\kappa$
+        \item If $\kappa\neq 0$ then for some $\lambda,\kappa=\lambda+1$
+        \item If $\kappa+1=\lambda+1$, then $\kappa=\lambda$
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    We say that $\kappa\leq \lambda$ if for some $\mu,\lambda=\kappa+\mu$
+\end{definition}
+\begin{theorem}
+    The following are equivalent:
+    \begin{enumerate}
+        \item $\kappa\leq\lambda$
+        \item For some $A$,$B$, $\bar{\bar{A}}=\kappa,\bar{\bar{B}}=\lambda$,and $A\subseteq B$
+        \item For any set $B$ of power $\lambda$ there exists $A\subseteq B$ of power $\kappa$
+        \item For any $A$,$B$ of respective powers $\kappa,\lambda$, there exists $f$ one-to-one on $A$ to $B$
+        \item For any set $A$ of power $\kappa$ there exists $B\supseteq A$ of power $\lambda$ 
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}[Exchange Principle]
+    For any $X,Y$ there exists \verb+Z)(X+ such that $Z\sim Y$.
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item $\kappa\leq \kappa$
+        \item If $\kappa<\lambda$ and $\lambda\leq \mu$ then $\kappa\leq \mu$
+        \item If $\kappa\leq \lambda$ then $\kappa+\mu\leq\lambda+\mu$
+        \item $0\leq \kappa$
+        \item If $\kappa<\lambda$, then $\kappa+1\leq\lambda$
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    For any $\kappa,\{\lambda:\lambda\leq \kappa\}$ exists.
+\end{theorem}
+We write $\kappa\leq^*\lambda$ if, for some $A$, $B$,$\bar{\bar{A}}=\kappa,\bar{\bar{B}}=\lambda$,
+and there is a funciton $f$ on $B$ onto $A$ ($A$ is `an image of $B$' )or else $\kappa=\varnothing$.
+\begin{theorem}
+    \begin{enumerate}
+    \item If $\kappa<\lambda$ then $\kappa\leq^*\lambda$
+        \item If $\kappa\leq^*\lambda$ then $\kappa\leq\lambda$
+        \item Suppose $\bar{\bar{B}}=\lambda$ and some $R$ well-orders $A$. Then $\kappa\leq^*\lambda$ implies $\kappa\leq \lambda$.
+    \end{enumerate}
+\end{theorem}
+\subsection{Natural numbers and finite sets}
+\begin{definition}
+    $\kappa$ is a natural number if $\kappa$ belongs to every set $X$ such that 
+    $0\in X$ and, for any $\lambda$, if $\lambda\in X$ then $\lambda+1\in X$.
+\end{definition}
+We say $A$ is finite if $\bar{\bar{A}}$ is a natural number; $A$ is infinite otherwise.
+\begin{theorem}
+    \begin{enumerate}
+        \item 0 is a natural number.
+        \item If $\kappa$ is a natural number so is $\kappa+1$
+        \item (Induction) Suppose that $\mathfrak{p}$0 (`$\mathfrak{p} holds for 0$');
+        and that, for any $n$, if $\mathfrak{p}n$ then $\mathfrak{p}(n+1)$. Then for every $n,\mathfrak{p}n$.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item $m+n$ is a natural number
+        \item If $\kappa<n$ then $\kappa$ is a natural number
+        \item If $\kappa+n=\lambda+n$ then $\kappa=\lambda$
+        \item Corollaries:\begin{itemize}
+            \item If $m\leq n$ then there is exactly one $k$ such that $m+k=n$
+            \item A finite set is not equivalent to a proper subset of itself
+            \item $n<n+1$
+            \item If $m\leq n$ and $n\leq m$ then $m=n$
+        \end{itemize}
+        \item $\kappa\leq n$ or $n\leq \kappa$
+        \item Corollaries:\begin{itemize}
+            \item $\leq$ `orders' the natural numbers. In this `order':
+            \item 0 is the first element
+            \item for each $n,n+1$ is the immediate successor of $n$ , and
+            \item each $n\neq 0$ has an immediate predecessor.
+        \end{itemize}
+        \item Put $W_n=\{m:m<n\}.$ Then $\bar{\bar{W_n}}=n.$ So every finite set $A$ can be ordered.
+        \item If $(A,R)$ is any order, every finite subset of $A$ has a first element\begin{remark}
+            So also a last. Hence every finite order is a well-order.
+        \end{remark}
+        \item Any two orders $(A,\leq),(A',\leq')$ each on an n-element set are isomorphic.
+        \item If $\kappa\leq^*n$ then $\kappa\leq n$
+    \end{enumerate}
+\end{theorem}
+\begin{remark}
+    When we use greek letter $\kappa,\lambda$ etc., we don't guarantee that they are 
+    finite, but when we use letters like n,j,k etc., we assume that they are finite.
+\end{remark}
+\begin{theorem}
+    \begin{enumerate}
+        \item (The least element principle). If for some $n$, $\mathfrak{p}n$, then there is 
+        ia a minimal( which is here the same as minimum) n such that $\mathfrak{p}$n.
+        \item (Course-of-values induction) If, for any n, if $\mathfrak{Q}$m holds for all $m<n$,
+        then $\mathfrak{Q}n$; then, for all $n,\mathfrak{Q}n$. 
+    \end{enumerate}
+\end{theorem}
+  By an n-termed sequence or synonymously, an ordered n-tuple of elements of $A$
+  we mean a function $s$ on $W_n$ to $A$. We may sometimes write $s_i$ instead of $s(i)$.
+  The length of $s$ is $n$. We say that $R$ is an $n-$ary relation for $A$ if $R\subseteq A^{W_n}$.
+  $o$ is called an $n-$ary operation for $A$ if $o:A^{W_n}\rightarrow A$
+\subsection{Multiplication and exponentiation}
+\begin{theorem}
+    If $A\sim A'$ and $B\sim B'$ then $A\times B\sim A'\times B'$
+\end{theorem}
+\begin{definition}
+    $\kappa\cdot\lambda$(or just $\kappa\lambda$)= the unique $\mu$ such that,
+    for some $A$, $B$, $\bar{\bar{A}}=\kappa,\bar{\bar{B}}=\lambda$, and $\overline{\overline{A\times B}}=\mu.$
+\end{definition}
+\begin{theorem}
+    \begin{enumerate}
+        \item $\kappa\lambda=\lambda\kappa$
+        \item $\kappa(\lambda\mu)=(\kappa\lambda)\mu$
+        \item $\kappa(\lambda+\mu)=\kappa\lambda+\kappa\mu$
+        \item $\kappa\cdot 0=0;\kappa\cdot 1=\kappa;\kappa\cdot 2=\kappa+\kappa$
+        \item If $\kappa\lambda=0$ then $\kappa=0$ or $\lambda=0$.
+        \item If $\kappa\leq\lambda$ then $\kappa\mu\leq\lambda\mu$.
+        \item If $\kappa,\kappa\geq 2$ then $\kappa+\lambda\leq\kappa\cdot\lambda$
+        \item $m\cdot n$ is a natural number
+        \item If $m\neq 0$ and $n<p$ then $mn<mp$(so, if $m\neq 0 $ and $mn=mp$ then $n=p$)
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    If $A\sim A'$ and $B\sim B'$, then $A^B\sim A'^{B'}$
+\end{theorem}
+\begin{definition}
+    $\kappa^{\lambda}$= the unique $\mu$ such that for some $A,B,\bar{\bar{A}}=\kappa,\bar{\bar{B}}=\lambda,$
+    and $\mu=\bar{\bar{A^B}}.$
+\end{definition}
+\begin{theorem}
+    \begin{enumerate}
+        \item $(\kappa^{\lambda})^{\mu}=\kappa^{\lambda\mu}$
+        \item $\kappa^{\lambda+\mu}=\kappa^{\lambda}\kappa^{\mu}$
+        \item $(\kappa\lambda)^{\mu}=\kappa^{\mu}\lambda^{\mu}$
+        \item $\kappa^0=1;\kappa^1=\kappa;\kappa^2=\kappa\kappa;$ and if $\kappa\neq 0$ then $0^{\kappa}=0$
+        \item If $\kappa\leq\lambda$ then $\kappa^{\mu}\leq\lambda^{\mu}$
+        \item If $\kappa\leq\lambda$ then $\mu^{\kappa}\leq \mu^{\lambda}$ unless $\kappa=\mu=0<\lambda$
+        \item If $\bar{\bar{A}}=\kappa$, the $\overline{\overline{P(A)}}=2^{\kappa}$
+        \item $\kappa\leq 2^{\kappa}$
+        \item $m^n$ is a natural number.
+    \end{enumerate}
+\end{theorem}
+\subsection{Definition by induction}
+\begin{theorem}
+    \begin{enumerate}
+        \item If $f$ works for $n$ and $k<n$, then $f\upharpoonright W_{k+1}$ works for $k$.
+        \begin{remark}
+            `work for' means that it satisfy the condition in theorem 2.17.1
+        \end{remark}
+        \item If $\mathfrak{B}_0=a$ and for all $n,\mathfrak{n+1}=\mathfrak{a}_{\mathfrak{B}_n}$, then $(\mathfrak{B}_i:i\leq k)$ works for $k$.
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    $D_x(\mathfrak{a}_x,a,n)=$ the unique $z$ such that for some $f$ on $W_{n+1},f(0)=a,f(i+1)=\mathfrak{a}_{f(i)}$
+    for all $i<n$, and $f(n)=z$.
+\end{definition}
+\begin{theorem}[Definition by induction]
+   \begin{enumerate}
+    \item There is exactly one $f$ such that $f$ is on $W_{q+1},f(0)=a,$ and $f(n+1)=\mathfrak{a}_{f(n)}$ for all $n<q$.
+    \item $\mathfrak{B}_0=a$ and for all $n,\mathfrak{B}_{n+1}=\mathfrak{a}_{\mathfrak{B}_n}$, and it also hold for $\mathfrak{C}$, then, for all $n,\mathfrak{B}_n=\mathfrak{C}_n$.
+    \item $D_x(\mathfrak{a},a,0)=a.D_x(\mathfrak{a},a, n+1)=\mathfrak{a}_{D_x(\mathfrak{a}_x,a,n)}$
+   \end{enumerate} 
+\end{theorem}
+\begin{theorem}
+    We can justibly introduce by recursion a notion $\mathfrak{B}$ by requiring that 
+    \[\mathfrak{B}_n=\mathfrak{C}((\mathfrak{B}:j<n)) \text{for all }n\]
+    \begin{remark}
+        It means that, we use some transformation $\mathfrak{C}$ on $(\mathfrak{B}:j<n)$ to give out $\mathfrak{B}_n$,
+        which is a course-of-values form of recursion.
+    \end{remark}
+\end{theorem}
+\begin{theorem}
+    If $N$ exists, then in fact there is exactly one function $F$ on $N$ such that $F(0)=c$.
+    and for all $n$, $F(n+1)=\mathfrak{a}_{f(n)}$.
+\end{theorem}
+\subsection{Axiom of infinity, Peano axioms, Dedekind infinite sets}
+An algebraic structure $(A,S,z)$ where $z\in A,S:A\rightarrow A$ is called a
+Peano structure if (P1) for any $a\in A, Sa\neq z$;(P2) S is one-to-one; and (P3) for any subset 
+$B$ of $A$, if $z\in B$ and $Sa\in B$, whenever $a\in B$, then $B=A$.(These are the famous Peano axioms)
+\begin{axiom}[Axiom of Infinity]
+    There exists a Peano structure.
+\end{axiom}
+\begin{theorem}
+    The following are equivalent( forms of the Axiom of Infinity)
+    \begin{enumerate}
+        \item There exists a Peano structure;
+        \item There exists an infinite set;
+        \item $N$ exists;
+    \end{enumerate}
+\end{theorem}
+We put $\aleph_0=\bar{\bar{N}}$.
+
+\begin{theorem}
+    If $\kappa$ is infinite, then $\aleph_0\leq\kappa$
+\end{theorem}
+\begin{theorem}
+    (A,S,z) is a Peano structure if and only if $(A,S,z)\cong(N,Sc,0)$
+\end{theorem}
+A cardinal $\kappa$ is called Dedekind infinite if $\kappa\geq\aleph_0,$
+\section{THE NUMBER SYSTEMS}
+\subsection{Introductory remarks}
+We call structure $(N,+,\cdot,0,1,<)$ which we call $\underbar{N}$. Let us 
+say that $\underbar{A}=(A,+,\cdot,0,1,<)$ is a Peano semiring if: $(A,S,0)$ is
+a Peano system, where $Sa=a+1$ for any $a\in A$; for any $a,b\in A, a<b$ if and only 
+if for some $c\neq 0, b=a+c,$ and also 
+\[\begin{cases}
+    a+0=a\\
+    a+(b+1)=(a+b)+1\\
+\end{cases} \text{and}\begin{cases}
+    a\cdot 0=0\\
+    a\cdot(b+1)=a\cdot b+a\\
+\end{cases}\]
+\begin{theorem}
+    $\underbar{A}$ is a Peano semiring if and only if $\underbar{A}$ is 
+    isomorphic to $\underbar{N}=(N,+,\cdot,0,1,<)$
+\end{theorem}
+It follows that any Peano semiring obeys the following rich list of laws (which 
+should be taken as restricted to the natural numbers): 2.3.,2.4.1.,2.4.3.,2.10.3.-2.10.9. and
+2.13.
+\subsection{Construction and characerization up to isomorphism of the integers, rationals, and reals}
+We define the notion $n\circ a$ by recursion, specifying that $0\circ a=0$ and $(n+1)\circ a=n\circ a+a, $ for any $a\in A$. 
+\begin{theorem}
+    There exists one and up to isomorphism only one ordered intergral domain $\underbar{Z}=(Z,+,\cdot,0,1,<)$
+    such that every element $x$ of $Z$ if of the form $n\circ 1$ or $-(n\circ 1)$ (where $n\in N$).
+\end{theorem}
+If $(A,+,\cdot,0,1,<)$ is an ordered integral domain, $a\in A$, and $i=n$ or $i=-n$ we put $i\circ a=n\circ a$
+or $-(n\circ a),$respectively.
+\begin{theorem}
+    There is one and up to isomorphism only one ordered field $\underbar{Q}=(Q,+,\cdot,0,1,<)$ such that 
+    every element of $Q$ is of the form $(i\circ 1)/(j\circ 1)$(where $i,j\in Z$ and $j\neq 0.$) 
+\end{theorem}
+\begin{theorem}
+    There is one and up to isomorphism only one Complete ordered field $\underbar{R}=(R,+,\cdot, 0,1,<)$
+\end{theorem}
+\section{MORE ON CARDINAL NUMBERS}
+\subsection{The Cantor-Bernstein Theorem}
+\begin{theorem}[Cantor-Bernstein]
+   If $\kappa\leq\lambda$ and $\lambda\leq\kappa$ then $\kappa=\lambda$ 
+\end{theorem}
+\subsection{Infinite sums and products of cardinal}
+\begin{axiom}
+    Suppose for each $i\in I$, there is an $x$ such that $\mathcal{P}(i,x)$.
+    Then there exists $f$ on $I$ such that, for each $i\in I,\mathcal{P}(i,f(i))$.
+\end{axiom}
+\begin{theorem}
+    Given $(\kappa_i:i\in I),$ there exists $F$ on $I$ such that $\overline{\overline{F(i)}}=\kappa_i$ for each $i\in I$.
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item If $F$ and $G$ are both disjointed and on $I$ and for each $i\in I, F(i)\sim G(i)$,
+        then $\bigcup_{i\in I}F(i)\sim \bigcup_{i\in I}G(i)$
+        \item For any $F$ on $I$ there exists a disjointed $G$ on $I$ such that for each $i\in I$,$F(i)\sim G(i)$.
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    $\sum_{i\in I}\kappa_i$ is the unique $\mu$ such that there exists a disjointed $F$ on $I$ 
+    such that, for each $i\in I,\overline{\overline{F(i)}}=\kappa_i$, and $\mu=\bigcup_{i\in I}F(i)$
+\end{definition}
+\begin{theorem}
+    If $F$ and $G$ are on $I $ and for each $i\in I, F(i)\sim G(i), $ then $\prod_{i\in I}F(i)\sim \prod_{i\in I}G(i)$
+\end{theorem}
+\begin{definition}
+    $\prod_{i\in I}\kappa_i$ is the unique $\mu$ such that there exists $F$ on $I$ such that for each $i\in I, \overline{\overline{F(i)}}=\kappa_i$,
+    and $\overline{\overline{\prod_{i\in I}F(i)}}=\mu$.
+\end{definition}
+\begin{theorem}
+    \begin{enumerate}
+   \item (General communicative law) Let $I\underset{f}{\sim}J$. Then $\sum_{j\in J}\kappa_j=\sum_{i\in I}\kappa_{f(i)}$(Likewise for $\prod$)
+   \item (General associative law)  \[\sum_{i\in I}\sum_{j\in J_i}\kappa _{ij}=\sum_{(i,j)\in W}\kappa _{ij},\]where $W=\{(i,j):i\in I \text{and} j\in J_i\}$.(Likewise for $\prod$)
+   \item (General distributive law) $\kappa\cdot\sum_{i\in I}\lambda_i=\sum_{i\in I}(\kappa\lambda_i);$
+   \[\prod_{i\in I}\sum_{j\in J_i}\kappa _{ij}=\sum_{h\in \prod_{i\in I}J_i}\prod_{i\in I}\kappa_{ih(i)}\]
+   \item $\sum_{i\in \{0,1\}}\kappa_i=\kappa_0+\kappa_1$ and $\prod_{i\in \{0,1\}}\kappa_i=\kappa_0\cdot\kappa_1;\sum_{i\in I}\kappa=\kappa\cdot \bar{\bar{I}}$ and $\prod_{i\in I}\kappa=\kappa^{\bar{\bar{I}}}.$
+\begin{remark}
+    Thus $1+1+1+\cdots=\sum_{n\in N}1=\aleph_0$ and $2\cdot 2\cdot2\cdot \cdots =2^{\aleph_0}$.
+\end{remark}
+\item If $J\subseteq I$ and $\kappa_i=0$ for all $i\in I-J$, then $\sum_{i\in I}\kappa_i=\sum_{i\in J}\kappa_i;$ and likewise for 1 and $\prod$ 
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item If, for all $i\in I,\kappa_i\leq\lambda_i, $ then $\sum_{i\in I}\lambda_i$ and $\prod_{i\in I}\kappa\leq\prod_{i\in I}\lambda_i$
+        \item If $\lambda\in Q$ then $\lambda\leq\sum_{\kappa\in Q}\kappa$\begin{remark}
+            Hence every set of cardinals is bounded above.
+        \end{remark}
+        \item $\kappa^{\sum_{i\in I}\lambda_i}=\prod_{i\in I}\kappa^{\lambda_i}$
+        \item $(\prod_{i\in I}\kappa_i)^{\lambda}=\prod_{i\in I}\kappa_i^{\lambda}$
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    If $\kappa_i\geq 2$ for all $i\in I$, then $\sum_{i\in I}\kappa_i\leq\prod_{i\in I}\kappa_i$.
+\end{theorem}
+\subsection{Different kinds of infinity}
+\begin{theorem}[Cantor's Theorem]
+   $\kappa<2^{\kappa}$ 
+\end{theorem}
+\begin{theorem}[The Konig-Zermole Theorem]
+   If, for each $i\in I,\kappa_i<\lambda_i,$ then $\sum_{i\in I}\kappa_i<\prod_{i\in I}\lambda_i$ 
+\end{theorem}
+\subsection{$\aleph_0,2^{\aleph_0},$ and $2^{2^{\aleph_0}}$- the simplest infinite cardinals}
+A set $A$ is called denumerable if $\bar{\bar{A}}=\aleph_0,$ and countable if $\bar{\bar{A}}\leq \aleph_0$.
+\begin{theorem}
+    $A$ is countable if and only if $A$ is denumerable or finite.
+\end{theorem}
+\begin{theorem}
+    If $\kappa\leq^*\aleph_0$, then $\kappa$ ia countable.
+\end{theorem}
+\begin{theorem}
+    The sets $Z$ (of integers) and $Q$ (of rationals) are denumerable.
+    Also
+    \[\aleph_0=\aleph_0+\aleph_0=\aleph_0\cdot n=\aleph_0\cdot\aleph_0=\aleph_0^n=\overline{\overline{Sq}},\]
+    where $Sq=\bigcup_{n\in N}N^{W_n}=$ the set of all finite sequences of natural numbers.
+\end{theorem}
+A real number is called algebraic if it is a root of some polynomial with rational
+coefficients not all zero.
+\begin{theorem}
+    The set $Alg$ of all real algebraic numbers is countable.
+\end{theorem}
+\begin{theorem}
+    A countable union of countable sets is countable.
+\end{theorem}
+The set $R$ is sometimes called the continum, and its cardinal number is 
+denoted by $\mathfrak{c}$.
+\begin{theorem}
+    $2^{\aleph_0}=\mathfrak{c}$
+\end{theorem}
+\begin{theorem}
+    There exists transcendental real numbers.(i.e., reals which are not algebraic.)
+\end{theorem}
+\begin{theorem}
+    $\mathfrak{c}=\mathfrak{c}+\mathfrak{c}=\mathfrak{c}\cdot\mathfrak{c}=\mathfrak{c}^n=\mathfrak{c}^{\aleph_0}$
+\end{theorem}
+\begin{theorem}
+    $\mathfrak{c}^{\mathfrak{c}}=2^{\mathfrak{c}}$
+\end{theorem}
+\section{ORDERS AND ORDER TYPES}
+\subsection{Ordered sums and products}
+The ordered sum of two orders can be defined in a natural way. If 
+the orders $\underbar{A}=(A,\leq)$ and $\underbar{A}'=(A',\leq')$ are disjoint,
+then, their ordered sum $\underbar{A}+\underbar{A}'$ is the structure $(A\cup A',\leq'')$,
+where, 
+\[x\leq''y \text{ if and only if } x\leq y \text{ or } x\leq'y \text{ or }(x\in A \text{ and } y\in A')\]
+Let $\underbar{I}=(I,\leq)$ 
+be an order and suppose 
+$(\underbar{$A_i$}:i\in I)$
+is a disjointed indexed family of orders (where each 
+$\underbar{$A_i$}=(A_i,\leq_i)$
+).
+Then, we defined the ordered sum 
+$\sum_{i\in \underbar{I}}\underbar{$A_i$}$
+ to be 
+$(\bigcup_{i\in I}A_i,\leq)$,
+where, 
+$x\leq y$ if and only if for the determined $i,j $such that
+$x\in A_i $ and $y\in A_j,$either$ i<j $ or else $(i=j $ and x$\leq_i y)$
+
+If $\underbar{A}$ and $\underbar{B}$ are orders, the ordered product $\underbar{A}\cdot\underbar{B}$
+can be defined to be $\sum_{b\in B}\underbar{A}$
+
+It is convenient to allow the case where the given $(\underbar{A}_i:i\in I)$is not disjointed.
+In this case, we put $\sum_{i\in \underbar{I}}A_i=\sum_{i\in \underbar{I}}A_i',$ where $\underbar{A}'=(A_i',\leq_i'),A_i'=\{i\}\times A_i,$
+and of course, $(i,a)\leq_i'(i,b)$ if and only if $a\leq_i b$. Thus, $\underbar{A}\cdot\underbar{B}$ is just the
+the set $A\times B$ of ``two letter words''(a,b) under the antilexograhic order.
+
+$^*$ take $A$ `turn around', i.e., given $\underbar{A}=(A,\leq)$, we have $A^*=(A,\geq)$
+\begin{theorem}
+    \begin{enumerate}
+        \item If $\underbar{I}=(I,\leq)$ is a well order and for each $i\in I,\underbar{A}_i$ is 
+        a well order, then $\sum_{i\in \underbar{I}\underbar{A}_i}$ is a well-order.
+        \item If $\underbar{A}$ and $\underbar{B}$ are well-orders so are $\underbar{A}+\underbar{B}$ and $\underbar{A}\cdot\underbar{B}$.
+    \end{enumerate}
+\end{theorem}
+\subsection{Order types}
+Each order $\underbar{A}$ corresponds something called Tp $\underbar{A}$(the order-type of $\underbar{A}$).
+Tp $\underbar{A}$= Tp $\underbar{B}$ if and only if $\underbar{A}\cong\underbar{B}$. Moreover, 
+for convenience, we assume also that if the order $\underbar{A}$ has finite cardinal $n$, then, Tp $\underbar{A}=n$.
+
+Order types are denoted by $\rho,\sigma,\tau.$ Order types of well-orders $\underbar{A}$
+are called ordinals and we write $\underbar{A}=$Ord $\underbar{A}$. We let $\omega=$Tp $(N,\leq);\eta=$Tp $(Q,\leq);$
+and $\lambda=$Tp $(R,\leq)$.
+\begin{theorem}
+    If $\underbar{A},\underbar{A}',\underbar{B},\underbar{B}'$ are orders, $\underbar{A}\cong\underbar{A}'$
+    and $\underbar{B}\cong\underbar{B}'$, then $\underbar{A}+\underbar{B}\cong\underbar{A}'+\underbar{B}',\underbar{A}\cdot\underbar{B}\cong\underbar{A}'\cdot\underbar{B}',$
+    and $\underbar{A}^*\cong\underbar{B}^*.$(For +, assume $\underbar{A})(\underbar{B}$ and $\underbar{A}')(\underbar{B}'$)
+\end{theorem}
+\begin{definition}
+    $\sigma+\tau$( or $\sigma\cdot\tau$) is the unique $\rho$ such that for some
+    (disjoint for +) orders $\underbar{A},\underbar{B},$Tp $\underbar{A}=\sigma,$Tp $\underbar{B}=\tau$ and 
+    $\rho=$Tp$(\underbar{A}+\underbar{B})$(respectively, $\underbar{A}\cdot\underbar{B}$).$\sigma^*$ is defined similarly.
+\end{definition}
+For any ordinal $\alpha$ and $\beta,\alpha+\beta$ and $\alpha\cdot\beta$ are ordinals.
+\begin{theorem}
+    Assume AC,
+    \begin{enumerate}
+        \item For any $(\sigma_i:i\in I)$ there exist orders $(\underbar{A}_i:i\in I)$ such that 
+        Tp $\underbar{A}_i=\sigma_i$ for each $i\in I$.
+        \item If the orders $\underbar{A}_i$ and $\underbar{A}_i'$ are isomorphic for 
+        each $i\in I$ and $\underbar{I}=(I,\leq)$ is an order, then $\sum_{i\in \underbar{I}}\underbar{A}_i\cong\sum_{i\in \underbar{I}}\underbar{A}_i'$
+    \end{enumerate}
+\end{theorem}
+\begin{definition}
+    If $\underbar{I}$ is an order, $\sum_{i\in \underbar{I}}\sigma_i$ is the unique $\rho$
+    such that for some orders $(\underbar{A}_i:i\in I)$,Tp $\underbar{A}_i=\sigma_i$ for each $i\in I$
+    and $\rho=$Tp($\sum_{i\in I}\underbar{A}_i$).
+\end{definition}
+Here are some distinct ordinals:
+\[0,1,2,\cdots,\omega,\omega+1,\cdots,\omega\cdot 2(=\omega+\omega),\cdots,\omega\cdot 3,\cdots,\omega\cdot\omega,\cdots\]
+\begin{theorem}
+    For $+,\cdot,$ and $\sum$ over order types, 
+    \begin{enumerate}
+        \item Associative laws for + and $\cdot$
+        \item communicative laws fail for + and $\cdot$
+        \item $\sigma(\tau+\tau')=\sigma\tau+\sigma\tau'$
+        \item But the law $(\alpha+\beta)\gamma=\alpha\gamma+\beta\gamma$ fails, even for ordinals.
+        \item (1) and (3) extend suitably to $\sum$, assuming AC.
+        \item $(\sigma+\tau)^*=\tau^*+\sigma^*$ and $(\sigma\cdot\tau)^*=\sigma^*\cdot\tau^*$
+    \end{enumerate}
+\end{theorem}
+If the order $\underbar{A}=(A,\leq)$ and $\underbar{A}'=(A',\leq')$ have the same
+type $\sigma$, then $A$ and $A'$ have the same cardinal; we define $\bar{\bar{\sigma}}$ to be this cardinal.
+Clearly $\overline{\overline{\sigma+\tau}}=\overline{\overline{\sigma}}+\overline{\overline{\tau}}$ and $\overline{\overline{\sigma\cdot\tau}}=\overline{\overline{\sigma}}\cdot \overline{\overline{\tau}}$
+\begin{theorem}
+    \begin{enumerate}
+        \item Any two denumerable dense orders without first or last elements are isomorphic (and hence of type $\eta$)
+        \item Let $\underbar{A}'$ have type $\eta$. Then, every countable order $(A,\leq)$ is isomorphic to a suborder (i.e., substructure) of $\underbar{A}'$
+    \end{enumerate}
+\end{theorem}
+\section{AXIOMATIC SET THEORY}
+\subsection{A formalized language}
+\begin{axiom}[Empty Set Axiom]
+    There is exactly one $x$ such that, for any $y,y\notin x$.
+\end{axiom}
+We take the following as convention
+\[y=\iota x\mathcal{P}x\leftrightarrow [\exists!x\mathcal{P}x\land\mathcal{P}y]\lor[\sim\exists!x\mathcal{P}x\land\forall z(z\notin y)]. \]
+\subsection{The axioms of set theory} 
+We list the axioms of ZFC below.
+\begin{enumerate}
+    \item (Empty Set Axiom) There is exactly one $x$ such that, for any $y,y\notin x$ 
+    \item (Extensionality Axiom) If, for any $x$,$x\in A$ if and only if $x\in B$, then $A=B$.
+    \item (Separation Axiom) $\{x:x\in B\land\mathcal{P}x\}$exists
+    \item (Doubleton) $\{t:t=x \text{ or }t=y\}$exists.
+    \item (Union Axiom) $\{x: \text{for some }A,x\in A \text{ and }A\in W\}$exists.(That is, $\bigcup_{A\in W}A$exists)
+    \item (Power Set Axiom) $\{B:\text{for every }x\in B, x\in A\}$ exists.(That is, $P(A)$ exists)
+    \begin{remark}
+        The axioms listed so far constitue the theory of axiom system denoted by $Z_0$.
+    \end{remark}
+    \item (Replacement Axiom) $\{\mathfrak{a}_x:x\in A\}$ exists.
+    \item (Axiom of Infinity)
+    \item (Axiom of Choice)
+    \item (Axiom of Regularity)
+\end{enumerate}
+Thus the theory ZFC has been describled. The theory Z consists of $Z_0$ 
+plus Infiity and Regularity. ZF is Z plus F, meaning the Axiom of Replacement.
+ZFC is ZF plus Choice, `C' standing for Choice.
+
+\begin{theorem}
+    One can drop from $Z_0F$ both Separation and Doubleton and still derive 
+    them.
+\end{theorem}
+\begin{theorem}
+    $\{x:\mathcal{P}x\}$ exists if there is a  `big enough B',i.e., a B such 
+    that $x\in B$ whenever $\mathcal{P}$x.
+\end{theorem}
+\begin{theorem}
+    We establish the existence of the following sets: First, directly, from 
+    axioms: $\varnothing;\{x\in A:\mathcal{P}x\};\{\mathfrak{a}_x:x\in A\};\bigcup(W);\mathfrak{P}(A);\{x,y\}.$
+    Hence easily $\{x\},\bigcup_{i\in I}\mathfrak{a}_i,(x,y)$ and $(\mathfrak{a}_x:x\in X)$.
+    Next: $A\cap B$ and $A-B;A\cup B=\bigcup(\{A,B\});A\circleddash B=(A-B)\bigcup(B-A);\bigcap_{i\in I}\mathfrak{a}_i$
+    if $I\neq\varnothing$. Now $A\times B$ and Dom $R$. Next, easily, Range $R,R[A].$ Then $R/S$, and
+    $f\upharpoonright A.$ Finally, $A^B$ and $\prod_{i\in I}\mathfrak{a}_i$.
+\end{theorem}
+\section{WELL-ORDERINGS,ORDINALS AND CARDINALS}
+\subsection{Well-orders}
+In a well-order $\underbar{A}$, every element $x$ is clearly of just one of 
+these three kinds: $x$ is the first element; $x$ is a successor element - i.e., $x$
+has an immediate predecessor. 
+
+Let $\underbar{A}=(A,\leq)$ be any well-order and $u\notin A$.
+Let $B$ be the ordered sum of $\underbar{A}$ and the order with universe $\{u\}$.
+Then $\underbar{B}$ is a well-order, and clearly $\underbar{A}=\underbar{B}_u$.
+We have the fact that every well-order $\underbar{A}$ is of the form $\underbar{B}_u$
+for some well-order $\underbar{B}$ and some $u$.
+\begin{theorem}
+    Suppose $\underbar{A}=(A,\leq)$ is a well-order and $f:A\rightarrow A$ is
+    increasing or, what is the same, order preserving(i.e., $f(x)<f(y)$ whenever $x<y$).
+    Then for every $x\in A,f(x)\geq x$.
+\end{theorem}
+\begin{theorem}
+    No well-order is isomorphic to (even a substructure of) a proper initial segment of itself.
+\end{theorem}
+An order (or indeed any structure) $\underbar{A}=(A,\cdots)$ is called rigid
+if it has no automorphisms except $Id_A$.(An automorphism of $\underbar{A}$ is an 
+$(\underbar{A},\underbar{A})-$isomorphism)
+\begin{theorem}
+    Any well-order $\underbar{A}=(A,\leq)$ is rigid.
+\end{theorem}
+\begin{theorem}
+    For any well-orders $\underbar{A}$ and $\underbar{B}$, at most 
+    one of the following holds:
+    \begin{enumerate}
+        \item $\underbar{A}$ is isomorphic to a proper initial segment of $\underbar{B}$
+        \item $\underbar{B}$ is isomorphic to a proper initial segment of $\underbar{A}$
+        \item $\underbar{A}\cong\underbar{B}$.
+    \end{enumerate}
+    Moreover, in each of (1)=(3) the corresponding map is unique.
+\end{theorem}
+\begin{theorem}[Comparison Theorem for Well-orders]
+   Of any well-orders $\underbar{A}$ and $\underbar{B}$, one is isomorphic to 
+   an initial segment of the other. 
+\end{theorem}
+\begin{theorem}
+    Suppose $\underbar{B}$ is any substructure of the well-order $\underbar{A}$.
+    Then $\underbar{B}$ is isomorphic to an initial segment of $\underbar{A}$.
+\end{theorem}
+Consider two assertion about an order $\underbar{A}=(A,\leq)$
+\begin{enumerate}
+    \item If $B$ is any non-empty subset of $A$, then it has a minimal element.
+    \item If $C$ is any subset of $A$, and, for each $a\in A$, if $x\in C$ for all $x<a$, then $a\in C$, then for all $a\in A,a\in C.$(Induction Principle)
+\end{enumerate}
+According to these two assertion, we can prove that 
+\begin{theorem}
+    Every well-order satisfies the induction principle(by the very definition of `well-order').
+\end{theorem}
+\begin{proof}
+    Prove by contradiction.
+    Suppose $\underbar{A}$ is well-ordered and for each $a$ in $A$,
+    if $x\in C$, for all $x<a$ then $a\in C$. By the axiom of seperation,
+    the set $B=\{x \in A:x \notin C\}$ exists, which is also a subset of $A$.
+    Thus, $B$ is also well-ordered and has a minimal element $b$. For any $a\in A,a<b$,
+    $a\notin B$. Thus, $a\in C$ and $b\in C$, which is contrary to $b\in B$.
+    Therefore $B=\varnothing$ and each $a\in A,a\in C$.
+\end{proof}
+\begin{theorem}[Recursion over a fixed well-order]
+   ($\mathfrak{a}$is given.)Let $\underbar{A}=(A,\leq)$  be a well-order. Then, there is exactly one
+   $f$ such that $f$ is a function on $A$ and for each $a\in A,f(a)=\mathfrak{a}_{f\upharpoonright \text{Pred }a}$ 
+\end{theorem}
+\begin{theorem}
+    We can introduce a notion $\mathfrak{O}(\underbar{A})$(defined for all 
+    well-orders $\underbar{A}$) by saying:``$\mathfrak{O}$ is defined recursively by requiring that: $\mathfrak{O}(\underbar{A})=\mathfrak{a}_{\{\mathfrak{O}(\underbar{A}_a):a\in A\}}$for each well-order $\underbar{A}=(A,\leq)$''
+    
+    Let $\mathfrak{O}$ be defined recursively by previous way. If $\underbar{A}\cong\underbar{A}'$(both being well-orders)
+    then $\mathfrak{O}(\underbar{A})=\mathfrak{O}(\underbar{A}')$
+\end{theorem}
+\subsection{Von Neumann ordinals}
+\begin{definition}
+    We define Ord $\underbar{A}$, for all well-order $\underbar{A}$, by recursion,by 
+    requiring for any well-order $\underbar{A}=(A,\leq)$:
+    \[\text{Ord }\underbar{A}=\{\text{Ord }\underbar{A}_a:a\in A\}.\]
+\end{definition}
+\begin{theorem}
+    If $\underbar{A}$ and $\underbar{B}$ are well-orders and $\underbar{A}\cong\underbar{B}$,
+    then Ord $\underbar{A}\cong=$ Ord $\underbar{B}$.
+\end{theorem}
+$\alpha,\beta,\gamma,\epsilon$ range over ordinals.
+\begin{theorem}
+    $\alpha\notin\alpha$
+\end{theorem}
+\begin{theorem}
+    If Ord $\underbar{A}=$ Ord $\underbar{B}$ ($\underbar{A},\underbar{B}$ well-orders) then $\underbar{A}\cong\underbar{B}$.
+\end{theorem}
+\begin{definition}
+    We say that $\alpha<\beta$ if for some well-orders $\underbar{A}$ and $\underbar{B}$, Ord $\underbar{A}=\alpha$, Ord $\underbar{B}=\beta$
+    and $\underbar{A}$ is a proper initial segment of $\underbar{B}$.
+\end{definition}
+\begin{theorem}
+    <`strictly orders' the ordinals. That is:
+    \begin{enumerate}
+        \item $\alpha\slashed{<}\alpha$;
+        \item If $\alpha<\beta$ and $\beta<\gamma$ then $\alpha<\gamma$;
+        \item $\alpha\leq\beta$ or $\beta\leq\alpha$
+    \end{enumerate}
+\end{theorem}
+For any $\alpha$, put $W(\alpha)=\{\beta:\beta<\alpha\}$. If $\alpha=$ Ord $\underbar{A}$ 
+then $W(\alpha)\{\text{Ord }\underbar{A}_a:a\in A\}.$Thus, by the Replacement Axiom:
+\begin{theorem}
+    $W(\alpha)$ exists.
+\end{theorem}
+Write $\underbar{W}(\alpha)=(W(\alpha),\leq_{W(\alpha)})$.
+\begin{theorem}
+    $\underbar{W}(\alpha)$ is a well-order and Ord $\underbar{W}(\alpha)=\alpha$.
+    Indeed, if Ord $\underbar{A}=\alpha$, then $\underbar{A}\underset{f}{\cong}\underbar{W}(\alpha),$
+    where $f(a)=$ Ord $\underbar{A}_a$ for each $a$ in $\underbar{A}$.
+\end{theorem}
+\begin{theorem}
+    If for some $\alpha,\mathcal{P}\alpha$, then, there is a least $\alpha$ such that $\mathcal{P}\alpha$. 
+\end{theorem}
+\begin{theorem}[Induction over all ordinals]
+   Suppose that, for all $\alpha$, if $\mathcal{P}\beta$ for all $\beta<\alpha$,
+   then $\mathcal{P}\alpha$. Then, for all $\alpha,\mathcal{P}\alpha$. 
+\end{theorem}
+\begin{theorem}[Recursion over all ordinals]
+   We can (justifiably) introduce a notion $\mathfrak{O}(\alpha)$ (over all $\alpha$)
+   by saying that: $\mathfrak{O}(\alpha)$ is defined recursively by requiring that for each $\alpha,\mathfrak{O}(\alpha)=\mathfrak{a}_{\mathfrak{O}\beta:\beta<\alpha}$ 
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item (Burali=Forti) The set of all ordinals does not exist.
+        \item Every set $K$ of ordinals is bounded above.
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    $\alpha=\{\beta:\beta<\alpha\}$
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item $0=\varnothing$
+        \item $\beta<\alpha$ if and only if $\beta\in\alpha$
+        \item Every member of an ordinal is an ordinal.
+        \item $\alpha$ is a transitive set - that is, for any $x,y$, if $x\in y\in \alpha$ then $x\in \alpha$)
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    $x$ is an ordinal if and only if $x$ is a transitive set and $(x,\in_x)$ is a well-order.
+\end{theorem}
+\subsection{The well-ordering theorem}
+\begin{theorem}[Well-ordering Principle]
+   Every set $A$ can be well-ordered (that is, for some $\leq,(A,\leq)$ is a well-order).
+   Obviously equivalent is: For any $A$ there exists $\alpha$ such that $A\sim\alpha$. 
+\end{theorem}
+\begin{theorem}
+    The Well-ordering Principle implies AC.
+\end{theorem}
+\begin{theorem}[Zorn's Lemma]
+    Ler $\underbar{A}=(A,\leq)$ be a partial order, and suppose that every 
+    subset $B$ of $A$ which is ordered by $\leq$ has an upper bound. Then, $\underbar{A}$ 
+    has a maximal member.
+\end{theorem}
+\begin{theorem}
+    Zorn's Lemma is equivalent to AC.
+\end{theorem}
+\subsection{Defining $\overline{\overline{A}}$ and Tp$\underbar{A}$}
+\begin{definition}
+    We put $\overline{\overline{A}}=$ the least ordinal $\alpha$ such that 
+    $A\sim\alpha$.
+\end{definition}
+\begin{theorem}
+    $\overline{\overline{A}}=\overline{\overline{B}}$ if and only if $A\sim B$.
+\end{theorem}
+An ordinal $\alpha$ is called an initial ordinal if $\alpha$ is not set-theoretically
+equivalent to any smaller ordinal. Obviously, $\alpha$ is a cardinal if and 
+only if $\alpha$ is an initial ordinal. 
+
+It is clear that 
+\[\overline{\overline{\kappa}}=\kappa\]
+\begin{theorem}
+    Given $(\kappa_i:i\in I)$, there exists $F$ on $I$ such that for each $i\in I,\overline{\overline{F(i)}}=\kappa_i.$
+    (take $f(i)=\kappa_i$)
+\end{theorem}
+\begin{definition}
+    Let $\underbar{A}$ be an order of power $\kappa$. If $\underbar{A}$
+    is not a well-order, put Tp$\underbar{A}=$ the set of all order $(\kappa,R)$
+    isomorphic to $\underbar{A}$; and if $\underbar{A}$ is a well-order, put Tp $\underbar{A}=$Ord $\underbar{A}$
+\end{definition}
+\begin{theorem}
+    For any orders $\underbar{A},\underbar{B}$, Tp $\underbar{A}$=Tp $\underbar{B}$ 
+    if and only if $\underbar{A}\cong\underbar{B}$.
+\end{theorem}
+\begin{theorem}
+    If $\underbar{A}=(A,\leq)$ is an order and $\overline{\overline{A}}=n$, then Tp $\underbar{A}=n$
+\end{theorem}
+\subsection{Easy consequences for cardinals of the Well-ordering Principle}
+\begin{theorem}
+    $\kappa\leq\lambda$(card) if and only if $\kappa\leq\lambda$(ord).
+\end{theorem}
+By theorem $7.31.$, the cardinals with their natural order are a `suborder' of the usual 
+ordering of the ordinals.
+
+What's more, we see at once that: Every non-empty set (or even `class')
+of cardinals has a least member. In particular, for any $\kappa$,
+since there is a larger cardinal, namely $2^{\kappa}$, there is an immediate 
+successor of $\kappa$ (among cardinals); it is denoted by $\kappa^+$.
+\begin{remark}
+    Because every cardinal is a initial ordinal, by theorem 7.16., there 
+    is a least one. What's more, the initial ordinals that is greater than 
+    $\kappa$ also has a least one, which is denoted by $\kappa^+$.
+\end{remark}
+\begin{theorem}[Cantor-Bernstein]
+    If $\kappa\leq\lambda$ and $\lambda\leq\kappa$ then $\kappa=\lambda$.
+\end{theorem}
+\begin{theorem}[Comparability of cardinals]
+    $\kappa\leq\lambda$ or $\lambda\leq\kappa$
+\end{theorem}
+We define  the cardinals $\aleph_{\alpha}$ for all $\alpha$ by recursion, putting 
+\[\aleph_{\alpha}=\text{the first infinite cardinal greater than }\aleph_{\beta} \text{ for all } \beta<\alpha\]
+\begin{theorem}
+    Every infinite $\kappa$ is an `aleph'(i.e., is of the form $\aleph_{\alpha}$).
+\end{theorem}
+\begin{remark}
+    To solve the ambiguity of cardinal + and ordinal +(and likewise for $\cdot$), 
+    we let $\aleph_{\alpha}+\aleph_{\beta}$ mean the cardinal sum, but $\omega_{\alpha}+\omega_{\beta}$ means the ordinal.
+\end{remark}
+\subsection{A harder consequences and its corollaries}
+\begin{theorem}
+    If $\kappa$ is infinite, then $\kappa\cdot\kappa=\kappa$
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item If $\kappa$ is infinite then $\kappa+\kappa=\kappa$
+        \item If at least one of $\kappa$ and $\lambda$ is infinite, then
+        \[\kappa+\lambda=\kappa\cdot\lambda=\max(\kappa,\lambda)\]
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    If $\kappa$ is infinite, then 
+    \begin{enumerate}
+        \item $(2^{\kappa})^{\kappa}=2^{\kappa}$
+        \item $\kappa^{\kappa}=2^{\kappa}$
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    If $\kappa$ is infinite, $\overline{\overline{I}}\leq\kappa,$ and $\lambda_i\leq\kappa$
+    for each $i\in I$, then, $\sum_{i\in I}\lambda_i\leq\kappa$.
+\end{theorem}
+\begin{theorem}
+    Let $\kappa$ be infinite.
+    \begin{enumerate}
+        \item Suppose $\kappa=\sup_{\alpha\in Q}\alpha$ where $Q\subseteq\kappa$, (in other words, $Q$ is a cofinal subset of $\kappa$)then $\kappa=\sum_{\alpha\in Q}\overline{\overline{\alpha}}$
+        \item Suppose $\sum_{i\in I}\lambda_i=\kappa$ where $\overline{\overline{I}}<\kappa$
+        and, for each $i\in I,\lambda_i<\kappa.$ Put $Q=\{\lambda_i:i\in I\}$. Then $\kappa=\sup_{i\in I}\lambda_i$
+    \end{enumerate}
+\end{theorem}
+An infinite cardinal $\lambda$ is called regular if $\lambda$ has no cofinal subset 
+of power less than $\lambda$ (otherwise, $\lambda$ is singular).
+By theorem 7.39. we can also say: $\lambda$ is regular if and only if $\lambda$
+cannot be expressed as a sum of fewer than $\lambda$ cardinals each less than $\lambda$.
+
+Then $\aleph_0$ is regular, and 
+\begin{theorem}
+    If $\kappa$ is infinite, then $\kappa^+$ is regular.
+\end{theorem}
+The remaining cardinals are the limit cardinals greater than $\aleph_0$.
+The first one $\aleph_{\omega}$ is singular, since $\aleph_{\omega}=\sum_{n\in\omega}\aleph_n$.
+In general, if $\alpha$ is a countable limit ordinal, then $\aleph_{\alpha}$ is singular.
+
+Regular limit cardianls are also called weakly inaccessible. An infinite 
+cardinal $\kappa$ is called inaccessible if $\kappa$ is regular and $2^{\lambda}<\kappa$
+whenever $\lambda<\kappa.$
+\section{THE AXIOM OF REGULARITY}
+\subsection{Partial universe and the axiom of regularity}
+By recursion, put
+\[ 
+\begin{cases}
+    V_0=\varnothing\\
+    V_{\alpha+1}=P(V_{\alpha})\text{ for any ordinal }\alpha\\
+    V_{\delta}=\cup_{\alpha<\delta}V_{\alpha} \text{ for any limit ordinal }\delta\\
+\end{cases}
+\]
+Set of the form $V_{\delta}$ will be called partial universe.
+We write $Vx$ to mean that for some $\alpha,x\in V_{\alpha}$.
+\begin{theorem}
+    \begin{enumerate}
+        \item $V_{\alpha}$ is a transitive set (i.e., if $x\in y\in V_{\alpha}$ then $x\in V_{\alpha}$).
+        \item If $\alpha<\beta$ then $V_{\alpha}\subseteq V_{\beta}$.
+        \item $V_{\alpha}$ is supertransitive (i.e., transitive and if $x\subseteq y\in V_{\alpha}$ then $x\in V_{\alpha}$)
+        \item The predicate $V$ is `supertransitive'; i.e, if $x\in y$ or $x\subseteq y$, and $Vy$ then $Vx$.
+    \end{enumerate}
+\end{theorem}
+If $Vx$ then we put Rk $x$, the rank of $x$, equal to the least $\alpha$
+such that $x\in V_{\alpha+1}$(or, what is the same, $x\subseteq V_{\alpha}$).
+\begin{theorem}
+    \begin{enumerate}
+        \item If $Vx,Vy$, and $x\in y$, then Rk $x<$ Rk $y$.
+        \item $V_{\alpha}=\{x:Vx \text{ and Rk}x<\alpha \}$.
+        \item  For any ordinal $\alpha,V\alpha$ and Rk $\alpha=\alpha$
+    \end{enumerate}
+\end{theorem}
+\begin{theorem}
+    If, for any $y\in x,Vy$, then $Vx$.
+\end{theorem}
+\end{document}

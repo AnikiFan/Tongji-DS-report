@@ -1,0 +1,54 @@
+\chapter{项目概述}
+\section{主要内容与目标}
+本次项目的主要内容为搜索算法。具体目标是实现算法使得吃豆人能够在迷宫中达到特定的位置，同时高效地收集食物。因此，本项目中的状态只需包含当前位置，
+如果要求需要收集多处食物，则还需要包含存储相应记录的数组。
+
+本项目的八个问题可以分为三部分。
+
+第一部分的任务是搜索问题是到达迷宫中指定的位置，要求分别使用DFS,BFS,UCS以及$A^*$算法实现。在该部分中，用于测试的迷宫有tinyMaze,mediumMaze,bigMaze,openMaze，
+前三个迷宫中只有一处食物，即目标状态。openMaze的特点在于迷宫的墙壁较为稀疏。
+
+第二部分的任务是对于指定搜索任务进行形式化，并构造相应的启发式函数。在该部分中，搜索任务的目标是让吃豆人到达迷宫的四个角落。
+
+第三部分的任务围绕“收集迷宫中的所有食物”这一搜索问题展开，要求设计启发式函数以及不追求最优解的算法。
+\section{已有代码}
+下面对已有代码中与本项目的具体实现相关的代码进行分析。
+\subsection{util.py}
+该文件中提供了多种可能需要用到的数据结构，并且如果需要使用，不能用Python自带库代替，因为可能会影响自动评分程序。
+\begin{enumerate}
+\item Stack：有push,pop,isEmpty方法，分别用于进行压栈、出栈以及判断栈是否为空的操作。
+\item Queue：有push,pop,isEmpty方法，分别用于入队、出队以及判断队列是否为空的操作。
+\item PriorityQueue：有push,pop,isEmpty,update方法，分别用于入队、出队、判断队列是否为空以及更新元素有限度的操作。优先弹出优先级低的元素。
+\item PriorityQueueWithFunction：是PriorityQueue的子类，支持指定一个函数priorityFunction用于从存储元素中提取优先级。
+\end{enumerate}
+这些数据结构的底层都是用列表实现的。
+
+同时还提供了用于计算曼哈顿距离的函数manhattanDistance。
+\subsection{search.py}
+该文件用于存储各种搜索算法的实现，同时包含了抽象类SearchProblem。
+
+SearchProblem类有以下方法：
+\begin{enumerate}
+    \item getStartState(self)：返回初始状态
+    \item isGoalState(self,state)：对所给状态进行目标测试
+    \item getSuccessors(self,state)：返回三元组(successor,action,stepCost)，其中successor为所给状态的后继，action为对应的状态，stepCost为action对应的代价
+    \item getCostOfActions(self,actions)：输入为一系列合法动作，返回对应的代价总和。
+\end{enumerate}
+同时，该文件还给出了一个样例：tinyMazeSearch(problem)。从中可以了解到需要自行实现的算法返回的解序列的形式是一个列表，元素为game库中导入的Directions类。
+\subsection{searchAgents.py}
+该文件中存储的是关于智能体以及搜索问题相关的代码，并不包含搜索算法的实现。
+
+PositionSearchProblem类是SearchProblem类的子类，用于存储状态空间中只包含位置的搜索问题。具体细节有：
+\begin{enumerate}
+\item 状态用二元元组实现
+\item 当行动非法，即产生“穿墙”行为时，代价返回999999
+\end{enumerate}
+从该类的代码中可以了解到初始化一个问题的基本步骤为：
+\begin{enumerate}
+    \item 初始化墙
+    \item 获取吃豆人初始位置
+    \item 设置起始状态
+    \item 设置目标测试
+    \item 设置损失函数
+\end{enumerate}
+同时，该文件还提供了函数mazeDistance。该函数通过广度优先搜索来获取迷宫内两点之间的最短路径长度。

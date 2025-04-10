@@ -1,0 +1,70 @@
+\subsection{最大数}
+\begin{formal}
+    {\cuhei 问题描述：}
+
+    给定一组非负整数 nums，重新排列每个数的顺序（每个数不可拆分）使之组成一个最大的整数。
+\end{formal}
+\begin{formal}
+    {\cuhei 输入要求：}
+
+    输入包含两行：第一行包含一个整数$n$，表示组数$nums$的长度；第二行包含$n$个整数$nums[i]$。
+\end{formal}
+\begin{formal}
+    {\cuhei 输出要求：}
+
+    输出包含一行，为重新排列后得到的数字。
+\end{formal}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[name=Q4]
+string nums[MAXN]; //利用to_string函数将非负整数转化为string.
+\end{lstlisting}
+\subsubsection{功能描述}
+\begin{function}
+    \SetKwFunction{Min}{Min}
+    \SetKw{Break}{Break}
+    \tcp*[h]{判断$S_1$是否排在$S_2$左侧}\;
+    s1 = S1 + S2\;
+    s2 = S2 + S1\;
+    \For{i=1 \KwTo $s_1.length$}
+    {
+        \lIf{$s_1[i] > s_2[i]$}{\Return{true}}
+        \lIf{$s_1[i] < s_2[i]$}{\Return{false}}
+    }
+    \KwRet{true}
+    \caption{StringCompare($S_1,S_2$)}
+\end{function}
+\begin{function}[H]
+    \SetKwFunction{Swap}{Swap}
+    \tcp*[h]{默认以最后一个元素作为pivot;l,r分别为子序列的左右端点下标}\;
+    \tcp*[h]{返回pivot的最终下标}\;
+    i = l - 1\;
+    \For{j = l \KwTo r-1}
+    {
+        \If(\tcp*[h]{使用自定义的比较规则}){StringCompare(A[j],A[r])}
+        {
+            i = i + 1\;
+            \Swap(A[j],A[i])\;
+        }
+    }
+    \Swap(A[i+1],A[r])\;
+    \KwRet{i+1}
+    \caption{Partition(A,l,r)}
+\end{function}
+\begin{algorithm}
+    \SetKwFunction{Quick}{Quick-Sort}
+    \If{l<r}
+    {
+        p = Partition(A,l,r)\;
+        \Quick(A,l,p-1)\;
+        \Quick(A,p+1,r)\;
+    }
+   \caption{Quick-Sort(A,l,r)} 
+\end{algorithm}
+\subsubsection{调试分析}
+一开始我自定义的排序规则是：当一个字符串以另一个字符串开头时，哪个小，哪个便排在前面。但是这样的无法正确排序3，30，34，5，9，
+会给出9533034而非9534330.后来我将该比较函数调整为：当一个字符串以另一个字符串开头时，将剩余的字符串再一次与较短的字符串进行比较，以
+得到最终的结果，但是这样得到的时9534303.最后我将自定义比较函数改为上述的逻辑，才成功通过测试。
+\subsubsection{总结和体会}
+本题的基本框架便是排序，唯一需要调整的便是如何判断两个数字串哪个排在前面。而难点便是自定义的比较函数。
+在本题中我使用的是快速排序，平均时间复杂度为 $\Theta(n\log n)$，这使得在使用了自定的比较函数后，时间复杂度仍能接受。
+如果使用冒泡排序等简单排序算法，则可能超出时间限制。

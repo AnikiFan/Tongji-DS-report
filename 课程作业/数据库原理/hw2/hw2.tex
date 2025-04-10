@@ -1,0 +1,150 @@
+% this is a template for papers or notes written in Chinese
+\documentclass[a4paper]{article}
+
+\input{header.tex}
+
+\title{作业{\hspace{1ex}}HW2}
+\author{姓名：范潇{\quad}学号：2254298{\quad}日期：\today}
+\date{}
+\begin{document}
+\maketitle
+% \thispagestyle{fancy}%用于单独设置某页的样式，此处用于设置标题页的格式
+在本次作业中我遵循\emph{SQLite}的语法。
+\section{(3.9)}
+\begin{lstlisting}
+--a
+select ID,person_name,city
+from employee natural join works
+where company_name = 'First Bank Corporation';   
+\end{lstlisting}
+\begin{lstlisting}
+--b
+select ID,person_name,city
+from employee natural join works
+where company_name = 'First Bank Corporation' and salary > 100000;
+\end{lstlisting}
+\begin{lstlisting}
+--c
+-- to make sure that those who don't work will be included in the resulting relation,
+-- I join relation employee with relation works instead of carrying out the query directly on the relation works only
+select ID
+from employee natural left join works
+where company_name <> 'First Bank Corporation' or company_name is null ; 
+\end{lstlisting}
+\begin{lstlisting}
+--d
+with target(ID,salary) as (
+    select ID,salary
+    from employee natural join works
+    where company_name = 'Small Bank Corporation'
+)
+select ID
+from target
+where salary = (select max(salary) from target);    
+\end{lstlisting}
+\begin{lstlisting}
+--e
+with target(city) as (
+    select city from company where company_name = 'Small Bank Corporation'
+)
+select company_name
+from(
+    select company_name,city
+    from company
+    where city in target
+    -- pick out the valid companies
+)
+group by company_name
+having count(*) = (select count(*) from target);    
+\end{lstlisting}
+\begin{lstlisting}
+--f
+with total(company_name,num) as (
+    select company_name,count(*)
+    from company natural join works
+    group by company_name
+)
+select company_name
+from total
+where num = (select max(num) from total);    
+\end{lstlisting}
+\begin{lstlisting}
+--g
+with avg_salary(company_name,salary)as (
+    select company_name, avg(works.salary)
+    from company natural join works
+    group by company_name
+)
+select company_name from avg_salary
+where salary > (select salary from avg_salary where company_name = 'First Bank Corporation');
+\end{lstlisting}
+\section{(3.15)}
+\begin{lstlisting}
+--a
+with target(branch_name) as (
+    select branch_name
+    from branch
+    where branch_city = 'Brooklyn'
+)
+select customer_name
+from customer natural join depositor natural join account
+where branch_name in target
+group by customer_name
+having count(distinct branch_name) = (select count(*) from target);
+\end{lstlisting}
+
+\begin{lstlisting}
+--b
+select sum(amount)
+from loan ;
+\end{lstlisting}
+
+\begin{lstlisting}
+--c
+select branch_name
+from branch
+where assets > (
+    select min(assets)
+    from branch
+    where branch_city = 'Brooklyn'
+    );
+\end{lstlisting}
+\section{(3.16)}
+\begin{lstlisting}
+--a
+select ID,person_name
+from employee natural join works natural join company ;
+\end{lstlisting}
+
+\begin{lstlisting}
+--b
+select E.ID,E.person_name
+from employee as E natural join manages ,employee as M
+where manager_id = M.ID and M.city = E.city and M.street = E.street;
+\end{lstlisting}
+
+\begin{lstlisting}
+--c
+with target(company_name,avg_salary) as (
+    select company_name,avg(salary)
+    from  works
+    group by company_name
+)
+select ID,person_name
+from employee natural join works natural join target
+where salary>avg_salary;
+\end{lstlisting}
+
+\begin{lstlisting}
+--d
+with target(company_name,tot_salary) as (
+    select company_name,sum(salary)
+    from works
+    group by company_name
+    -- assume there is no company without anyone working for it
+)
+select company_name
+from target
+where tot_salary = (select min(tot_salary)from target);
+\end{lstlisting}
+\end{document}

@@ -1,0 +1,384 @@
+\section{数据库物理设计}
+
+\subsection{存储结构设计}
+
+\subsubsection{数据库选型}
+\begin{itemize}
+  \item 选用PostgreSQL 数据库系统
+  \begin{itemize}
+    \item 支持JSON类型，用于存储爬虫原始数据（raw\_data字段）和地址聚合（addresses字段）
+    \item 支持物化视图，用于预计算recruitment\_mv，提升查询性能
+    \item 支持gin\_trgm\_ops操作符，用于地址和公司名称的模糊匹配
+    \item 支持异步SQLAlchemy，实现高并发数据处理
+    \item 内置的MVCC机制，保证数据一致性
+  \end{itemize}
+  \item 数据库配置
+  \begin{itemize}
+    \item 连接池：使用SQLAlchemy的异步会话管理
+    \item 环境变量：通过.env文件配置数据库连接参数
+    \item 时区处理：统一使用UTC时区存储时间戳
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{表空间组织}
+
+\begin{enumerate}
+  \item 规范化数据层表空间
+  \begin{itemize}
+    \item 核心业务表：users, companies, jobs, addresses
+    \begin{itemize}
+      \item users表：用户认证和权限管理
+      \item companies表：公司基本信息和元数据
+      \item jobs表：职位详情和关联信息
+      \item addresses表：地理位置和坐标数据
+    \end{itemize}
+    \item 关系映射表：company\_address, job\_address
+    \begin{itemize}
+      \item company\_address：多对多关系，支持一个公司多个地址
+      \item job\_address：多对多关系，支持一个职位多个工作地点
+    \end{itemize}
+    \item 物化视图：recruitment\_mv
+    \begin{itemize}
+      \item 预聚合职位、公司、地址信息
+      \item 支持高性能的分页和统计查询
+      \item 定时刷新保证数据一致性
+    \end{itemize}
+  \end{itemize}
+
+  \item 数据处理层表空间
+  \begin{itemize}
+    \item 原始数据表：raw\_recruitment\_boss, raw\_recruitment\_liepin
+    \begin{itemize}
+      \item 存储爬虫直接获取的JSON数据
+      \item 使用processed标志位跟踪处理状态
+      \item 保留source\_url确保数据不重复爬取
+    \end{itemize}
+    \item 暂存数据表：staged\_recruitment\_data
+    \begin{itemize}
+      \item 统一格式的中间表，存储清洗后的数据
+      \item 支持跨来源的记录去重和链接
+      \item 使用record\_hash\_for\_linkage优化相似度计算
+      \item 通过duplicate\_group\_id和is\_master\_record管理重复记录
+    \end{itemize}
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{字段类型选择}
+
+在设计数据库字段类型时，我们需要根据数据的特征和使用场景选择合适的类型，以平衡存储空间、查询性能和数据完整性。表\ref{tab:field_types}展示了本系统中使用的主要字段类型及其应用场景。
+
+对于标识符字段，我们选择Integer类型作为主键和外键，这不仅节省存储空间，还能通过自增特性避免键值碎片，提高数据库性能。在PostgreSQL中，Integer类型的自增主键会被自动创建聚集索引，有利于提升查询效率。
+
+文本类型的选择上，我们根据内容长度的不同采用了String和Text两种类型。对于长度固定或者有明确上限的字段（如用户名、角色等），使用String类型并指定合适的长度限制；对于可能包含大量文本的字段（如职位描述、公司简介等），则使用Text类型以节省存储空间。特别地，对于枚举类型的字段（如用户角色），我们使用PostgreSQL的Enum类型来确保数据的有效性。
+
+为了处理复杂的非结构化数据，我们充分利用了PostgreSQL对JSON类型的支持。原始爬虫数据和需要灵活扩展的字段（如标签数据、地址列表等）都使用JSON类型存储，这不仅提供了灵活的数据结构，还能通过PostgreSQL的JSON操作符实现高效的查询。
+
+表\ref{tab:field_lengths}详细列出了各个表中字符串类型字段的长度限制。这些限制是基于实际数据分析得出的，既要确保能够容纳正常数据，又要避免过度分配空间。例如，公司名称和职位名称的长度限制设置为500，这是考虑到中文公司名称可能较长，而且可能包含附加信息；而用户名等字段则限制在50个字符以内，这对于标识用途来说已经足够。
+
+对于时间相关的字段，我们统一使用带时区的DateTime类型，并通过SQLAlchemy的配置确保所有时间戳都以UTC时区存储。这样不仅能够准确记录时间信息，还能避免因时区差异导致的问题。created\_at和updated\_at这两个时间戳字段在大多数表中都会使用，用于追踪记录的创建和修改时间。
+
+\begin{table}[!htbp]
+  \caption{数据库字段类型设计}
+  \label{tab:field_types}
+  \centering
+  \begin{tabular}{@{}llll@{}} \toprule
+    \textbf{类型分类} & \textbf{具体类型} & \textbf{应用场景} & \textbf{优点} \\ \midrule
+    标识符字段 & Integer & 主键、外键 & 存储空间小，连接效率高 \\
+              &         & id字段自增 & 避免键值碎片 \\ \midrule
+    文本字段   & String(50) & 用户名、角色枚举 & 定长存储，性能好 \\
+              & String(500) & 公司名称、职位名称 & 适应较长文本 \\
+              & Text & 技能描述、职位福利 & 变长存储，节省空间 \\
+              & Enum & 用户角色(UserRole) & 约束取值范围 \\ \midrule
+    JSON字段   & JSON & 原始数据(raw\_data) & 灵活的数据结构 \\
+              &      & 标签数据(tags) & 支持复杂查询 \\
+              &      & 地址列表(addresses) & 支持索引优化 \\ \midrule
+    时间戳字段 & DateTime & created\_at & 支持时区(UTC) \\
+              &          & updated\_at & 自动更新时间戳 \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[!htbp]
+  \caption{字段长度限制设计}
+  \label{tab:field_lengths}
+  \centering
+  \begin{tabular}{@{}lll@{}} \toprule
+    \textbf{表名} & \textbf{字段名} & \textbf{长度限制} \\ \midrule
+    users & username & String(50) \\
+          & password & String(50) \\ \midrule
+    companies & name & String(500) \\
+             & industry & String(200) \\
+             & size & String(50) \\ \midrule
+    jobs & title & String(500) \\
+         & type\_level3 & String(100) \\
+         & salary & String(100) \\
+         & experience & String(100) \\
+         & education & String(100) \\ \midrule
+    addresses & address\_str & String(200) \\ \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{索引设计}
+
+\subsubsection{基础索引}
+
+\begin{enumerate}
+  \item 主键索引
+  \begin{itemize}
+    \item 所有表的id字段
+    \item 类型：B-tree
+    \item 特点：聚集索引
+  \end{itemize}
+
+  \item 外键索引（如代码\ref{lst:foreign_key_indexes}所示）
+  \item 唯一索引（如代码\ref{lst:unique_indexes}所示）
+\end{enumerate}
+
+\begin{listing}[htbp]
+  \begin{minted}{sql}
+-- Job表外键索引
+CREATE INDEX ix_jobs_company_id ON jobs(company_id);
+CREATE INDEX ix_jobs_raw_job_id ON jobs(raw_job_id);
+  \end{minted}
+  \caption{外键索引定义}\label{lst:foreign_key_indexes}
+\end{listing}
+
+\begin{listing}[htbp]
+  \begin{minted}{sql}
+-- User表唯一索引
+CREATE UNIQUE INDEX ix_users_username ON users(username);
+
+-- Company表唯一索引
+CREATE UNIQUE INDEX ix_companies_name ON companies(name);
+  \end{minted}
+  \caption{唯一索引定义}\label{lst:unique_indexes}
+\end{listing}
+
+\subsubsection{复合索引}
+
+\begin{enumerate}
+  \item 业务查询优化索引（如代码\ref{lst:composite_indexes}所示）
+  \item 数据处理优化索引（如代码\ref{lst:processing_indexes}所示）
+\end{enumerate}
+
+\begin{listing}[htbp]
+  \begin{minted}{sql}
+-- 公司查询优化
+CREATE INDEX ix_companies_industry_size ON companies(industry, size);
+CREATE INDEX ix_companies_name_industry ON companies(name, industry);
+
+-- 职位查询优化
+CREATE INDEX ix_jobs_title_type ON jobs(title, type_level3);
+CREATE INDEX ix_jobs_created_updated ON jobs(created_at, updated_at);
+  \end{minted}
+  \caption{复合索引定义}\label{lst:composite_indexes}
+\end{listing}
+
+\begin{listing}[htbp]
+  \begin{minted}{sql}
+-- 原始数据处理状态索引
+CREATE INDEX ix_raw_recruitment_boss_processed_created 
+ON raw_recruitment_boss(processed, created_at);
+
+-- 暂存数据去重索引
+CREATE INDEX ix_staged_recruitment_data_record_hash_for_linkage 
+ON staged_recruitment_data(record_hash_for_linkage);
+  \end{minted}
+  \caption{数据处理索引定义}\label{lst:processing_indexes}
+\end{listing}
+
+\subsubsection{特殊索引}
+
+\begin{enumerate}
+  \item GIN索引
+  \begin{itemize}
+    \item 用于全文搜索
+    \item 支持模糊匹配
+    \item 示例：
+    \begin{minted}{sql}
+-- 地址文本搜索
+CREATE INDEX ix_addresses_address_str_trgm 
+ON addresses USING gin (address_str gin_trgm_ops);
+    \end{minted}
+  \end{itemize}
+
+  \item B-tree索引
+  \begin{itemize}
+    \item 用于精确匹配和范围查询
+    \item 支持多列复合索引
+    \item 示例：
+    \begin{minted}{sql}
+-- 公司查询优化
+CREATE INDEX ix_companies_industry_size 
+ON companies(industry, size);
+    \end{minted}
+  \end{itemize}
+
+  \item 物化视图索引
+  \begin{listing}[htbp]
+    \begin{minted}{sql}
+-- 物化视图优化索引
+CREATE INDEX ix_recruitment_mv_title ON recruitment_mv(title);
+CREATE INDEX ix_recruitment_mv_company_name ON recruitment_mv(company_name);
+CREATE INDEX ix_recruitment_mv_created_at ON recruitment_mv(created_at);
+    \end{minted}
+    \caption{物化视图索引定义}\label{lst:materialized_view_indexes}
+  \end{listing}
+\end{enumerate}
+
+\subsection{查询优化设计}
+
+\subsubsection{物化视图优化}
+\begin{enumerate}
+  \item 物化视图设计
+  \begin{itemize}
+    \item 预聚合核心查询数据
+    \begin{itemize}
+      \item 合并jobs、companies和addresses表
+      \item 使用json\_agg聚合多个地址
+      \item 包含所有常用查询字段
+    \end{itemize}
+    \item 性能优化
+    \begin{itemize}
+      \item 创建覆盖索引避免回表
+      \item 使用CONCURRENTLY并发刷新
+      \item 通过调度器定期维护
+    \end{itemize}
+  \end{itemize}
+
+  \item 刷新策略
+  \begin{itemize}
+    \item 定时刷新
+    \begin{itemize}
+      \item 默认5分钟刷新间隔
+      \item 可通过环境变量配置
+      \item 支持手动触发刷新
+    \end{itemize}
+    \item 并发刷新
+    \begin{itemize}
+      \item 使用CONCURRENTLY选项
+      \item 不阻塞在线查询
+      \item 自动处理失败重试
+    \end{itemize}
+  \end{itemize}
+\end{enumerate}
+
+\subsubsection{查询优化策略}
+
+\begin{enumerate}
+  \item 分页查询优化
+  \begin{itemize}
+    \item 使用物化视图加速
+    \item 避免COUNT(*)带来的全表扫描
+    \item 基于时间戳的游标分页
+    \item 示例：
+    \begin{minted}{sql}
+-- 使用物化视图的分页查询
+SELECT * FROM recruitment_mv
+WHERE company_industry = :industry
+  AND created_at < :last_timestamp
+ORDER BY created_at DESC
+LIMIT :limit;
+    \end{minted}
+  \end{itemize}
+
+  \item 统计查询优化
+  \begin{itemize}
+    \item 利用物化视图预计算
+    \item 使用array\_agg聚合数组
+    \item 缓存热点统计数据
+    \item 示例：
+    \begin{minted}{sql}
+-- 使用物化视图的统计查询
+SELECT 
+    company_industry,
+    count(*) as job_count,
+    array_agg(DISTINCT company_size) as company_sizes,
+    avg(CASE 
+        WHEN salary ~ '^[0-9]+-[0-9]+k$' 
+        THEN (
+            (regexp_replace(split_part(salary, '-', 1), 'k', '')::integer + 
+             regexp_replace(split_part(salary, '-', 2), 'k', '')::integer) / 2
+        )::float 
+        ELSE null 
+    END) as avg_salary
+FROM recruitment_mv
+GROUP BY company_industry;
+    \end{minted}
+  \end{itemize}
+
+  \item 全文搜索优化
+  \begin{itemize}
+    \item 使用GIN索引加速模糊匹配
+    \item 支持中文分词和相似度计算
+    \item 优化字符串标准化处理
+    \item 示例：
+    \begin{minted}{sql}
+-- 使用GIN索引的模糊搜索
+SELECT * FROM addresses
+WHERE address_str % :query
+ORDER BY similarity(address_str, :query) DESC
+LIMIT 10;
+    \end{minted}
+  \end{itemize}
+
+  \item 记录链接优化
+  \begin{itemize}
+    \item 使用哈希值快速过滤
+    \item 分批处理避免内存溢出
+    \item 动态调整相似度阈值
+    \item 示例：
+    \begin{minted}{python}
+def calculate_similarity_score(record1: Dict, record2: Dict) -> float:
+    """计算两条记录的相似度得分，使用动态权重"""
+    base_weights = {
+        'company': 0.4,  # 公司名称权重
+        'title': 0.4,    # 职位名称权重
+        'address': 0.1,  # 地址权重
+        'other': 0.1     # 其他特征权重
+    }
+    # 动态调整权重和计算相似度
+    ...
+    return final_score
+    \end{minted}
+  \end{itemize}
+\end{enumerate}
+
+\subsection{并发控制}
+
+\subsubsection{事务隔离级别}
+\begin{itemize}
+  \item 读已提交（Read Committed）
+  \begin{itemize}
+    \item PostgreSQL默认隔离级别
+    \item 防止脏读，允许不可重复读
+    \item 支持MVCC，实现读写互不阻塞
+  \end{itemize}
+  \item 事务管理
+  \begin{itemize}
+    \item 使用SQLAlchemy的异步会话（AsyncSession）
+    \item 支持嵌套事务（begin\_nested）
+    \item 自动提交和回滚机制
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{并发访问优化}
+\begin{itemize}
+  \item ETL并发处理
+  \begin{itemize}
+    \item 使用batch\_size控制批处理大小
+    \item 通过processed标志位追踪处理状态
+    \item 支持断点续传和错误重试
+  \end{itemize}
+  \item 记录链接优化
+  \begin{itemize}
+    \item 使用record\_hash快速判断重复
+    \item 动态调整相似度阈值
+    \item 分批处理避免长事务
+  \end{itemize}
+  \item 物化视图刷新
+  \begin{itemize}
+    \item 支持CONCURRENTLY并发刷新
+    \item 通过调度器自动维护
+    \item 避免阻塞在线查询
+  \end{itemize}
+\end{itemize}

@@ -1,0 +1,117 @@
+\section{数域}
+\begin{mydef}
+    复数集的一个子集 $K$如果满足:
+
+(1)$0,1\in K$;
+
+(2)$a,b\in K\Rightarrow a\pm b,ab\in K$;
+
+(3)$a,b\in K,b\neq 0\Rightarrow \frac{a}{b}\in K$,
+
+则称 $K$为一个数域.
+\end{mydef}
+\begin{myrmk}
+    即，数域是对于加减乘除封闭的数集。
+\end{myrmk}
+有理数集，实数集，复数集都是数域；但整数集不是。
+
+显然，任一数域都包含有理数域，即有理数域是最小的数域；复数域则是最大的数域。
+\section{环}
+\subsection{环的定义}
+\begin{mydef}
+    设 $R$是一个非空集合，如果它有两个代数运算：加法和乘法，分别记作 $a+b$和 $ab$ 。
+    且这两个代数运算满足一下6条运算法则：
+    \begin{enumerate}
+        \item 加法结合律
+        \item 加法交换律
+        \item 加法具有零元
+        \item 加法具有负元
+        \item 乘法结合律
+        \item 乘法对于加法有左右分配律
+    \end{enumerate}
+    则称 $R$是一个环。
+
+
+\end{mydef}
+\begin{myrmk}
+    所谓 $R$上的一个代数运算，是指 $R\times R$到 $R$的一个映射。
+
+    
+\end{myrmk}
+    零元记作0.
+    元素 $a$的负元记作 $-a$。
+显然，环的零元和对于元素 $a$的负元都是唯一的。环中还可以定义减法为
+\[a-b:=a+(-b).\]
+
+\begin{mydef}
+    若环 $R$中的乘法还满足交换律，则称 $R$为交换环。
+\end{mydef}
+\begin{mydef}
+     若环 $R$中有一个元素 $e$具有性质:
+    \[ea=ae=a,\forall a \in R.\]
+    则称 $e$是 $R$的单位元，此时称 $R$是有单位元的环。
+\end{mydef}
+容易证明，在有单位元的环 $R$中，单位元是唯一的。
+    通常把单位元记成1.
+\begin{mydef}
+    环 $R$中的元素 $a$称为一个左零因子(右零因子)，如果 $R$中有元素 $b\neq 0$，则使得 $ab=0(ba=0)$。
+    左零因子和右零因子都简称为零因子。特别地，称0为平凡的零因子；其余的零因子称为非平凡的零因子。
+\end{mydef}
+\begin{mydef}
+    如果环 $R$没有非平凡的零因子，那么称 $R$是无零因子环。有单位元 $1(\neq 0)$的无零因子的交换环称为整环。
+\end{mydef}
+    $\mathbf{Z},K,K[x]$都是整环,$M_n(K)$不是整环,因为它不满足乘法交换律,且它有非平凡的零因子.
+\begin{mydef}
+    设 $R$是一个有单位元 $1(\neq 0)$的环。对于 $a\in R$，如果存在 $b\in R$，使得
+    \[ab=ba=1,\]
+    那么称 $a$是可逆元(或单位)，称 $b$是 $a$的逆元，记作 $a^{-1}$。
+\end{mydef}
+可以证明，如果 $a$是可逆元，则它的逆元唯一。
+\subsection{子环与扩环}
+\begin{mydef}[子环]
+    如果环 $R$的一个非空子集 $R_1$对于 $R$的加法和乘法也成为一个环,那么称 $R_1$是 $R$的
+    一个子环.
+\end{mydef}
+\begin{mythm}[子环判定定理]
+    环 $R$的一个非空子集 $R_1$为一个子环的充分必要条件是 $R_1$对于 $R$的减法与乘法都封闭.
+\end{mythm}
+\begin{mydef}[扩环]
+    设 $R$是有单位元 $1'$的交换环,如果 $R$有一个子环 $R_1$满足下列条件:
+    \begin{enumerate}
+        \item $1'\in R_1$
+        \item  数域$K$到 $R_1$有一个双射 $\tau$,且 $\tau$保持加法和乘法运算,
+    \end{enumerate}
+    那么 称 $R$可看成是 $K$的一个扩环.
+\end{mydef}
+\begin{myrmk}
+    可以证明, $\tau(1)=1'.$
+\end{myrmk}
+\section{常用符号}
+\begin{longtable}{p{2in}|l}
+    \caption{符号表}\\
+    \hline\hline
+    \sffamily\bfseries{含义}&\sffamily\bfseries{符号}\\
+    \hline
+    \endfirsthead
+    \caption{(续)}\\
+    \hline\\
+    \sffamily\bfseries{含义}&\sffamily\bfseries{符号}\\
+    \hline\\
+    \endhead
+    \hline\hline
+    \endfoot
+    数域&$K$\\
+    数域$K$中的所有非零数&$K^*$\\
+    数域$K$上的一元多项式&$K[x]$\\
+    数域$K$上的$n$级矩阵&$M_n(K)$\\
+    环& $R$\\
+    实数环&$\mathbf{R}$\\
+    整数环&$\mathbf{Z}$\\
+    不定元&$x$\\
+    多项式 $f$的次数& $\deg f$\\
+    多项式 $f$整除多项式 $g$& $f\mid g$\\
+    多项式 $f$不整除多项式 $g$& $f\nmid g$\\
+    多项式 $f$相伴多项式 $g$& $f\sim g$\\
+    多项式 $f(x),g(x)$的最大公因式& $(f(x),g(x))$\\
+    多项式 $f(x),g(x)$的最小共倍式& $[f(x),g(x)]$\\
+\end{longtable}

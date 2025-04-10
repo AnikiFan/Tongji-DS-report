@@ -1,0 +1,62 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\usepackage{makecell}
+\usepackage{color}
+\usepackage{geometry}%设置整体页面布局
+\usepackage{pdfpages}
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\title{\textbf{HW7}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{7.20}
+    \begin{enumerate}
+        \item \begin{align*}
+       A\Leftrightarrow (B\lor E)&\equiv(A\land(B\lor E))\lor(\lnot A\land \lnot(B\lor E))\\
+        &\equiv  (A\land(B\lor E))\lor(\lnot A\land \lnot B\land \lnot E) \\
+        &\equiv (A\lor(\lnot A\land \lnot B\land \lnot E))\land((B\lor E)\lor(\lnot A\land \lnot B\land \lnot E))  \\
+       & \equiv  (A\lor\lnot A)\land(A\lor\lnot B)\land(A\lor\lnot E)\land\\
+       &\quad (B\lor E\lor\lnot A)\land(B\lor E\lor\lnot B)\land(B\lor E\lor\lnot E)\\
+       & \equiv  (A\lor\lnot B)\land(A\lor\lnot E)\land (\lnot A\lor B\lor E)\\
+        % &\equiv   (A\lor\lnot B)\land(A\lor\lnot E)\land(\lnot A\lor B)\land(B\lor\lnot E)\land(\lnot A\lor E)\land(\lnot B\lor E)\\
+        % &\equiv   (A\lor\lnot B\lor E)\land(A\lor\lnot B\lor\lnot E)\land(A\lor B\lor\lnot E)\land(A\lor\lnot B\lor\lnot E)\land\\
+        % &\quad(\lnot A\lor B\lor E)\land(\lnot A\lor B\lor \lnot E)\land(A\lor B\lor\lnot E)\land(\lnot A\lor \lnot B\lor E)\\
+        \end{align*}
+        \item \[ E\rightarrow D\equiv\lnot E\lor D\]
+        \item\begin{align*}
+            C\land F\rightarrow\lnot B&\equiv \lnot(C\land F)\lor\lnot B\\
+            &\equiv \lnot C\lor\lnot F\lor\lnot B\\
+        \end{align*}
+        \item \[E\rightarrow B\equiv \lnot E\lor B\]
+        \item \[B\rightarrow F\equiv \lnot B\lor F\]
+        \item \[B\rightarrow C\equiv \lnot B\lor C\]
+    \end{enumerate}
+    所以合取范式为
+    \[(A\lor\lnot B)\land(A\lor\lnot E)\land (\lnot A\lor B\lor E)\land(\lnot E\lor D)\land( \lnot C\lor\lnot F\lor\lnot B)\land(\lnot E\lor B)\land(\lnot B\lor F)\land(\lnot B\lor C)\]
+\end{problem}
+\begin{problem}{7.12}
+   \begin{align*}
+    &(A\lor\lnot B)\land(A\lor\lnot E)\land (\lnot A\lor B\lor E)\land(\lnot E\lor D)\land( \lnot C\lor\lnot F\lor\lnot B)\\
+    &\land(\lnot E\lor B)\land(\lnot B\lor F)\land(\lnot B\lor C)\land\lnot(\lnot A\land\lnot B)\\
+    \equiv&(A\lor\lnot B)\land(A\lor\lnot E)\land (\lnot A\lor B\lor E)\land(\lnot E\lor D)\land( \lnot C\lor\lnot F\lor\lnot B)\\
+    &\land(\lnot E\lor B)\land(\lnot B\lor F)\land(\textcolor{red}{\lnot B\lor C})\land(A\lor B)\\
+   \end{align*} 
+   运用归结规则，得到新子句
+   \[(\lnot B\lor B\lor E),(\lnot E\lor B\lor E),(B\lor E)\]
+   \[A\lor\lnot A\lor E,A\lor\lnot E,\textcolor{red}{A},\lnot A\lor E\lor\lnot C\lor\lnot F,\lnot E\lor \lnot C\lor\lnot F,F\lor\lnot A\lor E,\lnot E\lor C,A\lor C\]
+   \[\lnot B\lor\lnot F\]
+   \[A\lor \lnot A\lor B,\textcolor{red}{\lnot A\lor B}\]
+   \[\textcolor{red}{\lnot B\lor\lnot C}\]
+   其中由$A,\lnot A\lor B$得到$B$，进而由$\lnot B\lor\lnot C$得到$\lnot C$，但是同时又可以由$\lnot B\lor C$得到$C$，从而得到空语句，所以得证。
+\end{problem}
+\end{document}

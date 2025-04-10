@@ -1,0 +1,88 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{线性规划}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}{线性规划}
+    \begin{align*}
+        \min &z=x_1+x_2+x_3 \\
+        s.t. & 2x_1+7.5x_2+3x_3\geq 10000\\
+        &20x_1+5x_2+10x_3\geq 30000\\
+        &x_1,x_2,x_3\geq 0
+    \end{align*}
+\end{problem}
+\begin{solution}
+    原问题等价于
+    \begin{align*}
+        \max &\hat{z}=-z=-x_1-x_2-x_3 \\
+        s.t. & 2x_1+7.5x_2+3x_3-x_4= 10000\\
+        &20x_1+5x_2+10x_3-x_5= 30000\\
+        &x_1,x_2,x_3,x_4,x_5\geq 0
+    \end{align*}
+    引入人工变量$z_1,z_2$，得到第一阶段问题：
+    \begin{align*}
+        \max &z'=-z_1-z_2=22x_1+12.5x_2+13x_3-x_4-x_5-40000 \\
+        s.t. & z_1+2x_1+7.5x_2+3x_3-x_4= 10000\\
+        &z_2+20x_1+5x_2+10x_3-x_5= 30000\\
+        &z_1,z_2,x_1,x_2,x_3,x_4,x_5\geq 0
+    \end{align*}
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{cclllll}
+            & val & $x_1$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+            $\hat{z}$&0 & -1 & -1 & -1 & 0 &0 \\
+            $z'$&-40000 & 22 & 12.5 & 13 & -1 &-1 \\
+            $z_1$&10000 & 2 & 7.5 & 3 & -1 &0 \\
+            $z_2$&30000 & 20 & 5 & 10 & 0 &-1 \\
+        \end{tabular}
+        \caption{初始单纯形表}
+    \end{table}
+
+    $x_1$入基，$z_2$离基。
+
+    \[x_1=1500-0.05z_2-0.25x_2-0.5x_3+0.05x_5\]
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{cclllll}
+                      & val      & $z_2$ & $x_2$ & $x_3$ & $x_4$ & $x_5$ \\
+            $\hat{z}$ &-1500     &0.05   &-0.75  &-0.5   & 0     &-0.05  \\
+            $z'$      &-7000     &-1.1   &    7  &   2   & -1    &0.1    \\
+            $z_1$     &7000      &-0.1   & 7     & 2     & -1    &0.1    \\
+            $x_1$     &1500      &0.05   & 0.25  & 0.5   & 0     &-0.05  \\
+        \end{tabular}
+        \caption{第一次转轴变换得到的单纯形表}
+    \end{table}
+
+    $x_2$入基，$z_1$离基。
+
+    \[x_1=1000-0.05z_2-0.25x_2-0.5x_3+0.05x_5\]
+
+    \begin{table}[!h]
+        \centering
+        \begin{tabular}{cclllll}
+                      & val      & $z_2$ & $z_1$ & $x_3$ & $x_4$ & $x_5$ \\
+            $\hat{z}$ &-2250     &-11/280&3/28   &-2/7   &-3/28  &-11/280\\
+            $z'$      &0         &    -1 &-1     &0      &0      &0      \\
+            $x_2$     &1000      &-1/70  &-1/7   &2/7    &-1/7   &1/70   \\
+            $x_1$     &1250      &3/56   &-1/28  &3/7    &1/28   &-3/56   \\
+        \end{tabular}
+        \caption{第二次转轴变换得到的单纯形表}
+    \end{table}
+
+    因此有解，当把$z_1,z_2$所在列划去后，可以看到非基变量的系数都为负，所以$\max\hat{z}=-2250$，
+    从而$\min z=2250.$
+\end{solution}
+\end{document}

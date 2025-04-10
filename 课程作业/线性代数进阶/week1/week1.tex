@@ -1,0 +1,35 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW1}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{\\\par}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}{1.2.7}
+    如果等式$f(x)=q(x)g(x)+r(x)$成立,则$f(x),g(x)$与$g(x),r(x)$有相同的公因式。
+\end{problem}
+
+\begin{solution}
+    设 $h(x)$为$f(x)$与 $g(x)$的一个公因式,则 $h(x)\mid f(x),h(x)\mid g(x)$,
+    从而有
+    \[h(x)\mid[f(x)-q(x)g(x)]=r(x),\]
+    又因为
+    \[h(x)\mid g(x)\]
+    所以 $h(x)$也是 $g(x)$与 $r(x)$的公因式。
+
+    因为 $r(x)=(-q(x))g(x)+f(x)$,由对称性可知， $g(x)$与 $r(x)$的公因式也是 $g(x)$与 $f(x)$的公因式。 
+
+    从而
+    $f(x),g(x)$与$g(x),r(x)$有相同的公因式。
+    \qed
+\end{solution}
+\end{document}

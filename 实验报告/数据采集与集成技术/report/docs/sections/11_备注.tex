@@ -1,0 +1,71 @@
+\section{备注}
+
+\subsection{系统启动说明}
+
+本系统包含前端和后端两个部分,启动方式如下:
+
+\subsubsection{后端启动}
+使用uvicorn启动FastAPI后端服务:
+\begin{minted}{bash}
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+\end{minted}
+
+\subsubsection{前端启动}
+前端使用pnpm作为包管理工具,需要先构建再启动:
+
+构建:
+\begin{minted}{bash}
+pnpm build
+\end{minted}
+
+启动:
+\begin{minted}{bash}
+pnpm start
+\end{minted}
+
+\subsection{演示账号}
+
+系统提供以下演示账号供测试使用:
+
+\begin{itemize}
+    \item \textbf{管理员账号}
+    \begin{itemize}
+        \item 用户名: demo\_admin
+        \item 密码: demo\_admin
+        \item 权限: 系统管理员权限,可访问所有功能
+    \end{itemize}
+    
+    \item \textbf{普通用户账号}
+    \begin{itemize}
+        \item 用户名: demo\_user  
+        \item 密码: demo\_user
+        \item 权限: 普通用户权限,可访问基础功能,不可访问后台管理
+    \end{itemize}
+\end{itemize}
+
+
+\subsection{一键获取数据说明}
+
+系统提供了一键获取数据的功能,可以在TaskPage页面中使用。具体步骤如下:
+
+\begin{enumerate}
+    \item 使用管理员账号登录系统
+    \item 进入TaskPage页面
+    \item 点击"一键获取数据"按钮,系统将自动执行以下操作:
+    \begin{itemize}
+        \item 从BOSS直聘爬取最新招聘数据
+        \item 导入猎聘网CSV数据文件
+        \item 执行ETL数据处理流程
+        \item 更新地理编码信息
+        \item 刷新数据统计视图
+    \end{itemize}
+    \item 在系统监控页面可以实时查看数据处理进度
+\end{enumerate}
+
+注意事项:
+\begin{itemize}
+    \item 数据获取过程可能需要几分钟到几十分钟不等,请耐心等待
+    \item 建议在系统负载较低时执行此操作
+    \item 如果处理过程中出现异常,系统会自动记录并可在监控页面查看详细信息
+    \item 为避免重复数据,系统会自动进行去重处理
+\end{itemize}

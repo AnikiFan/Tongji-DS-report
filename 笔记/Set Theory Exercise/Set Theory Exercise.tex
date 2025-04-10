@@ -1,0 +1,1259 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\usepackage{slashed}
+\theoremstyle{remark}
+\newtheorem*{remark}{remark}
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}[subsection]
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\author{Fan}
+\title{Set Theory Exercises}
+\date{2023.7.21}
+\begin{document}
+\maketitle
+\pagestyle{plain}
+\tableofcontents
+\printindex
+\section{Sets and Relations and Operations Among Them}
+\subsection{Set algebra and the set-builder}
+\begin{problem}
+State and prove the dual law of \[A\cap (B\cup C)=(A\cap B)\cup(A\cap C)\]
+
+dual law:
+\[A\cup(B\cap C)=(A\cup B)\cap(A\cup C)\]
+\begin{proof}
+If $x$ is in $A\cup (B\cap C)$, then $x$ must be either in A or $B\cap C$.
+If $x$ is in $A$, then it must be in $A\cup B$ and $A\cup C$, so it is in 
+$(A\cup B)\cap(A\cup C)$. Otherwise, $x$ is in $B\cap C$, which means that 
+$x$ is both in $B$ and $C$, consequently being both in $A\cup B$ and $A\cup C$.
+So in every possible cases, $x$ is in $(A\cup B)\cap(A\cup C)$.
+
+If $x$ is in $(A\cup B)\cap(A\cup C)$, then $x$ must both in $A\cup B$ and 
+$A\cup C$. If $x$ is in $A$, then $x$ is in $A\cup (B\cap C)$, otherwise, $x$
+must be both in $B$ and $C$, consequently in $B\cap C$ and $A \cup (B \cap C)$.
+So in every possible cases. $x$ is in $A\cup (B\cap C)$.
+
+\end{proof}
+\end{problem}
+\begin{problem}
+   Prove 
+\[\widetilde{A\cup B}=\tilde{A}\cap\tilde{B} \]
+\begin{proof}
+    If $x$ is in $\tilde{A}\cap \tilde{B}$, then $x$ is neither in $A$ or $B$,
+    which means that $x$ isn't in the union of $A$ and $B$. In other word, 
+    $x$ is in $\widetilde{A\cup B}$.
+
+    If $x$ is  in  $\widetilde{A\cup B}$, then $x$ isn't in the union of
+    $A$ and $B$. In other word, $x$ is neither in $A$ and $B$, so $x$ is in 
+    $\tilde{A}\cap \tilde{B}$.
+\end{proof} 
+\end{problem}
+\begin{problem}
+    Prove \[A\cap(B-C)=(A\cap B)-(A\cap C)\]
+    \begin{proof}
+        If $x$ is in LHS, then $x$ is in both $A$ and $B-C$, which means
+        that $x$ is in $A$ and $B$ but $x$ isn't in $C$.
+        So $x$ is in $A\cap B$ but not in $A\cap C$. In other word, $x$ is in
+        RHS.
+
+        If $x$ is in RHS, then $x$ is in $A\cap B$,but not in $A\cap C$. So,
+        first of all, $x$ must be in $A$ and $B$. Then, in order not to be in
+        $A\cap C$, $x$ isn't in $C$. So $x$ is in $A$ and $B$, but not in $C$.
+        In other word, $x$ is both in $A$ and $B-C$, so $x$ is in LHS.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Show that $\circleddash$ is associative,i.e $A\circleddash(B\circleddash C)=(A\circleddash B)\circleddash C$.
+    \begin{proof}
+%    \begin{align*}
+%        \phantom{\Leftrightarrow}&x\in A\circleddash (B\circleddash C)\\
+        %\Leftrightarrow &x\in(A-(B\circleddash C))\cup((B\circleddash C)-A)\\
+        %\Leftrightarrow &x\in(A-((B-C)\cup(C-B)))\cup(((B-C)\cup(C-B))-A)\\
+        %\Leftrightarrow &x\in(A\cap\widetilde{(B-C)\cup(C-B)})\cup((B-C)\cup(C-B)\cap\tilde{A})\\
+        %\Leftrightarrow &x\in(A\cap\widetilde{(B\cap\tilde{C})\cup(C\cap\tilde{B})})\cup((B\cap\tilde{C})\cup(C\cap\tilde{B})\cap\tilde{A})\\
+        %\Leftrightarrow &x\in(A\cap\widetilde{(B\cap\tilde{C})}\cap\widetilde{(C\cap\tilde{B})})\cup((B\cap\tilde{C})\cup(C\cap\tilde{B})\cap\tilde{A})\\
+        %\Leftrightarrow &x\in(A\cap(\tilde{B}\cup C)\cap(\tilde{C}\cup B))\cup((B\cap\tilde{C})\cup(C\cap\tilde{B})\cap\tilde{A})\\
+        %\Leftrightarrow &x\in((\tilde{B}\cup C)\cap(\tilde{C}\cup B)\cap A)\cup((B\cap\tilde{C})\cup(C\cap\tilde{B})\cap\tilde{A})\\
+    %\end{align*}
+Now we are going to prove
+\[A\circleddash (B\circleddash C)=\{x:x \text{is in A or B or C, but isn't in any of their intersection}\}\]
+    If $x$ is in $A\circleddash(B\circleddash C)$, $x$ is either in $A$ or $B\circleddash C$.
+    In the first case, $x$ isn't in $B\circleddash C$. Due to the symmtry, we assume that 
+    $x$ is both in the union of $A$ and $B$ and the union of $A$ and $C$, so that $x$ is in the union
+    of $B$ of $C$, which is contrary to previous argument.
+    
+    In the second case, $x$ isn't in $A$ and the union of $B$ and $C$. So that $x$ isn't in neither the
+    union of $A$ and $B$ nor the union of $A$ and $C$.
+
+    So that $x$ is the RHS.
+
+    If $x$ is in the RHS.
+    Obviously, $x$ is in $B\circleddash C$.
+    If $x$ isn't in the LHS, then $x$ must be in the union of $A$ and $B\circleddash C$,
+    so that $x$ must be either in the union of $A$ and $B$ or the union of $A$ and $C$, which is
+    contrary to the assumption.
+
+    So that
+\[A\circleddash (B\circleddash C)=\{x:x \text{is in A or B or C, but isn't in any of their intersection}\}\]
+
+Due to RHS's symmetry, we can replace A with C.
+
+Meanwhile,
+\[A\circleddash(B\circleddash C)=(B\circleddash C)\circleddash A=(C\circleddash B)\circleddash A\]
+So we only need to prove thet the $A$ in the LHS can be replaced by $C$, which  is true because of the symmtry of 
+the RHS of the equation we proved earilier.
+    \end{proof}
+%    \begin{remark}
+%        Because $\widetilde{A\cup B}=\tilde{A}\cap\tilde{B}$,so
+        %\[\widetilde{A\cap B}=\tilde{A}\cup\tilde{B}\]
+    %\end{remark}
+\end{problem}
+\begin{problem}
+    Prove that 
+    \[\text{if}A\cap C=B \text{and} A\cup C =B \cup C \text{then}A=B.\]
+    \begin{proof}
+        Suppose $x$ is in $A$. If $x$ is also in $C$, then $x$ is in $A\cap C=B\cap C$,
+        so that $x$ is also in $B$.
+        If $x$ isn't in $C$, then $x$ is still in $A\cup C=B\cup C$, so that $x$ is
+        either in $B$ or $C$. However $x$ isn't in $C$, so that $x$ is also in $B$.
+
+        So in all possible cases, $x$ is in $B$.
+
+        Due to the symmetry, we can guarantee that, supposing $x$ is in $B$, then it must be $A$ also.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    (1),(2),(3) stands for an asserting expression, a naming expression, and neither of them respectively.
+   \[ \begin{array}{cc}
+        expression & type \\
+        \hline 
+        \int_{a}^{b}x^2d&(2)\\
+       \text{ the unique x such that} & (3)\\
+        \exists x(x>y)& (1)\\
+        (A\cup B)\cup C& (3)\\
+        A\cup B\in C& (3)\\
+        \{x:x<2\}&(1)\\
+    \end{array}
+\]
+\end{problem}
+\begin{remark}
+    The correct answer is (3)(3)(1)(2)(1)(2).
+\end{remark}
+\subsection{Russell's paradox}
+\index{unsolved problem 1.2.1}
+\begin{problem}
+    Obtain a set $t$ such that given any $C$, $t\notin C$ and also (a)
+    $t$ is a subset of $C$, and (b) $t$ is a specific ('definable') set.
+\end{problem}
+\subsection{Infinite unions and intersections}
+\begin{problem}
+    Prove de Morgan's law's first part.
+    \begin{proof}
+       We can use deduction.
+       It is known that
+       \[\widetilde{A\cup B}=\tilde{A}\cap \tilde{B}\] 
+       Suppose that when there is k elements in set I, the law establish.
+        When there is k+1 elements in set I,
+        \[\widetilde{\bigcup_{i\in\{1,2,\cdots,k\}}\mathfrak{G}_i}=\bigcap_{i\in\{1,2,\cdots,k\}}\tilde{\mathfrak{G}}_i\]
+        \[\widetilde{\bigcup_{i\in\{1,2,\cdots,k+1\}}\mathfrak{G}_i}=\widetilde{\bigcup_{i\in\{1,2,\cdots,k\}}\mathfrak{G}_i\cup \mathfrak{G}_{k+1}}
+        =\widetilde{\bigcup_{i\in\{1,2,\cdots,k\}}\mathfrak{G}_i}\cap \tilde{\mathfrak{G}}_{k+1}=\bigcap_{i\in\{1,2,\cdots,k+1\}}\tilde{\mathfrak{G}}_i\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    prove the first part of the distributive laws.
+    \begin{proof}
+       It is known that
+       \[A\cap(B\cup C)=(A\cap B)\cup (A\cap C)\] 
+       If when there is k elements in the set I, the law establishs.
+       
+       Then, when there is k+1 elements in the set I:
+       \[B\cap\bigcup_{i\in \{1,2,\cdots,k\}}A_i=\bigcup_{i\in\{1,2,\cdots,k\}}(B\cap A_i)\]
+       \[
+        \begin{array}{rl}
+            B\cap\bigcup_{i\in\{1,2,\cdots,k+1\}}A_i&=(B\cap\bigcup_{i\in\{1,2,\cdots,k\}}A_i)\cup (B\cap A_{k+1})\\
+                                                   &= (B\cup \bigcup_{i\in\{1,2,\cdots,k\}})\cap(B\cup A_{k+1})\\
+                                                   &=\bigcup_{i\in\{1,2,\cdots,k\}}(B\cap A_i)\cap (B\cup A_{k+1})\\
+                                                   &=\bigcup_{i\in\{1,2,\cdots,k+1\}}(B\cap A_i)\\
+        \end{array}
+       \]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    In the plane, let $C_r=\{P:d(\mathfrak{O} ,\mathfrak{P} <r )\}$ and $C_r^*=\{P:d(\mathfrak{O}, \mathfrak{P} )\leq r\}.$
+
+    What is $\bigcap^{\infty}_{n=1}{C_1+\frac{1}{n}}$?
+    
+    The answer is $C_i^*.$
+\end{problem}
+\begin{problem}
+    In each expression classify each occurrence of any variable as free or bound.
+\begin{enumerate}
+    \item For all y, y<x.
+    \item $y=\int_{1}^{u}(x^2+y)dy$
+    \item $\sum_{i=1}^{n}(i^2+1)$
+    \item For any positive real number y there is exactly one positive real number x such that $x^2=y$.
+\end{enumerate}
+
+For (1), y is bounded, x is free.
+
+For (2), u is free, x is free, y is bounded.
+
+For (3), i is bounded, n is free.
+
+For (4), y is free, x is bounded.
+\end{problem}
+\subsection{Ordered couples and Cartesian products}
+\begin{problem}
+    Prove 
+    \[\text{If} (a,b)=(c,d)\text{then} a=c \text{and}b=d\]
+\begin{proof}
+    According to the definition:
+    \[(a,b)=\{\{a\},\{a,b\}\},(c,d)=\{\{c\},\{c,d\}\}\]
+    Since this two ordered couples are equal, then the two sets on the RHS 
+    are equal to. If two sets are equal, they must have same number  of element.
+    So $\{a\}=\{c\},\{a,b\}=\{c,d\}$,the former equation shows that $a=c$.
+    If $a=d$,then $a=c=d$. Due to the latter equation, a,b,c,d are the same, which of
+    cause lead to $a=c$ and $b=d$.
+    If $a\neq d$,then we must have $b=d$, so that we have $a=c$ and $b=d$.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Prove
+    \[A\times \bigcup_{i\in I}\mathfrak{B}_i=\bigcup_{i\in I}(A\times \mathfrak{B}_i)\]
+\begin{proof}
+   % \[\begin{array}{rl}
+        LHS=$\{(a,b):a\in A,b\in \bigcup_{i\in I}\mathfrak{B}_i\}$
+      %     &=\bigcup_{i\in I}\{(a,b):a\in A,b\in \mathfrak{B}_i\}\\
+      %     &=\bigcup_{i\in I}(A\times \mathfrak{B}_i)
+   % \end{array}\]
+   Suppose ordered couple (a,b) is in LHS, then a is in $A$ and b is in the 
+   union of each $\mathfrak{B}_i$, which means that it must be in one of them,
+   so that $x$ must be in one of the set $(A\times \mathfrak{B}_i)$. Therefore,
+   the ordered couple (a,b) is also in RHS. 
+   
+   Suppose ordered couple (a,b) is in RHS, then it is in one of the sets $A\times \mathfrak{B}_i$.
+   so that a is in $A$ and b is in one of the sets $\mathfrak{B}_i$. Therefore, 
+   b is in the union of $\mathfrak{B}_i$ and the ordered couple (a,b) is in
+   the LHS.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Prove 
+    \[A\times(B-C)=A\times B-A\times C\]
+    \begin{proof}
+        If ordered couple $(a,b)$ is in the LHS, then a is in $A$ and 
+        b is in $B-C$, which means that b is in $B$ but no in $C$, so
+        that the ordered couple is in $A\times B$ but not in $A\times C$,
+        which means that it is in the RHS.
+
+        If ordered couple (a,b) is in the RHS, then it is in $A\times B$,
+        which means that a ia in $A$ and b is in $B$. However, it is not 
+        in $A\times C$, so b isn't in $C$. In other word, b is in $B-C$, and
+        the ordered couple is in the LHS.
+    \end{proof}
+\end{problem}
+\index{unsolved problem 1.4.4}
+\begin{problem}
+    Use the previous two equation to infer 
+    \[A\times \bigcap_{i\in I}\mathfrak{B}_i=\bigcap_{i\in I}(A\times \mathfrak{B}_i)\]
+\end{problem}
+\begin{problem}
+   Prove 
+   \[(A\cap B)\times (C\cap D)=(A\times C)\cap(B\times D)\]
+\begin{proof}
+   Suppose ordered couple (x,y) is in the LHS, then x is in $A\cap B$, and
+   y is in $C\cap D$, which means that x is both in A and B and y is both
+   in C and D. Therefore, the ordered couple (x,y) is both in $A\times C$ and
+   $B\times D$. 
+
+    Suppose ordered couple (x,y) is in the RHS, then (x,y) is both in $(A\times C)$
+    and $(B\times D)$, which means that x is both in $A$ ,$B$, therefore, $A\cap B$, while y is both in $C$ and $D$ 
+    therefore, in $C\cap D$.So that the ordered couple is also in the LHS.
+\end{proof}
+\end{problem}
+\subsection{Relations and functions}
+\begin{problem}
+    Prove
+    \[ \Breve{R/S}=\Breve{S}/\Breve{R}\]
+\begin{proof}
+    Suppose $(x,y)$ is in the LHS, then $(y,x)$ is in $R/S$,
+    so that there exist z such that $(y,z)$ is in $R$ and $(z,x)$ is in $R$.
+    Therefore, $(z,y)$ and $(x,z)$ is in $\Breve{R}$ and $\Breve{S}$, respectively.
+    Hence, $(x,y)$ is also in $\Breve{S}/\Breve{R}$.
+
+    Suppose $(x,y)$ is in the RHS, then there exists z such that $(x,z)$ and
+    $(z,y)$ is in $\Breve{S}$ and $\Breve{R}$ respectively. Hence, $(z,x)$ and
+    $(y,z)$ is in $S$ and $R$ respectively. Therefore, $(y,x)$ is in $R/S$, which
+    means that $(x,y)$ is in $\Breve{R/S}$.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Prove
+        \[R[\bigcup_{i\in I}\mathfrak{a}_i]=\bigcup_{i\in I}R[\mathfrak{a}_i]\]
+\begin{proof}
+    Suppose $x$ is in the LHS, then it is in the image of the union of $\mathfrak{a}_i$.
+    Therefore, $x$ must be in the image of one $\mathfrak{a}_i$. In other word,
+    $x$ is in one of the image of $\mathfrak{a}_i$. Hence, $x$ is in the RHS.
+
+    Suppose $x$ is in the RHS, then $x$ is in one of the image of $\mathfrak{a}_i$.
+    Therefore, $x$ is definitely in the image of the union of $\mathfrak{a}_i$. Hence, $x$
+    is also in the LHS.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Prove
+    \[f^{-1}(A-B)=f^{-1}A-f^{-1}B.\]
+    \begin{proof}
+        If $x$ is in the LHS, then $f(x)\in A-B$, which means that $f(x)$ is
+        in $A$ but not in $B$. Thereforem, $x$ is in $f^{-1}A$ but not in $f^{-1}B$.
+        Hence, $x$ is in the RHS.
+
+        Suppose $x$ is in the RHS, then $x$ is in $f^{-1}A$, but not in $f^{-1}B$.
+        Therefore, $f(x)$ is in $A$ but not in $B$. Hence $f(x)$ is in $A-B$, and 
+        $x$ is in the LHS.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove: If, for any $A$, $B$,$R[A\cap B]=R[A]\cap R[B],$ then $\Breve{R}$ is a function.
+    \begin{proof}
+        If $\Breve{R}$ isn't a funciton. Then, there exists $x,a,b$ such that 
+        $\Breve{R}[\{x\}]=\{a\}=\{b\}$. Therefore, $\{x\}=R[\{a\}]=R[\{b\}]$.
+        Since $a\neq b$, 
+        \[R[\{a\}\cap\{b\}]=R[\varnothing]=\varnothing\]
+        However,
+        \[R[\{a\}\cap\{b\}]=R[\{a\}]\cap R[\{b\}]=\{x\}\cap\{x\}=\{x\}\neq\varnothing,\]
+        whichi is a contradiction.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove
+    \[R/\bigcup_{i\in I}S_i=\bigcup_{i\in I}R/S_i\]
+    \begin{proof}
+        Suppose $(x,y)$ is in the LHS, then there exist z and n such that
+        $(x,z)$ is in $R$, and $(z,y)$ is in $S_n$. Therefore $(x,y)$ is in 
+        $R/S_n$, hence $(x,y)$ is in the RHS.
+
+        Suppose $(x,y)$ is in the RHS, then there exists n such that $(x,y)\in R/S_n$.
+        Therefore, there exists z such that $(x,z)$ and $(z,y)$ is in $R$ and 
+        $S_n$ respectively. Hence $(z,y)$ is in $\bigcup_{i\in I}S_i$ and $(x,y)$
+        is also in LHS.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    If $R$ is a function then $R/\bigcap_{i\in I}S_i=\bigcap_{i\in I}R/S_i$
+    \begin{proof}
+       This is a special case of the last question. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove
+    \[(R/S)[A]=S[R[A]]\]
+    \begin{proof}
+        Suppose b is in the LHS, then there exists a such that $(a,b)\in (R/S)$.
+        Therefore, there exist z such that $(a,z)$ and $(z,b)$ is in R and S respectively.
+        Hence z is in $R[A]$, and consequently b is in the RHS.
+
+        Suppos b is in the RHS, then there exist z such that $z\in R[A]$ and 
+        $(z,b)\in S$. Therefore, there exists a such that $a\in A$ and $(a,z)$ is in
+        R. Hence, $(a,z)$ and $(z,b)$ is in R and S respectively. In other word, $(a,b)$
+        is in $(R/S)$, and b is in the LHS.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Since the laws for $R-$image and \verb+R/_+ seem to be parallel, try to reduce the 
+    first to the second. Specially, fill in the blank and prove :$\{z\}\times R[A]=$\verb+_/R+.
+    (Here z is any fixed thing.(Aside: $U$ and $\{z\}\times U$ are practically the same thing, 
+    so this does `reuce ' image to /.))
+
+    Suppose $(z,x)$ is in the LHS, then $x$ is in $R[A]$. Therefore, there exists 
+    a in $A$ such that $(a,x)$ is in $R$. Now we have $(z,x)$ in the LHS, $(a,x)$ in $R$, so
+    we can replace \verb+_+ with $\{z\}\times A$.
+
+    Now we are going to prove
+    \[\{z\}\times R[A] =(\{z\}\times A)/R\]
+    \begin{proof}
+       Suppose $(z,b)$ is in the LHS, then $b$ is in $R[A]$.
+       Therefore, there exists a in $A$ such that $(a,b)$ is in $R$.
+       Since $(z,a)$ and $(a,b)$ is in $\{z\}\times A$ and $R$ respectively,
+       $(z,b)$ is also in the RHS. 
+
+       Suppose $(x,b)$ is in the RHS, then there exists a such that $(x,a)$ and $(a,b)$
+       is in $\{z\}\times A$ and $R$ respectively. Obviously, $x=z$, we just replaced x with z
+       in the following proof. Since $(a,b)$ is in $R$, b is in $R[A]$. Hence, $(x,b)$ is in the LHS
+    \end{proof}
+\end{problem}
+\subsection{Sets of sets, power set, arbitrary Cartesian product}
+\begin{problem}
+    Prove
+    \[P(A)\underset{H}{\sim}\{u,v\}^A\]
+    where $H(B)=c_B$
+    \begin{proof}
+        We can choose a set $B$ from $P(A)$, so that $B$ is the subset of $A$.
+        $H(B)=c_B$ is then a function that is on A to  $\{u,v\}$.
+        If $c_B$=$c_D$, obviously, $B=D$ and for any function in RHS, we can find a 
+        corresponding subset in A. So it is a one-to-one function.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that if $x$ is in $\bigcup_{f\in\prod J_i,i\in I}\bigcap_{i\in I}\mathfrak{a}_{if(i)}$,
+    then $x$ is also in $\bigcap_{i\in I}\bigcup_{j\in J_i}\mathfrak{a}_{ij}$.
+    \begin{proof}
+       For any $x$ in  $\bigcup_{f\in\prod J_i,i\in I}\bigcap_{i\in I}\mathfrak{a}_{if(i)}$
+       For every i in I, there exists $f(i)$ in $J_i$ such that $x$ is in $\mathfrak{a}_{ij(i)}$.
+       Hence for every i in I, $x$ is in $\bigcup_{j\in J_i}\mathfrak{a}_{ij}$, and in their union.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove
+    \[\prod_{i\in I}\bigcup_{j\in J_i}\mathfrak{a}_{ij}=\bigcup_{f\in \prod J_i,i\in I}\prod_{i\in I}\mathfrak{a}_{if(i)}\]
+    \begin{proof}
+    Suppose $f$ is in the LHS, then, for every i in I, we can select an element from
+    $\bigcup_{j\in J_i}\mathfrak{a}_{ij}$, which is corrospondent to a j in $J_i$, forming a function $g$.
+    Hence $g$ is in $\prod J_i$, and therefore f is in $\prod _{i\in I}\mathfrak{a}_{ig(i)}$.
+    So $f$ is in the RHS.
+    
+    Suppose $f$ is in the RHS, then there exists a function $g$ in $\prod_{i\in I}J_i$,
+    that for every i in I, g(i) is in $J_i$, and then $\prod_{i\in I}\mathfrak{a}_{ig(i)}$
+    corrospondent to a element in $\mathfrak{a}_{ig(i)}$. In  other word, 
+    for every i in I, $f$ has corrospondent to a element in $\mathfrak{a}_{ig(i)}$, therefore
+    in the union of $\mathfrak{a}_{ij}$. Hence, for every i in I, $f$ actually corrospondent 
+    to a element in $\bigcup_{j \in J_i}\mathfrak{a}_{ij}$, and $f$ is in LHS too. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Does the previous equation hold if $\bigcup$ is replaced everywhere by $\bigcap$?
+
+    The answer is no. It is very easy to construct $\mathfrak{a}_{ij}$ such that 
+    $\bigcap_{j\in J_i}\mathfrak{a}_{ij}=\varnothing$,and $\bigcup_{j\in J_i}\mathfrak{a}_{ij}\neq\varnothing$.
+    In this case, the LHS is equal to $\varnothing$, but the RHS equals doesn't equal to $\varnothing$.
+    (We can let $\prod_{i\in I}J_i $ only have one element.)
+\end{problem}
+\begin{problem}
+    Let $f$ be on $A$ onto $B$. Show there exists $g:B\rightarrow A$ such that for
+    each $b\in B$,$f(g(b))=b$.Show also that $g$ is one-to-one.
+    \begin{proof}
+        Since $f$ is a function on $A$ onto $B$, for each $b\in B$, there at
+        least exists a $a\in A$ such that $f(a)=b$, so we can let $g(b)=a$.
+
+        If $b,c\in B , g(b)=g(c)$ , then $b=f(g(b))=f(g(c))=c$, so it is one-to-one.
+    \end{proof}
+\end{problem}
+\subsection{Structures}
+\begin{problem}
+    Complete theorem 1.16.
+
+    \begin{enumerate}
+        \item $\underbar{A}\underset{Id_{\underbar{A}}}{\cong}\underbar{A}$
+        \item if $\underbar{A}\underset{f}{\cong}\underbar{B},$then $\underbar{B}\underset{f^{-1}}{\cong}\underbar{A}$
+        \item if $\underbar{A}\underset{f}{\cong}\underbar{B}$ and $\underbar{B}\underset{g}{\cong}\underbar{C}$,then $\underbar{A}\underset{g\circ f}{\cong}\underbar{C}$.
+    \item $\underbar{A}\cong \underbar{A}$
+    \item if $\underbar{A}\cong \underbar{B}$, then $\underbar{B}\cong \underbar{A}$
+    \item if $\underbar{A}\cong \underbar{B}$ and $\underbar{B}\cong \underbar{C}$ then $\underbar{A}\cong \underbar{C}$.
+\end{enumerate}
+\end{problem}
+\begin{problem}
+    Prove theorem 1.17.
+    \begin{proof}
+       If f is an isomorphism of $\underbar{A}$ into $\underbar{A}'$,
+       we can regard $\underbar{A}'$ itself as $\underbar{A}'$'s substructures.
+       
+       If f is an isomorphism of $\underbar{A}$ into $\underbar{B}$, which is a
+       substructure of $\underbar{A}'$, then, $A\underset{f}{\sim}B$,and for any
+       $x,y\in A,xRy$ if and onlly if $f(x)R'f(y)$.\index{unsolved problem 1.7.2}
+    \end{proof}
+    \begin{remark}
+        Maybe `an isomorphism into' means $A$ isn't necesserily one-to-one 
+        to $A$'.
+    \end{remark}
+\end{problem}
+\begin{problem}
+    Prove that if $\underbar{A}=(A,R)$ and $A\underset{f}{\sim}A'$(A' is just a set),
+    then there is exactly one $R'$ such that $(A,R)\underset{f}{\cong}(A',R')$.
+    \begin{proof}
+        when $(A,R)\underset{f}{\cong}$,for $x,y\in A$,$xRy$ if and only if
+        $f(x)R'f(y)$.
+        Since $R$ is a set of order couple, we can let $R'={(f(a),f(b)):(a,b)\in R}$.
+        If there is another $R''$, we can easily prove that $R'$ and $R''$ share same 
+        elements.
+    \end{proof}
+\end{problem}
+\subsection{Partial order and orders}
+\begin{problem}
+    Prove that every partial order $(A,\leq)$ is isomorphic to $(Q,\subseteq_Q)$
+    for some $Q$.
+
+    We can construct $Q=\{\{b:b\leq a\}:a\in A\}$.
+    It is obviously that the mapping $a\in A \rightarrow \{b:b\leq a\}$ is 
+    one-to-one, and $x\leq y$ iff $\{b:b\leq x\}\subseteq\{b:b\leq y\}$.(because of the transitive)
+\end{problem}
+\begin{problem}
+    Prove theorem 1.19. Then, looking at your proof, improve it by weakening its
+    hypotheses and then prove it agian.
+\begin{proof}
+    We need to prove that f is one-to-one and $xRy$ whenver $f(x)R'f(y)$.
+    Suppose $f(x)R'f(y)$, if $x\Breve{R}y$, then $f(x)\Breve{R}'f(y)$, thus $f(y)R'f(x)$.
+    Due to the transitive, $f(x)R'f(x)$, which is contrary to the irreflective.
+    If $x=y$, then $f(x)=f(y)$, however, this is also contrary to the irreflective.
+    Due to the connect, $xRy$.
+
+    Now we have to prove that f is one-to-one. If f(x)=f(y), then due to the 
+    irreflective $f(x)\slashed{R'}f(y)$ and $f(x)\slashed{\Breve{R}'}f(y)$, consequently
+    $x\slashed{R}y$ and $x\Breve{\slashed{R}}y$. Due to the connected, x=y. Since f is onto A',
+    now f is one-to-one.
+\end{proof}
+ 
+During the proof, we only need  $(A',R')$ to be  irreflective and transitive
+and $(A,R)$ to be connected. Meanwhile, f should still preserve order.
+
+The proof remain the same.
+\begin{remark}
+    $(A',R')$ just need to be asymmetric.
+\end{remark}
+\end{problem}
+\begin{problem}
+    Prove theorem 1.20
+    \begin{proof}
+        If x is a minimum, then, for all $y\in B,x\leq y$, which means that
+        $x<y$ or  $x=y$. If $y<x$, then $x<x$ which is contrary to irreflective,
+        or $y<y$, which is also contrary to irreflective. So, for all $y\in B$,
+        $y\slashed{<}x$.
+
+        If a and b are both $\underbar{B}$'s minimum element, then $a\leq b,b\leq a$,
+        due to the antisymmetric, $a=b$.
+
+        If $\underbar{A}$ is an order, then $\underbar{B}$ is also an order.
+        If $a$ is a minimum of B, then, for any $b\in B$, $a\leq b$, if for some 
+        $c\in B$ such that $c<a$, then $a\leq c$, which means that $a<c$ or$a= c$.
+        If $a<c$, it is contrary to the irreflective. If $a=c$, then $c<c$, which is 
+        also contrary to irreflective. So a is also a minimal. 
+        
+        If $a$ is a minimal of $B$, then for any $b\in B$, $b\slashed{<}a$.
+        Since $\underbar{B}$ is connected, $b=a$ or $b>a$, which means that $a\leq b$.
+        Thus $a$ is also a minimum.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 1.21.3
+    \begin{proof}
+        For every proper initial segment $B\subset A$,
+        we are going to prove that $B=$ Prod the first element of $A-B$.
+        Suppose $x$ is in the RHS, then $x<\text{the first element of} A-B$,
+        so that $x$ isn't in $A-B$, thus in B.
+
+        Suppose $x$ is in the LHS, then if $x$ isn't in the RHS, then $x\geq $
+        the first element of $A-B$. Since $x$ is in $B$, so $x$ counldn't in $A-B$,
+        so that $x\geq $the first element of $A-B$. Since $B$ is a initial segment,
+        the first element of $A-B$ should be in $B$, which is a contradiction.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that for any order $\underbar{A}=(A,\leq)$, the following are equivalent:
+    \begin{enumerate}
+        \item $\underbar{A}$ is a well-order.
+        \item Every non-empty final segment of $\underbar{A}$ has a least element.
+        \item Every proper initial segment of $\underbar{A}$ is of the form Pred $a$(for some $a\in A$)
+    \end{enumerate}
+    \begin{proof}
+        We have already proof $(1)\rightarrow(3)$.
+
+        Since every non-empty subset of $A$ has a first element, we have $(1)\rightarrow(2)$.
+
+        For every non-empty subset $B$, $\underbar{B}$ is also an order, and we can 
+        regard B itself as a final segment. According to (2), it has a least element.
+        Hence, we have $(2)\rightarrow(1)$
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $\underbar{A}=(A,\leq)$ be any order. Show the following are equivalent:
+    \begin{enumerate}
+        \item Every non-empty subset of $A$ bounded above has a least upper bound.
+        \item Every non-empty subset of $A$ bounded below has a greatest lower bound.
+        \item Given any non-empty initial segment $U$ having a non-empty complement $V$,
+        either $U$ has a last element or $V$  has a first.
+    \end{enumerate}
+    \begin{proof}
+    \index{unsolved problem 1.8.6}
+    \begin{remark}
+        After refering to the hint, we give the following proof. We 
+        first prove $(1)\rightarrow(2)$
+
+        Given B is a non-empty subset of A, and $x$ is in A,
+        then, $x$ is obviously a upper bound of the set of B's lowerbound.
+        According to (1), we have U as the least upper bound of the 
+        set of B's lowerbound. Then, for every lowerbound l, $l \leq U$.
+        If U is in B, then, obviously, U is the greatest lower bound of B.
+        Otherwise, U is not in $B$, then, for every $x$ in $B$, $U<x$,
+        so that U is a lower bound, so that U is also the greatest lower bound of B.
+        (If not so, then there will be a upper bound of the lower bound of B that is less than
+        U, which is contrary to the fact that U is the least lower bound.)
+
+        Due to the symmetry, $(2)\rightarrow(1)$.
+    \end{remark}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Assume knowledge of the usual orders $\underbar{R}=(R,\leq)$ of the real
+    numbers and $\underbar{Q}=(Q,\leq)$ of the rationals.
+    Show true or false:
+    \begin{enumerate}
+        \item Every non-empty proper initial segment of $\underbar{R}$ is Pred a, for some $a\in R$
+        \item Every non-empty proper initial segment of $\underbar{R}$ is Pred $^{\leq}$ a , for some $a\in R$
+        \item Every non-empty proper initial segment of $\underbar{R}$ is Pred  a or Pred $^{\leq}$, for some $a\in R$
+        \item Every non-empty proper initial segment of $\underbar{Q}$ is Pred a or Pred $^{\leq}$ a (in $\underbar{Q}$ for some $a\in Q$)
+    \end{enumerate}
+\index{problem 1.8.7 uncorrect}
+    The answer is FFFF
+    \begin{remark}
+        The answer should be FFTF.
+    \end{remark}
+\end{problem}
+\begin{problem}
+    Which of $\underbar{N},\underbar{Z},\underbar{Q},\underbar{R}$are dense? discrete? well-ordered? continuous?
+
+    $\underbar{N}$ is discrete, well-ordered,continuous.
+
+    $\underbar{Z}$ is discrete, continuous.
+
+    $\underbar{Q}$ is dense
+
+    $\underbar{R}$ is dense, continuous.
+\end{problem}
+\section{CARDINAL NUMBERS AND FINITE SETS}
+\subsection{Crdinal numbers,+,and $\leq$}
+\begin{problem}
+    Prove the Exchange Principle
+    \begin{proof}
+        First, we let $Z=\{t\}\times Y$.
+        Then we try to let $Z)(X$.
+        So that for any y in Y,$(t,y)\notin X$
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Show that in Theorem 2.5, (1) is equivalent to (5).
+\begin{proof}
+   If  $\kappa\leq\lambda$, then there exists a $\mu$ such that $\lambda=\kappa+\mu$.
+    So that for any set $A$ of power $\kappa$, there exists some C such that $A$
+    and $C$ are disjoint and $\overline{\overline{A\cup C}}=\lambda$. We can
+    We can let $B=A\cup C$
+
+    If for any set $A$ of power $\kappa$, there exists $B\supseteq A$ of power $\lambda$.
+    Let $C=B-A$, then $C)(A$,and for $\mu=\bar{C}$, $\lambda=\kappa+\mu$
+\end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 2.8.1.
+    \begin{proof}
+        If $\kappa\leq\lambda$, then there is $\mu$ such that $\kappa+\mu=\lambda$.
+        Then there is some $A$,$B$ such that $\bar{\bar{A}}=\kappa,\bar{\bar{B}}=\mu,A)(B,\overline{\overline{A\cup B}}=\lambda$
+        Since $A\cup B\supseteq B$, it is easy to construct a function on $A\cup B$ onto $B$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 2.8.3.
+    \begin{proof}
+        Since $\kappa\leq^*\lambda$, we have a function $f$ on $B$ onto $A$.
+        We have $\{x:x \text{is the R-least x such that }f(x)=a, \text{for every a in }B \}$
+        \index{unsolved problem 2.1.4.}
+    \end{proof}
+\end{problem}
+\subsection{Natural numbers and finite sets}
+\begin{problem}
+    Prove theorem 2.9.1 and 2.9.2
+    \begin{proof}
+        According to the definition. Every $X$ has a 0 in it.
+        So 0 is a natural number.
+
+        If $\kappa$ is a natural number, then, there is a $\kappa$ in 
+        every $X$. Hence, there is also a $\kappa+1$ in every $X$.
+        Therefore, $\kappa+1$ is also a natural number.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Suppose we have a notion $\mathfrak{n}(\kappa+1)$ for which theorem 2.9
+    can be proved, i.e., such that we can prove the following:
+    \begin{enumerate}
+        \item $\mathfrak{n}0$
+        \item If $\mathfrak{n}\kappa$ then $\mathfrak{n}(\kappa+1)$
+        \item (In general) If $\mathfrak{p}0$ and for any $\lambda$ such
+        that $\mathfrak{n}\lambda$ if and only if $\lambda$ is a natural number.
+    \end{enumerate}
+    \begin{proof}
+    Since 0 is a natural number, for any $\lambda$ such that $\mathfrak{n}\lambda,$
+    if $\lambda$ is a natual number, then $\lambda+1$ is also a natural number,
+    then for all $\lambda$, $\mathfrak{n}\lambda$ and $\lambda$ is a natural number.
+
+    According to the normal induction, we can prove that when $\lambda$ is a 
+    natural number, $\mathfrak{\lambda}$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 2.10 respectively.
+\begin{proof}
+    We show that for all n, m+n is a natual number, by induction on 
+    `n'. Since $m+0=m$, so it is a natural number. Suppose $m+n$ is a 
+    natural number, then, because $m+(n+1)=(m+n)+1$, so it is also a natural number by the
+    inductive hypothesis.
+\end{proof}
+\begin{proof}
+    Since $\kappa\geq 0$, when $n=0,$ let $\bar{\bar{A}}=\kappa$, then there is a 
+    one-to-one function on $A$ to $\varnothing$. Thus $A=\varnothing$
+   % then we have $0\leq \kappa\leq n=0$.
+
+    Suppose when $\kappa\leq n$, $\kappa$ is a natural number.
+    Then, when $\kappa\leq (n+1)$, if $\kappa\leq n$, by induction hypothesis, 
+    it is a natural number. Otherwise, $n<\kappa\leq(n+1)$. If $\kappa<(n+1)$,
+    Since $n<\kappa$, $\kappa\neq 0$, so there exists $\lambda$, such that $\kappa=\lambda+1$.
+    So $\lambda+1<n+1$ or $\lambda<n<\kappa$. So we have $\lambda+1=\kappa\leq n<\kappa$, which means that
+   there is a one-to-one function on $A$ to $B$, and then there is a one-to-one function on $B$ to $A$, 
+   where $\bar{\bar{A}}=\kappa,\bar{\bar{B}}=n$,so that there have to be a one-to-one function on $A$ to $B$,
+   which means that $n=\kappa$,which is a contradiction. So $\kappa=n+1$, which is a natural number.
+\end{proof}
+   \begin{remark}
+    During the proof, we also prove that if $n<\kappa\leq(n+1)$, then $\kappa=(n+1)$.
+   \end{remark}
+\begin{proof}
+    When $n=0$, we have $\kappa+0=\kappa,\lambda+0=\lambda$, so $\lambda=\kappa$.
+    Suppose when $\kappa+n=\lambda+n$, we have $\kappa=\lambda$.
+    Then, when $\kappa+(n+1)=\lambda+(n+1)$, we have $(\kappa+n)+1=(\lambda+n)+1$,
+    by induction hypothesis and theorem 2.3.5., we have $\kappa+n=\lambda+n$ and $\kappa=\lambda$.
+\end{proof}
+\begin{proof}
+ %  If $m\neq n$, then $m<n$, so that $m+1\leq n$. If $m+k\neq n,k=1,2,\cdots,n$,
+  % then $m+k<n,k=1,2,\cdots,n$. Thus $m+n<n$, which is contrary to $m\geq 0$ or $m+n\geq n$.
+ If $m\leq n$, then, for some $k$, $n=m+k$ or $m+k=n.$
+ If there is a and b such that $m+a=n=m+b$.
+ Let $\bar{\bar{M_1}}=\bar{\bar{M_2}}=m,\bar{\bar{A}}=a,\bar{\bar{B}}=b,M_1)(A,M_2)(B$,
+ then $M_1\cup A\sim M_2\cup B$. Since $M_1\sim M_2,$ then $A\sim B$, thus $a=b.$
+
+    If $A$ has n element, then $\bar{\bar{A}}=n$, any subset $B$ of $A$ has less than n
+    element, so $\bar{\bar{B}}<\bar{\bar{A}}$. Thus, $A$ is not equivalent to a proper subset of itself.
+
+Since $n<n+1$, then n is finite, let $A$ is a set with at least one element and $\bar{\bar{A}}=n+1$,
+then we can remove one element and get a subset with cardinal number n. It is obvious that there is 
+a one-to-one function on the subset to $A$, and the subset is not equal to $A$. Hence $n<n+1.$
+
+n,m are all natural number, and there is a one-to-one function on $A$ to $B$,
+and another one-to-one function on $B$ to $A$, so that the number of elements of $A$ and $B$
+should be equal, thus $m=n$.
+\end{proof}
+\begin{proof}
+ When $n=0$, it is obvious that $\kappa\geq 0$.
+ Suppose that $n\leq \kappa$ or $\kappa\leq n$.
+On one hand, if $\kappa \geq n$, suppose $\kappa=n$, then $\kappa\leq n+1$;
+else, $\kappa >n$, then $\kappa\geq n+1.$
+On the other hand, if $\kappa\leq n$, then due to $n<n+1$, thus $n\leq n+1$ and $\kappa\leq n+1$.
+\end{proof}
+\begin{proof}
+   We need to proof the connected, reflective, transitive and antisymmetric property.
+   Theorem 2.6 show its reflective and transitive property. Theorem 2.10.4 show its antisymmetric property.
+   Theorem 2.10.5 show its connected property.
+
+   Since $\kappa\geq 0$, so that 0 is the first element.
+
+   If $m> n$, then there exist one $k$ such that $n+k=m$ and $k\neq 0$.
+   So that $k\geq 1$, and $m=n+k\geq n+1$. So $n+1$ is the immediate successor of $n$.
+
+   If n is a natural number, then $n+1$ is also a natural number and also the immediate successor of $n$.
+\end{proof}
+\begin{proof}
+   For every finite set $A$, $A\sim W_{\bar{\bar{A}}}$. Then, according to problem 1.7.3.
+   it can be ordered.
+\end{proof}
+\begin{proof}
+    Any finite order subset of an order is also a order, and thus can isomorphic to $W_n$,
+    since $W_n$ has the first element, so is this finite subset.
+\end{proof}
+\begin{proof}
+    They are both isomorphic to $W_n$, due to the transitive, they are also isomorphic.
+\end{proof}
+\begin{proof}
+   If $\kappa\leq n$, then there exist a set $A$ such that $\bar{\bar{A}}=\kappa$,
+   and there is a one-to-one function on $A$ to $W_n$. Then $A$ is a finite set, 
+   and $A\sim W_{\bar{\bar{\kappa}}}\subseteq W_n$. Then $\kappa\leq n$. 
+\end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 2.11.
+    \begin{proof}
+        When $n=0$, $\mathfrak{Q}m$ holds for all $m<n$ since m doesn't exist at all.
+        Suppose when n, for every $m<n$, we have $\mathfrak{Q}m$, then we also have $\mathfrak{Q}n$,
+        which means that, for every $m<n+1$, we have $\mathfrak{Q}m$. By induction hypothesis, we have that,
+        for all m, we have $\mathfrak{Q}n$ for every $n<m$, thus we have $\mathfrak{Q}n$ for all n. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove without AC the `axiom of choice for finitely many sets': If $I$ is 
+    finite, F is on I, and for each $i\in I,F(i)\neq \varnothing$ then there is 
+    a choice function for $F$.
+    \begin{proof}
+       Since for each $i\in I, F(i)\neq \varnothing,$ then there is at least one element in 
+       $F(i)$, and our choice function will pick out this element. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove: If $A$ if finite and $f:A\rightarrow A$ then $f$ is one-to-one 
+    if and only if $f$ is onto.
+    \begin{proof}
+        If $f$ is one-to-one, then the image of $f$ also have cardinal of $A$,
+        however, it is also a subset of $A$, so that f is onto $A$.
+
+        If $f$ is onto f, then, The cardinal of the image of $f$ is same as the 
+        cardinal of $A$, so that $f$ has to be one-to-one.
+        \begin{remark}
+            To be more rigorous, we should use previous results to finish the proof.
+            Use contradiction to prove the second direction.
+        \end{remark}
+    \end{proof}
+\end{problem}
+\subsection{Multiplication and exponentiation}
+\begin{problem}
+    Prove theorem 2.13.7
+    \begin{proof}
+        \[\begin{array}{rl}
+            \kappa\cdot\lambda&=((\kappa-1)+1)\cdot((\lambda-1)+1)\\
+                              &=(\kappa-1)+(\lambda-1)+(\kappa-1)\cdot(\lambda-1)+1\\
+                              &=\lambda+\kappa+(\kappa-1)(\lambda-1)-1\\
+                              &\geq \lambda+\kappa\\
+        \end{array}\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 2.14.
+    \begin{proof}
+        We let $A\underset{f}{\sim}A',B\underset{g}{\sim}B'$,
+        \[F(h)(g(b))=f(h(b)),\phantom{111}h\in A^B\]
+        We only need to prove that this is a one-to-one function onto $A'^{B'}$
+
+        If $F(u)=F(v)$, then, for every b in $B$, we have
+        \[f(u(b))=f(v(b))\]
+        Since f is a one-to-one function, so that $u(b)=v(b)$,
+        which means that $u=v$ and F is a one-to-one function.
+        
+        For any function u in $A'^{B'}$ such that $u(b)=a$, we have $v$ in $A^B$,
+        such that $v(g^{-1}(b))=f^{-1}(u(b))$, and \[F(v)(b)=F(v)(g(g^{-1}(b)))=f(v(g^{-1}(b)))=f(f^{-1}(u(b)))=u(b)\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+   Prove  theorem 2.15.1
+   \begin{proof}
+    We take $F(f)(b,c)=f(c)(b)$, and we are going to prove that 
+    \[(A^B)^C\underset{F}{\sim}A^{B\times C}\]
+    We need to prove that $F$ is one-to-one and is onto $A^{B\times C}$
+
+    If for $u,v\in (A^B)^C, F(u)=F(v),$ then, for every ordered couple $(b,c) \in B\times C$
+    $u(c)(b)=v(c)(b)$, which means that function $u(c)=v(c)$, thus $u=v$, so $F$ is one-to-one.
+
+    For any function $u$ in $A^{B\times C}$, we need to prove that there exists a
+    function $v$ in $(A^B)^C$ that $F(v)=u$.
+
+    Suppose $u(b,c)=a$, then we let $v(c)(b)=a$.
+\begin{remark}
+    We should let $h_c(b)=g((b,c))$ and $f(c)=h_c$ for $g\in A^{B\times C}$
+\end{remark}
+   \end{proof}
+\end{problem}
+\begin{problem}
+    Give the function F needed for the proof of theorem 2.15.2.
+
+    We want 
+    \[A^{B\cup C}\underset{F}{\sim}A^BA^C\]
+    where B and C are disjoint.
+
+    Let 
+    \[F(f)(a,b)=(f(a),f(b))\]
+    \begin{remark}
+        The correct answer is $F(f)=(f\upharpoonright B,f\upharpoonright C)$
+    \end{remark}
+\end{problem}
+\begin{problem}
+    Give the function F needed for the proof of theorem 2.15.3.
+
+    We want
+    \[(AB)^C\underset{F}{\sim}A^CB^C\]
+
+    Let
+\[F(f)(c_1,c_2)=(f(c_1),f(c_2))\]
+\end{problem}
+\begin{problem}
+    Prove theorem 2.15.6.
+    \begin{proof}
+        If $\kappa=\lambda$ or $\mu=0$, then, we have $\mu^{\kappa}=\mu^{\lambda}$.
+        Else, we have $\alpha\neq 0$ such that $\lambda=\alpha+\kappa$
+        \[\begin{array}{rl}
+           \mu^{\lambda}&=\mu^{\kappa+\alpha}\\
+                        &=\mu^{\kappa}\mu^{\alpha}\\
+                        &\geq\mu^{\kappa}\mu^{0}\\
+                        &=\mu^{\kappa}\cdot 1\\
+                        &=\mu^{\kappa}\\
+        \end{array}\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove $2\kappa\leq 2^{\kappa}$.
+    \begin{proof}
+    If $\kappa=0$, then $2\kappa=0\leq 2^{\kappa}=1$;
+    
+    \index{unsolved problem 2.3.7.}
+    \begin{remark}
+        Consider $2\times A$ and $2^A$, if $\kappa\geq 3$.( The cases $\kappa=0,1,2$ are trival seperately.)
+    \end{remark}
+    \end{proof}
+\end{problem}
+\subsection{Definition by induction}
+\begin{problem}
+    Prove theorem 2.17.1.
+    \begin{proof}
+        We only need to prove that there is only one function that 
+        satisfies the condition.
+
+        Suppose $f$ and $g$ all satisfy the condition, then, 
+        $f(0)=g(0)$. We now prove $f=g$ by induction on i;
+        Suppose $f(i)=g(i)$, then $f(i+1)=\mathfrak{f(i)}=\mathfrak{g(i)}=g(i+1)$,
+        thus, $f(n)=g(n)$ for all $n<q$. Since Dom f = Dom g, we have $f=g$
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that 
+    \[\begin{cases}
+        m\cdot n \text{is the unique z such that for some f on} W_{n+1},\\
+        f(0)=0,f(i+1)-f(i)+m \text{for all } i<n, and f(n)=z\\
+    \end{cases}\]
+    \begin{proof}
+       Now we have $f(i)+m$ as $\mathfrak{a}_{f(i)}$, by theorem 2.17.1., we have
+       exactly one funciton that satisfy the condition. What's more, according to theorem 2.16.1,
+       f also works for $i<n$. Thus, f(n) is unique, and the recursion process is unique too.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Obtain theorem 2.18. as a corollary of theorem 2.17.
+    \begin{proof}
+       Let $a=\mathfrak{B}_1,\mathfrak{O}_n=(\mathfrak{B}:i<n)$, then,$\mathfrak{O}_1=a$.
+       Regarding $\mathfrak{C}$ as $\mathfrak{O}$, by theorem 2.17.2., we have a unique $\mathfrak{O}_n$,
+       therefore, a unique $\mathfrak{B}_i$. 
+    \end{proof}
+\end{problem}
+\subsection{Axiom of infinity, Peano axioms, Dedekind infinite sets}
+\begin{problem}
+    Assume $(A,S,z)$ is a Peano structure. Take $f$ to be the function on $N$ such that 
+    $f(0)=z,$ and $f(n+1)=S(f(n))$ for all n.
+
+    Prove that $f$ is onto A and $f$ is one-to-one.
+
+    \begin{proof}
+        Let $B$ be the image of f, then, for any $x$ in $B$, $f(x)$ is also in $B$. What's more $z\in B$.
+        According to P3, we have $B=A$, which means thath f is onto $A$.
+
+        Suppose $f(m)=f(n)$. If $m=0$, then, $f(m)=f(n)=z$. According to P1, for all $n$, 
+        $f(n+1)=S(f(n))\neq z$, so that $n=0=m$. If $m,n\neq 0$, then $n-1,m-1\in N$.
+        $f(n)=S(f(n-1))=f(m)=S(f(m-1))$. Since $S$ is one-to-one, suppose $m\geq n$, then we have $f(m-n)=f(0)$.
+        Thus $m-n=0$, or $m=n$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove the following are equivalent:
+    \begin{enumerate}
+        \item $kappa$ is Dedekind infinite, i.e., $\bm{\alpha}_0\leq\kappa$
+        \item $\kappa=\kappa+1$
+        \item for some $A,\kappa=\bar{\bar{A}}$ and $A$ is equivalent to a proper subset of itself.
+    \end{enumerate}
+    \begin{proof}
+        Since $N$ is a infinite set, let $A=N-{0}$,which is a subset of $N$.
+        We have $A\sim N$,so that $\aleph_0=\aleph_0 -1$ or $\aleph_0+1=\aleph$.
+
+        Suppose $\kappa\geq\aleph_0$, then, there exist $\lambda$, such that $\kappa=\aleph_0+\lambda=\aleph_0+1+\lambda=\kappa+1$.
+
+        For some $A$, if $\bar{\bar{A}}=\kappa,$ such that $\kappa=\kappa+1$.
+        Then, for any $x$ that is not in $A$, we have $\overline{\overline{A\cup\{x\}}}=\kappa+1=\kappa$.
+        Hence, $A\cup\{x\}\sim A$, while $A\cup\{x\}\supset A$.
+
+        \index{unsolved problem 2.5.2.}
+    \end{proof}
+    \begin{remark}
+        ($(3)\rightarrow(1)$)
+
+        According to (3), there exists $a$ such that $A\underset{f}{\sim } B\subseteq A-\{a\}$,
+        where $B$ is a subset of $A$. By recursion, put $h(0)=a$ and $h(n+1)=f(h(n))$
+        for all $n$. We show by induction that for all n, $\mathcal{P}(n)$ holds, where 
+        \[\mathcal{P}(n) \text{is : for all } k\neq n, h(n)\neq h(k)\]
+        $\mathcal{P}(0)$ holds, as $a\in $ Rng $f$ wile $k\in $ Rng f if $k\neq 0$. 
+        Assume $\mathcal{P}(n).$ Let $h(n+1)=h(k), $ where $k\neq n+1$. Then $k\neq 0$ as above.
+        Say $k=l+1$. Thus $f(h(n))=f(h(l))$ . Since f is one-to-one, so that $(n)=h(l)$, where $n\neq l$,
+        which is contrary to the induction hypothesis. So $\mathcal{P}(n+1)$ holds.
+        Now put $C=$Rng $h\cup\{a\}$. We showed $h$ is one-to-one on $N$ onto $C$, so $\bar{\bar{C}}=\aleph_0.$
+        Thus $\bar{\bar{C}}<\bar{\bar{A}}=\kappa,$ so $\aleph_0\leq\kappa$, as desired.
+    \end{remark}
+\end{problem}
+\section{MORE ON CARDINAL NUMBERS}
+\subsection{Infinite sums and products of cardinals}
+\begin{problem}
+    Prove theorem 4.3.1.
+    \begin{proof}
+        Suppose $F(i)\underset{f_i}{\sim}G(i)$, we are going to prove that 
+        \[\bigcup_{i\in I}F(i)\underset{\bigcup_{i\in I}f_i}{\sim}\bigcup_{i\in I} G(i)\]
+        For any  $x$ in the RHS, it must be in one of $G(i)$. Thus, for 
+        that very $i$, there exists $a$ in $F(i)$ that $f_i(a)\sim x$, since $F(i)\underset{f}{\sim}G(i)$
+
+        Let $H=\bigcup_{i\in I}f_i$, then, if $H(a)=H(b)$, there exists an i such that they are both in $G(i)$.
+        Since $f_i$ is also one-to-one, we have $a=b$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that the $\mu=\overline{\overline{\bigcup_{i\in I}F(i)}}$ is unique, where for each $i\in I$,$\bar{\bar{F(i)}}=\kappa_i$ and $F$ is disjointed.
+    \begin{proof}
+        Suppose we have f and g that both satisfy the condition of $F$,
+        then, $\bar{\bar{f(i)}}=\kappa_i=\bar{\bar{g(i)}}$. Thus, $f(i)\sim g(i)$. By theorem 4.3.1.,
+        we have $\bigcup_{i\in I}F(i)\sim\bigcup_{i\in I}G(i)$, thus $\overline{\overline{p\bigcup_{i\in I}F(i)}}=\overline{\overline{p\bigcup_{i\in I}G(i)}}=\mu$,
+        which means that $\mu$ is unique.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 4.4.
+    \begin{proof}
+        Let $F(\prod_{i\in I}f(i))(i)=h_i(f(i))$, where $F(i)\underset{h_i}{\sim}G(i)$
+
+        For every $\prod_{i\in I}g(i)$ in the RHS, we can let $f(i)=h_i^{-1}(g(i))$, then 
+        \[F(\prod_{i\in I}f(i))(i)=h_i(f(i))=g(i)\]
+        Thus, H is onto RHS.
+
+        If $F(\prod_{i\in I}g(i))=F(\prod_{i\in I}f(i))$, then,$h_i(g(i))=h_i(f(i))$. However, $h_i$ is one-to-one.
+        Hence $g(i)=f(i)$, which means that $H$ is also one-to-one.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 4.7.
+    \begin{proof}
+    Suppose $A_i$ are disjointed and $\bar{\bar{A_i}}=\kappa_i$,let
+    \[F\upharpoonright A_i(a)=(i,a)\]
+    Then, we have construct a funciton on LHS into RHS.
+    \end{proof}
+\end{problem}
+\subsection{$\aleph_0,2^{\aleph_0},$ and $2^{2^{\aleph_0}}$- the simplest infinite cardinals}
+\begin{problem}
+    Prove without AC: A finite union of countable set is countable.
+    \begin{proof}
+        Use diagonal method.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 4.15.
+    \begin{proof}
+        Since every element in $R$ can be written as $\overline{a_0a_1\cdots a_n.a_{n+1}\cdots}$,
+        which is in $10^{\aleph_0}$. So that $\mathfrak{c}\leq 10^{\aleph_0}$
+
+        What's more, every $x$ in $2^{\aleph_0}$, is in $R$, and also can be represented in tenary.
+        So that $2^{\aleph_0}\leq \mathfrak{c}$ and $2^{\aleph_0}\leq 10^{\aleph_0}$. However, every number in tenary can also be represented in 
+        binary, thus $2^{\aleph_0}\geq 10^{\aleph_0}$. Therefore, $\mathfrak{c}=2^{\aleph_0}=10^{\aleph_0}$
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 4.18.
+    \begin{proof}
+       \[ \begin{array}{rl}
+           \mathfrak{c}^{\mathfrak{c}}&=(2^{\aleph_0})^{\mathfrak{c}}\\
+                                      &=2^{\aleph_0\mathfrak{c}}\\
+        \end{array}\]
+        However, $\mathfrak{c}\leq\aleph_0\mathfrak{c}\leq \mathfrak{c}\cdot\mathfrak{c}=\mathfrak{c}$
+        Thus,
+        \[\mathfrak{c}^{\mathfrak{c}}=2^{\mathfrak{c}}\]
+    \end{proof}
+\end{problem}
+In problems 4-6 below, show that $\bar{\bar{A}}=\aleph_0$, or that $\bar{\bar{A}}=2^{\aleph_0}$, or else that $\bar{\bar{A}}=2^{\mathfrak{c}}$
+\begin{problem}
+   $A$ is the set of all continuous functions on $R$ to $R$. 
+   
+   Since the continuous funciton can be determined only by its value on 
+   rational points, so that $\bar{\bar{A}}\leq \overline{\overline{R^Q}}$.
+   What's more, we have constant function that is absolutely continuous funciton.
+   Thus, $\bar{\bar{R}}\leq\mathfrak{c}\leq\overline{\overline{R^Q}}=\overline{\overline{\mathfrak{c}^{\aleph_0}}}=\mathfrak{c}$.
+   Therefore, $\bar{\bar{A}}=\mathfrak{c}$.
+\end{problem}
+\begin{problem}
+    $A$ ia the set of all permutations of R.
+
+    Since function like $ax+b,$ where $a,b\in R$, can be regarded as a
+    permutation. Thus, $\bar{\bar{A}}\geq \mathfrak{c}^{\mathfrak{c}}$.
+    Meanwhile, permutation is just a function that is on $R$ onto $R$.
+    Thus, $\bar{\bar{A}}\leq \mathfrak{c}^{\mathfrak{c}}$.
+    So, $\bar{\bar{A}}=\mathfrak{c}^{\mathfrak{c}}$.
+\end{problem}
+\begin{problem}
+    $A$ is the family of all open sets of $R$.
+    \begin{proof}
+        Let $F(a,b)=(\frac{a+b}{2},\frac{b-1}{2}),b\geq a.$
+        Then $A\underset{F}{\sim}R\times R$.
+        Therefore, $\bar{\bar{A}}=\mathfrak{c}^{\mathfrak{c}}$. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $A\subseteq R$ and $\bar{\bar{A}}=\aleph_0$.
+    Prove now, without using AC,, that $\overline{\overline{R-A}}=\mathfrak{c}$.
+    \begin{proof}
+        Since $\overline{\overline{A}}=\aleph_0,$ $A$ is isomorphic to $N$.
+        We can using cantor's proof method, starting from the 1st digit, 2ed digit, and so 
+        on, to get countable numbers that is in $R-A$. Thus, $\overline{\overline{R-A}}\geq \aleph_0$.
+
+        Let $\overline{\overline{R-A}}=\aleph_0+\lambda,$ then $\mathfrak{c}=\aleph_0+\aleph_0+\lambda=\aleph_0+\lambda=\overline{\overline{R-A}}.$
+    \end{proof}
+\end{problem}
+\section{ORDERS AND ORDER TYPES}
+\subsection{Ordered sums and products}
+\begin{problem}
+    Show $\sum_{i\in \underbar{I}}\underbar{A}_i$ is an order if $\underbar{I}$ is and each $\underbar{A}_i$ is.
+    \begin{proof}
+        We need to show that the ordered sum is reflective, antisymmetric, transitive and connected.
+
+        Since each $\underbar{A}_i$ is an order, the ordered sum is obviously reflective and antisymmetric.
+        Suppose $a\leq b,b\leq c$, then, if $a,b,c$ are all in one $A_i$, since $A_i$ is 
+        transitive, we have $a\leq b\leq c$. Otherwise, we let $a,b,c$ be in $A_i,A_j,A_k$ 
+        respectively. If $i,j,k$ are all different, then, $a\leq b\leq c$.
+        If $i=j<k$ or $i<j=k$, we also have $a\leq b\leq c$. Thus, it is transitive.
+        Given $a$ in $A_i$, and $b$ in $A_j$. If $i<j$, then $a\leq b$.
+        If $i=j$, since $A_i$ is connected, so that $a\leq b$ or $a=b$ or $a\geq b$.
+        If $i\geq j$, then, $a\geq b$. Thus, it is also connected.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 5.1.1.
+    \begin{proof}
+        Given any non-empty subset of the ordered sum, the i of the element in that subset
+        form a non-empty subset of $I$. Thus, it has a least element j. Likewise, in the union of $A_j$ and
+        the subset, we also have a least element $(x,j)$. Thus, the ordered sum is a well-order.
+    \end{proof}
+\end{problem}
+\subsection{Order types}
+\begin{problem}
+    Prove theorem 5.3.1.
+    \begin{proof}
+        Using AC.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove $\omega^*,\omega,$ and $\omega,\omega^*$ are all different.
+    \begin{proof}
+        $\overline{\overline{\omega}}=\overline{\overline{\omega^*}}=\overline{\overline{\omega+\omega^*}}=\overline{\overline{\omega^*+\omega}}$,
+        So, there is a least element and greatest element in $\omega$ and $\omega^*$ respectively,
+        which is also the least element and the greatest element of $\omega+\omega^*$.
+        However, $\omega^*+\omega$ has neither the least element nor the greatest element.
+        Thus, these four structure are all different.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Fill in and prove: $1+\omega=?$
+    
+    $1+\omega=\omega$
+    \begin{proof}
+        We can add a new element into $N$, letting it to be the new least element x.
+        Let $f(0)=x,f(1)=0,f(2)=1,\cdots$
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove 5.4.2.
+    \begin{proof}
+        The counterexample for + is that 
+        \[\omega+\omega^*\neq\omega^*+\omega\]
+        The counterexample for $\cdot$ is that 
+    \index{unsolved problem 4.2.4.}
+    \begin{remark}
+        $2\cdot\omega\neq\omega\cdot 2$
+    \end{remark}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 5.4.3.
+    \begin{proof}
+        Let $B,C$ be disjointed, and $\overline{\overline{A}}=\overline{\overline{\sigma}},
+        \overline{\overline{B}}=\overline{\overline{\tau}},\overline{\overline{C}}=\overline{\overline{\tau}}'$.
+        Suppose $(x,y),(m,n)$ is in LHS, and $(x,y)\leq(m,n)$.
+        For the first case, $n,y$ is both in B or C, then, it is also in the RHS.
+        For the second case, $n,y$ is in C,B seperately. Then, it is also in the RHS.
+        Suppose they are in the RHS. There is also two cases. In all cases, they are also in the LHS.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 5.4.4.
+    \index{unsolved problem 4.5.6.}
+    \begin{remark}
+        take $\alpha=\beta=1,\gamma=\omega.2\cdot\omega=\omega,\omega\cdot \omega\neq\omega$
+    \end{remark}
+\end{problem}
+\begin{problem}
+    Show that $\eta+\eta=\eta$ but $\lambda+\lambda\neq\lambda$.
+\end{problem}
+\begin{problem}
+    $B\subseteq A$ is said to be dense in the order $\underbar{A}=(A,\leq)$
+    if whenever $x<y$ there exists $b\in B$ such that $x<b<y$. Prove that an order $\underbar{A}$
+    is isomorphic to the real order if $\underbar{A}$ has no firsr or last element,
+    there is a countable set $B$ dense in $\underbar{A}$, and in $\underbar{A}$,
+    every non-empty subset bounded above has a least upper bound.
+\end{problem}
+\section{AXIOMATIC SET THEORY}
+\begin{problem}
+    Following the order in theorem 6.3., prove in $Z_0F$ the existence of:
+    \begin{enumerate}
+        \item $(\mathfrak{a}_x:x\in X)$
+        \item $A\times B$.
+        \item Dom $R$
+        \item $R/S$
+        \item $A^B$ and then $\prod_{i\in I}\mathfrak{a}_i$.
+    \end{enumerate}
+    \begin{proof}
+        Since function is a relation, $(\mathfrak{a}_x:x\in X)=\{(x,\mathfrak{a}_x):x\in X\}$.
+        
+        $A\times B=\{(a,b):a\in A,b\in B\}$
+
+        Dom $R=\{x:(x,\mathfrak{a}_x)\in (\mathfrak{a}_x:x\in X)\}$
+
+        $R/S=\{(x,y):\text{for some z in R,(x,z) in R, and (z,y)}\in  S \}$
+
+        $A^B=\{f:\text{Dom }f =B \text{ and is into }A\}$
+
+        $\prod_{i\in I}\mathfrak{a}_i=\{f:\text{Dom }f= I \text{ and }f(i) \text{ is in }\{\mathfrak{a}_i:x\in X\}\}$
+    \end{proof}
+\end{problem}
+\section{WELL-ORDERINGS,ORDINALS AND CARDINAL}
+\subsection{Well-orders}
+\begin{problem}
+    Prove theorem 7.1.
+    \begin{proof}
+        If there exist $a$ in $A$ such that $f(a)<a$, then, let $f^n(x)=ff\cdots ff(x)$.
+        The subset $\{x:x=f^n,n\in N\}$ has no least element, which is contrary to the fact that $A$ is a well-order.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 7.3.
+    \begin{proof}
+        Suppose $\underbar{A}\underset{f}{\cong}\underbar{A}$, then,
+        $f(x)\geq x, f^{-1}(x)\geq x$, thus, $x\geq f(x)\geq x$ or $f(x)=x$. 
+        Thus, $f=Id$
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $H$ be the set of all $f$ such that $f$ is an isomorphism between 
+    an initial segment of $\underbar{A}$ and an initial segment of $\underbar{B}$.
+    Prove that $H$ is a chain(i.e., if $f,g\in H$ then $f\subseteq g$ or $g\subseteq f$).
+    \begin{proof}
+        Let f be a function on initial segment $a$ in $A$ onto initial segment 
+        $b$ in $B$. Let g be a function on intial segment $c\subseteq a$ in $A$
+        onto initial segment $d$ in $B$. If $g\slashed{\subseteq}f$, then,
+        \index{unsolved problem 6.1.3.}
+    \end{proof}
+\end{problem}
+\end{document}

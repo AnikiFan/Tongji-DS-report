@@ -1,0 +1,45 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\usepackage{makecell}
+\usepackage{color}
+\usepackage{geometry}%设置整体页面布局
+\usepackage{pdfpages}
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\title{\textbf{HW8}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{14.13}
+  \begin{align*}
+    &P(b,i,\lnot m,g,j)\\
+  = & P(b)P(\lnot m)P(i\mid b,\lnot m)P(g\mid i,b,\lnot m)P(j\mid g)\\
+  = & 0.9\times 0.9\times 0.5\times 0.8\times 0.9\\
+  = & 0.2916
+  \end{align*}
+  
+  \begin{align*}
+    % &P(\text{进监狱}\mid\text{触犯法律、被起诉、面临一个有政治动机的检举人}) \\
+     & \mathbf{P}(J\mid b,i,m)\\
+    =&\alpha \mathbf{P}(J,b,i,m)\\
+    =&\alpha \sum_g\mathbf{P}(b,m,i,g,J)\\
+    =&\alpha \sum_gP(b)P(m)P(i\mid b,m)P(g\mid b,i,m)\mathbf{P}(J\mid g)\\
+    =&\alpha P(b)P(m)P(i\mid b,m)\sum_gP(g\mid b,i,m)\mathbf{P}(J\mid g)\\
+    =&\alpha^{\prime}\sum_gP(g\mid b,i,m)\mathbf{P}(J\mid g)\\
+    =&\alpha^{\prime}(0.9\times<0.9,0.1>+0.1\times <0,1>)\\
+    =&\alpha^{\prime}<0.81,0.19>\\
+    =&<0.81,0.19>\\
+  \end{align*}
+  所以
+    \[P(\text{进监狱}\mid\text{触犯法律、被起诉、面临一个有政治动机的检举人})=P(j\mid b,i,m)=0.81 \]
+\end{problem}
+\end{document}

@@ -1,0 +1,742 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{ctex}%提供中文支持
+\usepackage{graphicx}%用于插入图片
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{makecell}%允许表格的单元格内换行
+%伪代码
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+%伪代码
+%代码块
+\usepackage{ listings}
+\usepackage[x11names]{xcolor}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+	backgroundcolor=\color{white},      % choose the background color
+	basicstyle=\footnotesize\ttfamily,  % size of fonts used for the code
+	columns=fullflexible,
+	tabsize=4,
+	breaklines=true,               % automatic line breaking only at whitespace
+	captionpos=b,                  % sets the caption-position to bottom
+	commentstyle=\color{mygreen},  % comment style
+	escapeinside={\%*}{*)},        % if you want to add LaTeX within your code
+	keywordstyle=\color{blue},     % keyword style
+	stringstyle=\color{mymauve}\ttfamily,  % string literal style
+	frame=single,
+	rulesepcolor=\color{red!20!green!20!blue!20},
+	% identifierstyle=\color{red},
+	language=c,
+}
+%代码块
+%引用
+\usepackage{framed}
+\usepackage{quoting}
+ \colorlet{shadecolor}{Turquoise1!20}
+\newenvironment{shadedquotation}
+ {\begin{shaded*}
+  \quoting[leftmargin=0pt, vskip=0pt]
+ }
+ {\endquoting
+ \end{shaded*}
+}
+%引用
+%跨页伪代码
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+   \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+       {\raggedright\textbf{\ALG@name~\thealgorithm} ##2\par}%
+       \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+       \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+       \fi
+       \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+%跨页伪代码
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+\author{姓名: 范潇\phantom{11}学号: 2254298}
+\title{作业 HW5 试验报告}
+\date{2023年 12月 21日}
+\begin{document}
+\lstset{breaklines}%这条命令可以让LaTeX自动将长的代码行换行排版
+		\lstset{extendedchars=false}%这一条命令可以解决代码跨页时，章节标题，页眉等汉字不显
+		%示的问题
+		\lstset{numbers=left,numberstyle=\tiny,keywordstyle=\color{blue!70},
+			commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+			rulesepcolor=\color{red!20!green!20!blue!20},escapeinside=``,
+			%xleftmargin=-10em,xrightmargin=-23em,
+            aboveskip=1em} 
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+% 实验报告格式要求按照模板（使用Markdown等也请保证报告内包含模板中的要素）
+% 对字体大小、缩进、颜色等不做强制要求（但尽量代码部分和文字内容有一定区分，可参考vscode配色）
+% 实验报告要求在文字简洁的同时将内容表示清楚
+% 报告内不要大段贴代码，尽量控制在20页以内
+\maketitle
+\section{涉及数据结构和相关背景}
+查找，即在数据集合中寻找满足某种条件的数据对象。查找表则是由同一类型的数据元素组成的数据集合，可以按照
+查找过程中是否有元素发生变化而区分为静态查找表和动态查找表。关键字则是数据元素中的某个数据项的值，用于标记一个数据元素，
+主关键字可以唯一标识一个数据元素，而可以识别若干记录的关键字称为次关键字。
+
+除了算法的时间复杂度和空间复杂性外，评价查找算法的一个标准是平均比较次数，也称平均查找长度ASL。
+
+顺序查找，又称线性查找，适用于顺序表。实现需要注意的细节是：从顺序表结尾开始向前查找。将数组下标为0的位置置为要查找的元素。如果查找失败，对于长度为n的数组，需要比较n次。
+如果查找成功，则最少需要1次比较，最多需要n次比较。在查找成功的情况下，平均查找长度为 (n+1)/2。
+
+二分查找适用于已经排序好的顺序表。当所查找的顺序表按照升序排列时，先求位于查找区间正中的对象的下标mid，如果该位置是所给关键字，则查找成功。如果该关键字在欲查找的关键字的前面，则将 
+查找区间的最小值设为mid+1，否则将最大值设为 mid-1。当low>high时，查找失败。
+
+分块查找适用于分块有序的顺序表，即块与块之间存在有序关系，而块内中不存在。在块与块之间使用二分查找，在块中使用顺序查找。
+
+二叉排序树（二叉查找树）或者是一颗空树，或者是具有下列性质的二叉树：
+\begin{enumerate}
+\item 每个结点都有一个作为查找依据的关键字，所有结点的关键字互不相同。
+\item 左子树（若非空）上所有结点的关键字都小于根节点的关键字
+\item  右子树（若非空）上所有结点的关键字都大于根节点的关键字
+\item  左子树和右子树也是二叉排列树
+\end{enumerate}
+
+如果对一颗二叉排列树进行中序遍历，则可以按从小到大的顺序，将各结点关键字排列起来。
+因此可以使用中序遍历来求最大值、最小值，以及给定值的前驱和后继。
+
+在查找中，和给定值比较的关键字个数等于待查找结点所在的层数。与给定值比较的关键字个数不超过树的高度，所以二叉排列树的性能和其深度相关。最好的情况是二叉排列树的形态和二分查找的判定树相同，其平均查找长度和 $\log_2n$成正比。
+
+对二叉排序树中的结点进行删除时，要求做到删除一个结点后，仍然保持二叉排序树的有序性。
+对于叶子结点，直接删除即可。
+对于有两个孩子结点的结点，若要删除它，则可以将它用左子树中的最大元素，或者右子树中的最小元素来代替。
+对于只有一个孩子结点的结点，要想删除它，可以直接用它的非空子树来代替它。
+
+AVL树即高度平衡的二叉查找树。一颗AVL树或者是空树，或者是具有下列性质的二叉查找树：它的左子树和右子树都是AVL树，且左子树和右子树的高度之差的绝对值不超过1。
+任一结点的左子树高度减去右子树高度所得的值即为该结点的平衡因子，由AVL树的定义可知，只能取-1，0和1。AVL树还有如下性质：
+\begin{enumerate}
+    \item 对于有n个结点的AVL树，它的高度保持在 $O(log_2n)$，平均查找长度也保持在 $O(log_2n)$
+    \item 高度为h的AVL树的最小结点数为$F_{h+3}-1$
+    \item  适合于组织在内存中较小的索引
+\end{enumerate}
+
+为了保持AVL树的平衡，当插入一个新结点时，插入后需要通过旋转来调整左右子树的高度。
+
+哈希查找的基本思想为：在记录的存储地址和它的关键字之间建立一个确定的对应关系；使得不经过比较，依次存取就能得到所查元素的查找方法。优点为插入、查找的速度快”，缺点有：
+\begin{enumerate}
+    \item 计算哈希地址需要一定的时间
+\item 哈希表需要一定的冗余从而占用空间多
+\item 只能按照关键字查找
+\end{enumerate}
+
+相关的基本概念有：
+\begin{enumerate}
+    \item 哈希函数：在记录的关键字与记录的存储地址之间建立的一种对应关系
+\item 哈希表：应用哈希函数，由记录的关键字确定记录在表中的地址，并将记录放入此地址，这样构成的表叫哈希表
+\item 哈希查找：利用哈希函数进行查找的过程
+\item  冲突：不同关键词对应的哈希函数值相同的现象
+\item 同义词：发生冲突的不同关键词
+\item 负载因子：填入哈希表的结点数与哈希表空间的比值
+\end{enumerate}
+
+哈希表的设计包括三个步骤：
+\begin{enumerate}
+    \item 确定散列函数的值域，从而确定散列表的空间范围
+\item 构造合适的散列函数，使得冲突发生概率尽可能小
+\item 处理冲突的方法
+\end{enumerate}
+
+哈希函数的评价因素有：
+\begin{enumerate}
+    \item 是否简单
+\item 是否均匀，从而冲突发生的概率小
+\end{enumerate}
+
+常用的哈希函数构造法有：
+\begin{enumerate}
+\item 直接定址法
+\begin{itemize}
+    \item 取`key`的线性函数
+    \item 地址集合与关键字集合大小相等
+\end{itemize}
+
+ \item 数字分析法
+ \begin{itemize}
+    \item 取关键字若干位或其组合作为哈希地址
+    \item 适用于关键字位数比哈希地址大，且可能出现的关键字事先知道的情况
+ \end{itemize}
+ \item 平方取中法
+ \begin{itemize}
+    \item 将关键字平方后取中间几位作为哈希地址
+    \item 所取位数由散列表的长度决定
+    \item 适用于不知道全部关键字的情况
+    \item  较为常用
+ \end{itemize}
+ \item 折叠法
+ \begin{itemize}
+    \item 将关键字分割为位数相同的几部分，然后取这几部分的叠加
+    \item 位移叠加：顺序不变
+    \item  间界叠加：蛇形排序
+    \item 适用于关键字位数很多，且每一位上数字分布大致均匀的情况
+ \end{itemize}
+ \item 除留余数法
+ \begin{itemize}
+    \item 取关键字除某个数p得到的余数作为哈希地址
+    \item p不大于表长，常取素数或素数之积，来减少冲突发生的可能性
+ \end{itemize}
+ \item 乘余取整法
+ \begin{itemize}
+    \item 先让关键字乘以一个0到1之间的常数，然后取乘积的小数部分；然后再用散列表长度乘以该小数部分并向下取整。
+ \end{itemize}
+ \item 基数转换法
+ \begin{itemize}
+    \item 将原先 A进制的码视为B进制的码，然后转换为A进制的码，再取其中的若干位。
+    \item B一般大于A，且互素 
+ \end{itemize}
+\end{enumerate}
+
+选取哈希函数主要考虑一下因素：
+\begin{enumerate}
+    \item 计算哈希函数所需时间
+\item 关键字长度
+\item  哈希表长度
+\item  关键字分布情况
+\item 记录的查找频率
+\end{enumerate}
+
+冲突处理的常用方法有：
+\begin{enumerate}
+\item 开放定址法
+\begin{itemize}
+    \item 发生冲突时，按照某个探测序列逐个探测散列表中的其他地址，直到遇到空地址为止，将发生冲突的记录存放在该地址中
+    \item 常用探测序列有：
+    \begin{enumerate}
+        \item 线性循环
+        \begin{itemize}
+            \item 地址递增，将散列表视为是循环的来计算
+            \item 只要散列表未满，总能找到一个不冲突的地址
+            \item 会导致更多的冲突可能，即导致“集聚”现象
+        \end{itemize}
+        \item 二次探测
+        \begin{itemize}
+            \item 增量序列为$1^2,-1^2,2^2,-2^2,\cdots$
+            \item 不易产生“聚集”现象
+            \item 不能保证探测到散列表中的所有地址
+        \end{itemize}
+        \item 伪随机探测法
+        \begin{itemize}
+            \item 增量序列由伪随机函数生成
+        \end{itemize}
+    \end{enumerate}
+\end{itemize}
+\item 再哈希法
+\begin{itemize}
+    \item 构造多个哈希函数，依次使用，知道不发生冲突为止
+    \item 不易产生“聚集”现象
+    \item 计算时间增加
+\end{itemize}
+\item 链地址法
+\begin{itemize}
+    \item 哈希表中存储的是链表的头指针
+    \item 不易产生“聚集”
+    \item 删除记录简单
+\end{itemize}
+\item 建立公共溢出区
+\begin{itemize}
+    \item 在基本散列表之外，另外设立一个溢出表保存与基本表中记录冲突的所有记录
+\end{itemize}
+\end{enumerate}
+\section{实验内容}
+\subsection{和有限的最长子序列}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    给你一个长度为n的整数数组nums和一个长度为m的整数数组queries，返回一个长度为m的数组answer，其中answer[i]是nums中元素之和小于等于queries[i]的子序列的最大长度。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第一行包括两个整数n和m，分别表示数组nums和queries的长度；第二行包括n个整数，为数组nums中元素；第三行包含m个整数，为数组queries中元素。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    输出一行，包括m个整数，为answer中元素。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef int ElemType;
+vector<ElemType> data,query,ans;//分别存储整数数组、询问、以及答案
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{求和有限的最长子序列}
+    \begin{algorithmic}[1]
+        \Require 最大和序列query、整数数组data
+        \Ensure 最长子序列长度数组ans
+        \Function {get\_max\_length}{vector$<$int$>$query,vector$<$int$>$data}
+        \While {遍历data}
+        \State{data[i]+=data[i-1]}//求前缀和
+        \EndWhile
+        \State Sort(data)//升序排列
+        \State l = 0
+        \State h = data.size()-1
+        \While{遍历data}
+        \While{l$\leq$h}
+        \State mid = (l+h)/2
+        \If{data[mid]$\leq$query[i]\&\&((mid==data.size()-1)
+        
+        $\vert\vert$
+        (data[mid+1]$>$query[i]))}
+        \State  ans.push\_back(mid+1)
+        \State break
+        \EndIf
+        \If{data[mid]$<$query[i]}
+        \State{l=mid+1}
+        \Else{h=mid-1}
+        \EndIf
+        \EndWhile
+        \EndWhile
+        \State \Return ans
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+本题调试过程较短，使用输出中间变量法来辅助调试。所输出的中间变量是搜索区间端点 l和 h。
+\subsubsection{总结与体会}
+该题题目中强调“不改变元素顺序”，但是由于子序列并不要求连续，所以实际上该题中
+元素的顺序并不会影响结果。该题的易错点之一是本题中 mid上的元素符合要求的标准是
+“小于给定值的最大值”，而非“与给定值相等”，所以成立的条件是
+data[mid]$\leq$query[i]\&\&((mid==data.size()-1)$\vert\vert$(data[mid+1]$>$query[i])).
+\subsection{二叉排序树}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    二叉排序树BST（二叉查找树）是一种动态查找表，基本操作集包括：创建、查找，插入，删除，查找最大值，查找最小值等。
+本题实现一个维护整数集合（允许有重复关键字）的BST，并具有以下功能：
+\begin{enumerate}
+    \item 插入一个整数
+    \item 删除一个整数
+    \item 查询某个整数有多少个
+    \item 查询最小值
+    \item 查询某个数字的前驱（集合中比该数字小的最大值）
+\end{enumerate}
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第1行一个整数n，表示操作的个数；
+接下来n行，每行一个操作，第一个数字op表示操作种类：
+\begin{enumerate}
+    \item 若op=1，后面跟着一个整数x，表示插入数字x
+    \item 若op=2，后面跟着一个整数x，表示删除数字x（若存在则删除，否则输出None，若有多个则只删除一个）
+    \item 若op=3，后面跟着一个整数x，输出数字x在集合中有多少个（若x不在集合中则输出0）
+    \item 若op=4，输出集合中的最小值（保证集合非空）
+    \item 若op=5，后面跟着一个整数x，输出x的前驱（若不存在前驱则输出None，x不一定在集合中）
+\end{enumerate}
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    一个操作输出1行（除了插入操作没有输出）。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef int ElemType;
+typedef struct BST {
+    ElemType key;
+    int n;
+    BST* lchild, * rchild;
+}BST;
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{插入元素}
+    \begin{algorithmic}[1]
+        \Require 二叉排序树，待插入元素
+        \Ensure 插入元素后的二叉排序树
+        \Function {insert}{BST*\&T,ElemType\,x}
+        \If{T非空}
+        \State {为T申请内存空间}
+        \State{左右子树置空}
+        \State{key=x}
+        \State{n=1}
+        \State \Return
+        \EndIf
+        \If{x==key}
+        \State n++
+        \State \Return
+        \EndIf
+        \State {p = T}
+        \State{pre = NULL}
+        \While{p\&\& p$->$key!=x}
+        \State{pre更新为p}
+        \If{p$->$key$<$x}
+        \State{p更新为右子树}
+        \Else 
+        \State{p更新为左子树}
+        \EndIf
+        \EndWhile
+        \If{p非空}
+        \State n++
+        \Else 
+        \State {为p申请内存空间}
+        \State{左右子树置空}
+        \State{key=x}
+        \State{n=1}
+        \State \Return
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{求指定元素个数}
+    \begin{algorithmic}[1]
+        \Require 二叉排序树，指定元素
+        \Ensure 指定元素个数
+        \Function {get\_num}{BST*\&T,ElemType\,x}
+        \If{T为空}
+        \State{输出0}
+        \State \Return
+        \EndIf
+        \State {p = T}
+        \While{p\&\& p$->$key!=x}
+        \State{pre更新为p}
+        \If{p$->$key$<$x}
+        \State{p更新为右子树}
+        \Else 
+        \State{p更新为左子树}
+        \EndIf
+        \EndWhile
+        \If{如果p为空}
+        \State{输出0}
+        \Else 
+        \State{输出n}
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{求最小元素}
+    \begin{algorithmic}[1]
+        \Require 二叉排序树
+        \Ensure 二叉排序树中的最小元素
+        \Function {get\_min}{BST*T}
+        \If{T为空}
+        \State{输出-1}
+        \State \Return
+        \EndIf
+        \State {p = T}
+        \While{左子树不为空}
+        \State{p更新为左子树}
+        \EndWhile
+        \State{输出key}
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+//求指定元素的前驱
+void pre(BST* T, ElemType x)
+{
+    BST* target = NULL;//用于存储前驱所在的结点
+    get_pre(T, target, x);
+    if (!target)//并未找到前驱
+        cout << "None" << endl;
+    else//找到前驱
+        cout << target->key << endl;
+    return;
+}
+void get_pre(BST* T, BST*& target, ElemType x)
+{
+    if (!T)//树为空
+        return;
+    //中序遍历
+    get_pre(T->lchild, target, x);
+    if (T->key < x)//保持target始终为T的前驱
+        target = T;
+    get_pre(T->rchild, target, x);
+    return;
+}
+\end{lstlisting}
+\begin{breakablealgorithm}
+    \caption{删除指定元素}
+    \begin{algorithmic}[1]
+        \Require 当前结点，指定元素，当前结点的前驱，flag
+        \Ensure 更新后的结点
+        \Function {del}{BST*\&T,ELemType\,x,BST*\&pre,int\,remove}
+        \If{T为空}
+        \State{输出None}
+        \State \Return
+        \EndIf
+        \State {p = T}
+        \While{p\&\& p$->$key!=x}//寻找待删除元素
+        \State{pre更新为p}
+        \If{p$->$key$<$x}
+        \State{p更新为右子树}
+        \Else 
+        \State{p更新为左子树}
+        \EndIf
+        \EndWhile
+        \If{p非空}
+        \State{输出None}
+        \State\Return
+        \EndIf
+        \If{n$>$1\&\&!remove}//找到但是有多个，且不移除
+        \State{n-=1}
+        \State\Return
+        \EndIf
+        \If{p的左右孩子均为空}
+        \If{前驱不为空，且p为前驱的右子树}
+        \State{前驱右子树置空}
+        \EndIf
+        \If{前驱不为空，且p为前驱的左子树}
+        \State{前驱左子树置空}
+        \EndIf
+        \State{释放p}
+        \EndIf
+        \If{p没有左孩子}
+        \If{前驱为空}
+        \State{T置为p的右子树}
+        \EndIf
+        \If{前驱不为空，且p为前驱的右子树}
+        \State{前驱右子树置为p的右子树}
+        \EndIf
+        \If{前驱不为空，且p为前驱的左子树}
+        \State{前驱左子树置为p的左子树}
+        \EndIf
+        \State{释放p}
+        \State\Return 
+        \EndIf
+        \If{p没有右孩子}
+        \If{前驱为空}
+        \State{T置为p的左子树}
+        \EndIf
+        \If{前驱不为空，且p为前驱的左子树}
+        \State{前驱左子树置为p的左子树}
+        \EndIf
+        \If{前驱不为空，且p为前驱的右子树}
+        \State{前驱右子树置为p的左子树}
+        \EndIf
+        \State{释放p}
+        \State\Return 
+        \EndIf
+        \State 辅助指针q置为p的左子树
+        \State pre置为p 
+        \While{q的右子树不为空}
+        \State{pre置为q}
+        \State{q置为q的右子树}
+        \EndWhile 
+        \State{p$->$key=q$->$key}
+        \State{p$->$n=q$->$n}
+        \State del(q,q$->$key,pre,1)//此时不再是删除，而是直接移动
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+在基本错误全部解决后，可以通过前9个样例，但是第10个样例无法通过。因为第10个样例的输入过多，难以找出出错原因，所以我
+编写脚本循环使用生成测试样例的数据。发现当输入数据达到50多条时才会出现错误。经过排查，发现是因为我将“移动”一个结点的操作等同于删除一个结点了，
+当排序树中的元素没有多份时，这样是可以的，但是在本题中不行，所以我添加了remove形参来区分“移动”结点还是“删除”结点。
+\subsubsection{总结与体会}
+本题和普通的排序树的最大差别在于树中的元素可以有多份，当删除一个元素时，实际上是减去该元素的一份，当全部份数都被减去后，才释放该结点。但是当对排序树进行调整时，
+是要将元素的作为一个整体进行移动，要把待移动的元素的所有份数一起移动，因此不能用“删除”这个操作实现，这是和普通排序树有所不同，也是本题的易错点。
+
+在设计数据结构时，需要注意各个数据结构的特点。在本题中，便利用了“中序遍历二叉排序树得到的是递增序列”这一特性来实现“查询最小值”，“查询某个数字的前驱”这些功能。
+\subsection{换座位}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    期末考试，监考老师粗心拿错了座位表，学生已经落座，现在需要按正确的座位表给学生重新排座。假设一次交换你可以选择两个学生并让他们交换位置，给你原来错误的座位表和正确的座位表，问给学生重新排座需要最少的交换次数。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    两个n*m的字符串数组，表示错误和正确的座位表old\_chart和new\_chart，old\_chart[i][j]为原来坐在第i行第j列的学生名字。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    一个整数，表示最少交换次数。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+   std::vector<vector<std::string>> &old_chart;
+   std::vector<std::vector<std::string>> &new_chart;
+   map<string, bool> flag;//旧座位表中的元素到其被访问状态之间的的哈希表
+    map<string, string>old_map;//旧座位表中的元素到新座位表中对应位置的元素之间的哈希表
+    map<string, string>new_map;//新座位表中的元素到旧座位表中对应位置的元素之间的哈希表
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{求最少交换次数}
+    \begin{algorithmic}[1]
+        \Require 旧座位表old\_chart,新座位表new\_chart
+        \Ensure 最少交换次数sum
+        \Function {solution}{std::vector$<$vector$<$std::string$>>$ \&old\_chart, \newline std::vector$<$std::vector$<$std::string$>>$ \&new\_chart}
+        \State 初始化并置零计数器sum
+        \While{遍历old\_chart}
+        \State{构建old\_chart中的元素到new\_chart中对应位置的元素之间的哈希表old\_map}
+        \State{构建new\_chart中的元素到old\_chart中对应位置的元素之间的哈希表new\_map}
+        \State{构建old\_chart中的元素到其被访问状态之间的的哈希表flag}
+        \EndWhile
+        \While{遍历old\_chart}
+        \If{old\_chart[i][j] == new\_chart[i][j]}
+        \State { flag[old\_chart[i][j]] = 1}
+        \State{continue}
+        \EndIf
+        \If{当前循环元素old\_chart[i][j]已被访问过}
+        \State {continue}
+        \EndIf
+        \State{string src = old\_chart[i][j], now =old\_map[src]}
+        \State{更新src,now中的元素的被访问状态}
+        \While{now!=src}
+        \State {sum++}
+        \State {now= old\_map[now]}
+        \State{更新now的被访问状态}
+        \EndWhile
+        \EndWhile
+        \State \Return sum
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+一开始使用顺序查找表实现，但是会超时，后来改为了用stl容器map来实现，便能顺利通过样例。
+\subsubsection{总结与体会}
+在进行大规模的查找时，数据结构的选取便显得十分重要。本题采用了哈希表，降低了查找所需的时间复杂度。
+\subsection{哈希表}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{问题描述：}
+    本题针对字符串设计哈希函数。假定有一个班级的人名名单，用汉语拼音（英文字母）表示。
+    \begin{enumerate}
+        \item 首先把人名转换成整数，采用函数h(key)=((...(key[0] * 37+key[1]) * 37+...)*37+key[n-2] )* 37+key[n-1]，其中key[i]表示人名从左往右的第i个字母的ascii码值(i从0计数,字符串长度为n，1$<=$n$<=$100)。
+        \item 采取除留余数法将整数映射到长度为P的散列表中，h(key)=h(key)\%M，若P不是素数，则M是大于P的最小素数，并将表长P设置成M。
+        \item 采用平方探测法（二次探测再散列）解决冲突。（有可能找不到插入位置，当探测次数$>$表长时停止探测）
+    \end{enumerate}
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+第1行输入2个整数N、P，分别为待插入关键字总数、散列表的长度。若P不是素数，则取大于P的最小素数作为表长。
+第2行给出N个字符串，每一个字符串表示一个人名。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+在1行内输出每个字符串插入到散列表中的位置，以空格分割，若探测后始终找不到插入位置，输出一个'-'。输出包含若干行，每有一个pop操作对应一行，为弹出堆栈的元素。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+bool* vec;//用于记录哈希表中位置的使用情况
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{判断是否为质数}
+    \begin{algorithmic}[1]
+        \Require 待判断正整数n
+        \Ensure 判断结果
+        \Function {is\_prime}{unsigned\,long\,long\,n}
+        \If{n$<$2}
+        \State \Return 否
+        \EndIf 
+        \While{遍历大于2，且比n小的正整数}
+        \If{循环变量i能整除n}
+        \State \Return 否
+        \EndIf
+        \EndWhile
+        \State \Return 是
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+				rulesepcolor=\color{red!20!green!20!blue!20}]
+//获得输入字符串的键值
+unsigned long long get_key(string str)
+{
+    unsigned long long key=0;
+    for(int i = 0;i<str.length();i++){
+        key*=37;
+        key+=(str[i]);
+    }
+    return key;
+}
+\end{lstlisting}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+//二次探测
+void detect(bool*vec,unsigned long long key,unsigned long long len)
+{
+    int  i = 0;//记录探测次数
+    int d = 2;
+    while(i<len){
+        if(d%2){//偏移量的符号按照奇偶次序交换
+            if(!vec[(key-(d/2)*(d/2)+len*len)%len]){
+                //位置未被占用
+                vec[(key-(d/2)*(d/2)+len*len)%len]=1;
+                cout<<(key-(d/2)*(d/2)+len*len)%len<<" ";
+                //存储成功
+                return;
+            }
+        }
+        else{
+            if(!vec[(key+(d/2)*(d/2))%len]){
+                //位置未被占用
+                vec[(key+(d/2)*(d/2))%len]=1;
+                cout<<(key+(d/2)*(d/2))%len<<" ";
+                //存储成功
+                return;
+            }
+        }
+        d++;
+        i++;
+    }
+    //存储失败
+    cout<<"-"<<" ";
+    return ;
+}
+\end{lstlisting}
+\begin{breakablealgorithm}
+    \caption{创建哈希表}
+    \begin{algorithmic}[1]
+        \Require 关键字总数N，散列表长度P
+        \Ensure 存储结果序列
+        \Function {init}{int\,N,unsigned\,long\,long\,P}
+        \While{!is\_prime(P)}
+        \State{P++}
+        \EndWhile
+        \State{初始化辅助数组vec并置零}
+        \While{读取关键字数量少于N}
+        \State 读入关键字并存储至变量in中
+        \State{key = get\_key(in)}
+        \State{key\%=p}
+        \If{!vec[key]}
+        \State{vec[key]=1}
+        \State {输出key}
+        \Else 
+        \State{detect(vec,key,p)}
+        \EndIf
+        \EndWhile
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+一开始我所编写的程序无法通过最后几个样例。经过分析，发现是因为哈希表长度过大，在解决冲突时，会产生对负数取余数的操作，
+无法得到正确结果，因此我在模len的操作之前，先加上len*len。最终通过全部样例。
+\subsubsection{总结与体会}
+本题的易错点在于，在通过模p得到key的过程中，要确保被模p的数字非负。同时，从本题也可以看出，哈希表在时间复杂度上的优势在一定程度上是用空间复杂度换取的。
+\section{实验总结}
+查找表以多种存储结构为基础，并利用了它们的特点。例如二分查找、哈希表利用了顺序表的随机存取这一特点，而AVL树中的旋转操作也利用了二叉链表的灵活性。在实际应用中，首先
+要根据所给条件确定大致的查找表类型，然后在此基础上进一步进行设计和优化，例如在“二叉排序树”这一道题中，便在结点中增加了用于记录重复个数的数据域；在使用哈希表时更是如此，
+如果没有选择合适的哈希函数或者解决冲突的方案，则会大大降低查找的效率。
+\end{document}

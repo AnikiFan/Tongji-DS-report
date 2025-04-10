@@ -1,0 +1,70 @@
+\chapter{项目概述}
+\section{主要内容与目标}
+本次项目的主要内容为多智能体环境下的智能体实现。具体目标是实现算法使得吃豆人能够在迷宫中收集食物，并避免被幽灵击败。这里的吃豆人游戏被化简为回合制游戏，
+即各个智能体轮流执行动作，而非同时执行动作。同时，需要考虑有三个及以上的智能体的情况。
+
+在该项目中，首先需要对于基于反射的智能体进行优化。该智能体的特点在于，它是根据当前状态，来评估各个合法的动作。
+而该项目涉及到的另一个智能体则是直接对于依据未来的状态来选择下一动作，要求在此基础上实现Minimax，Alpha-Beta算法。这两种算法的使用前提是对手
+绝对理性，总是依据最优解执行操作。但实际情况可能并非如此，为此，项目要求我们实现Expectimax。同时，项目还要求实现Evaluation Function来直接
+评估未来状态，以便减少计算量。
+
+\section{已有代码}
+下面对已有代码中与本项目的具体实现相关的代码进行分析。
+\subsection{util.py}
+本项目中主要需要使用该文件中提供的manhattanDistance函数，用于计算两坐标之间的曼哈顿距离。
+% 该文件中提供了多种可能需要用到的数据结构，并且如果需要使用，不能用Python自带库代替，因为可能会影响自动评分程序。
+% \begin{enumerate}
+% \item Stack：有push,pop,isEmpty方法，分别用于进行压栈、出栈以及判断栈是否为空的操作。
+% \item Queue：有push,pop,isEmpty方法，分别用于入队、出队以及判断队列是否为空的操作。
+% \item PriorityQueue：有push,pop,isEmpty,update方法，分别用于入队、出队、判断队列是否为空以及更新元素有限度的操作。优先弹出优先级低的元素。
+% \item PriorityQueueWithFunction：是PriorityQueue的子类，支持指定一个函数priorityFunction用于从存储元素中提取优先级。
+% \end{enumerate}
+% 这些数据结构的底层都是用列表实现的。
+
+% 同时还提供了以下函数：
+% \begin{enumerate}
+    % \item manhattanDistance：用于计算两坐标之间的曼哈顿距离。
+    % \item normalize：将给定的vector或Counter归一化并返回
+    % \item nSample：给定一个多项分布，和一组值，并按照这个多项分布进行$n$次抽样
+    % \item sample：给定一个多项分布，和一组值，进行一次抽样，抽中的值
+    % \item sampleFromCounter：从给定Counter的键中抽样，抽中各键的概率与该键的值成正比
+    % \item getProbability：返回给定值在指定的离散分布下被抽中的概率
+    % \item flipCoin：在参数为$p$的二项分布中进行一次抽样
+    % \item chooseFromDistribution：给定一组值及其分布，从中进行一次抽样
+    % \item nearestPoint：将输入的坐标离散化，即找到最近的格点的坐标
+    % \item sign：符号函数
+    % \item arrayInvert：返回输入的二维矩阵的转置
+    % \item matrixAsList：返回存有指定值的元素的行列数的列表
+% \end{enumerate}
+
+% 并且还提供了以下类：
+% \begin{enumerate}
+%     \item Counter：类似于字典，采用键值对的方式存放数据，特别地，值为数值型数据，因此适用于统计和处理数据。有以下方法：
+%     \begin{itemize}
+%         \item incrementAll：将给定多重集中的元素对应的值自增1
+%         \item argMax：返回值最大的键（可能有多个）
+%         \item sortedKeys：将键按照出现值排序并返回
+%         \item totalCount：将各键出现的值求和并返回
+%         \item normalize：将各键的值归一化
+%         \item divideAll：将各键出现的值除以给定的除数
+%         \item copy：返回自身的一个拷贝
+%         \item \_\_mul\_\_：将乘法重载为两个Counter中键的对应的值相乘后求和
+%         \item \_\_radd\_\_：将加法重载为两个Counter中的键对应的值相加，返回一个新的对象
+%         \item \_\_add\_\_：将加法重载为两个Counter中的键对应的值相加，直接作用在左操作对象上
+%     \end{itemize}
+% \end{enumerate}
+\subsection{multiAgents.py}
+该文件用于存储各种智能体的实现。
+
+该文件给出了一个样例：ReflexAgent(Agent)。在该类中，有evaluationFunction和getAction两个方法。前者用于评估各个合法的下一个状态，这里直接返回得分；后者
+随机选取使得下一个状态得分最大的动作。这里evaluationFunction的特殊指出在于接收的是状态-动作二元组。在evaluationFunction的实现中，可以了解到，我们可以从GameState类中
+获取到吃豆人当前位置，剩余食物位置等有用的信息。
+
+该文件还给出了MultiAgentSearchAgent类，有index，evaluationFunction，depth三个属性。其中index恒为0，因为我们约定吃豆人为0号智能体；
+evaluationFunction是用于对给定状态进行评估的函数；depth是当前状态所处的深度。
+它有三个子类：MinimaxAgent,AlphaBetaAgent,ExpectimaxAgent，需要我们去实现。
+\subsection{GameState.py}
+该文件中的内容为吃豆人的游戏主体，包含GameState等类。GameState类中包含了获取吃豆人合法动作、智能体的下一个状态、吃豆人位置、幽灵位置、智能体数量、
+食物数量、食物位置、是否胜利等有用的状态信息。
+\subsection{Game.py}
+该文件中的内容为吃豆人游戏中的智能体相关实现。其中包含Configuration、AgenState等类。通过Configuration类，我们能够获取到智能体的当前位置。

@@ -1,0 +1,69 @@
+\section{实验原理}
+\subsection{稀疏高斯过程}
+高斯过程的缺陷之一便是其较高的时间复杂度，主要的瓶颈在于无论是在训练是最大化边际似然函数，还是在进行预测时，都需要求解训练集的协方差矩阵的逆矩阵，而这一操作的时间复杂度为$\mathcal{O}(n^3)$。
+我们尝试使用FITC方法来减少高斯过程的训练和推理的时间复杂度。FITC 方法是采用伪数据方法的一种稀疏高斯过程。
+\subsubsection{伪数据近似方法}
+
+采用伪数据的稀疏高斯过程的动机在于：含有$N$个样本的训练集$(\mathbf{X},\mathbf{y})$中往往存在较多的冗余，即我们可以规模相对较小的$M$个伪数据点$(\mathbf{Z},\mathbf{u})$来“概括”出原始训练集的大部分信息。
+伪数据方法所作的核心假设便是：在给定了伪数据后，训练集$(\mathbf{X},\mathbf{y})$便和测试集$(\mathbf{X}_*,f(\mathbf{X}_*))$条件独立。从而有
+
+\[
+      p\left(
+            \begin{bmatrix}
+            \mathbf{y} \\ \mathbf{u}
+            \end{bmatrix}
+            \Bigg| 
+            \begin{bmatrix}
+            \mathbf{X} \\ \mathbf{Z}
+            \end{bmatrix}
+            \right)
+            =
+            \mathcal{N}\left(
+            \begin{bmatrix}
+            \mathbf{y} \\ \mathbf{u}
+            \end{bmatrix}\Bigg|
+            \mathbf{0}, 
+            \begin{bmatrix}
+            \mathbf{K}_{\mathbf{NN}}+\sigma^2\mathbf{I}_{\mathbf{N}} & \mathbf{K}_{\mathbf{NM}} \\
+            \mathbf{K}_{\mathbf{NM}}^\top & \mathbf{K}_{\mathbf{MM}}
+            \end{bmatrix}
+            \right),\qquad \mathbf{K}_{*\mathbf{N}} = \mathbf{K}_{*M}\mathbf{K}_{MM}^{-1}\mathbf{K}_{MN}
+\]
+
+其中$\mathbf{K}_{\mathbf{NN}} = \mathbf{K}(\mathbf{X}, \mathbf{X}),
+\mathbf{K}_{\mathbf{NM}} = \mathbf{K}(\mathbf{X}, \mathbf{Z}),
+\mathbf{K}_{\mathbf{MN}} = \mathbf{K}(\mathbf{Z}, \mathbf{X}),
+\mathbf{K}_{\mathbf{MM}} = \mathbf{K}(\mathbf{Z}, \mathbf{Z}),
+\mathbf{K}_{\mathbf{*M}} = \mathbf{K}(\mathbf{X}_*, \mathbf{Z})$为通过核函数计算得到的协方差矩阵。右式表明$\mathbf{X}_*$与$\mathbf{X}$是以$\mathbf{Z}$为桥梁来发生关联的。
+
+如何选取伪数据仍是一个开放问题，我们采用的方法是通过K-means算法对原始训练集进行聚类，并以得到的类簇中心作为伪数据。
+
+通过边缘化上述联合概率密度，我们便可以得到原始训练集的概率密度。
+
+      \[p(\mathbf{y}|\mathbf{X})=\int_{\mathbf{u}}p(\mathbf{y},\mathbf{u}|\mathbf{X},\mathbf{Z})\]
+
+更进一步，我们可以得到：
+
+      \[p(\mathbf{y},\mathbf{u}|\mathbf{X},\mathbf{Z})=p(\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z})p(\mathbf{u}|\mathbf{X},\mathbf{Z})=p(\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z})p(\mathbf{u}|\mathbf{Z})\]
+
+    其中
+      $p (\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z}) = \mathcal{N}(\mathbf{y}|\mathbf{K}_{\mathbf{NM}}\mathbf{K}^{-1}_{\mathbf{MM}}\mathbf{u},\mathbf{K}_{\mathbf{NN}}-\mathbf{K}_{\mathbf{NM}}\mathbf{K}_{\mathbf{MM}}^{-1}\mathbf{K}_{\mathbf{NM}}^{\top}) + \sigma^2\mathbf{I}$,
+      $p(\mathbf{u}|\mathbf{Z})                        = \mathcal{N}(\mathbf{u}|0,\mathbf{K}_{\mathbf{MM}})$
+
+上式与伪数据的概率密度进行卷积后，便可以得到原训练集的概率密度。但是目前为止，我们只是作了些形式上的变换，仍然无法避免对于$N$阶矩阵求逆的步骤。
+
+\subsubsection{FITC近似方法}
+
+FITC 方法在伪数据方法所做的条件独立的假设基础上，进一步假设：当给定伪数据后，原始训练集中的样本条件独立，即我们认为上式中的协方差矩阵为对角阵。
+
+      \[\tilde{p} (\mathbf{y}|\mathbf{u},\mathbf{X},\mathbf{Z}) = \mathcal{N}(\mathbf{y}|\mathbf{K}_{\mathbf{NM}}\mathbf{K}^{-1}_{\mathbf{MM}}\mathbf{u},diag[\mathbf{K}_{\mathbf{NN}}-\mathbf{Q}_{\mathbf{NN}}] + \sigma^2\mathbf{I}_{\mathbf{N}}),\]
+      其中 $\mathbf{Q}_{\mathbf{NN}} = \mathbf{K}_{\mathbf{NM}}\mathbf{K}_{\mathbf{MM}}^{-1}\mathbf{K}_{\mathbf{NM}}^{\top}$
+
+与伪数据的概率密度进行卷积后，便可以得到
+
+      \[\tilde{p} (\mathbf{y}|\mathbf{X},\mathbf{Z}) = \mathcal{N}(\mathbf{y}|0,\mathbf{Q}_{\mathbf{NN}}+diag[\mathbf{K}_{\mathbf{NN}}-\mathbf{Q}_{\mathbf{NN}}] + \sigma^2\mathbf{I}_{\mathbf{N}})=\mathcal{N}(\mathbf{y}|\mathbf{Q}_{\mathbf{NN}}+\mathbf{D}_{\mathbf{N}}):=\mathcal{N}(\mathbf{y}|\mathbf{K}_*).\]
+
+      其中$\mathbf{D}_{\mathbf{N}} = diag[\mathbf{K}_{\mathbf{NN}}-\mathbf{Q}_{\mathbf{NN}}] + \sigma^2\mathbf{I}_{\mathbf{N}}$
+
+      可以看到，现在的协方差矩阵$\mathbf{K}_*$虽然是一个$N$阶方阵，但是它等于一个对角阵，以及由$M$阶和$N\times M$大小的矩阵相乘得到的$N$阶矩阵之和。
+      因此，我们可以通过woodbury等恒等式，来降低优化超参数时所要做的$N$阶矩阵求逆以及$N$阶矩阵求行列式的操作，使得整体的时间复杂度从$\mathcal{O}(N^3)$降至$\mathcal{O}(M^2N)$。

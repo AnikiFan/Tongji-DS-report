@@ -1,0 +1,65 @@
+% this is a template for papers or notes written in Chinese
+\documentclass[a4paper]{report}
+\usepackage{mdframed}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{makecell}
+\usepackage{longtable}
+\usepackage{xeCJK}
+\usepackage{titletoc}
+\usepackage{ulem}
+\usepackage{stringstrings}
+\usepackage{zhnumber}
+\input{style/body}
+\input{style/algosupport}
+\input{style/inlinecodeSupport}
+% \input{theoremenv.tex}
+
+\author{\Large{范潇\quad2254298}}
+\title{\sffamily\Huge\bfseries{数据库课程设计报告}}
+\date{\Large{\today}}
+\pagestyle{empty}
+\renewcommand{\contentsname}{\textcolor[rgb]{0.54,0.62,0.83}{\textnormal{\fontsize{16pt}{0}{目录}}}}
+\titlecontents{chapter}
+[0pt]
+{\vspace{0pt}\zihao{5}}              
+{\thecontentslabel}              
+{}
+{\titlerule*[8pt]{.}\contentspage}
+
+\begin{document}
+\begin{titlepage}
+    \heiti
+    \vspace*{64pt}
+    \begin{center}
+        \fontsize{24pt}{0}{城市共享单车管理与调度系统}\\
+        \vspace*{36pt}
+        \fontsize{16pt}{0}{数据库原理课程设计报告}\\
+        \vspace*{50pt}
+        \includegraphics{./pic/tongji-logo-purple.pdf}\\
+        \vspace*{50pt}
+        \fontsize{14pt}{0}{学　　号}\ \ \underline{\makebox[200pt]{\fontsize{14pt}{0}{\songti\textbf{2254298}}}}\\
+        \vspace*{10pt}
+        \fontsize{14pt}{0}{姓　　名}\ \ \underline{\makebox[200pt]{\fontsize{14pt}{0}{\songti\textbf{范潇}}}}\\
+        \vspace*{10pt}
+        \fontsize{14pt}{0}{专　　业}\ \ \underline{\makebox[200pt]{\fontsize{14pt}{0}{\songti\textbf{数据科学与大数据技术}}}}\\
+        \vspace*{10pt}
+        \fontsize{14pt}{0}{授课老师}\ \ \underline{\makebox[200pt]{\fontsize{14pt}{0}{\songti\textbf{李文根}}}}\\
+        \vspace*{36pt}
+    \end{center}
+\end{titlepage}
+\tableofcontents
+\include{content/0abstract}
+\include{content/1intro}
+\include{content/2requirement}
+\include{content/3feasibility}
+\include{content/4concept}
+\include{content/5logic}
+\include{content/6management}
+\include{content/7implementation}
+\include{content/8summary}
+% \maketitle
+% \thispagestyle{fancy}%用于单独设置某页的样式，此处用于设置标题页的格式
+\bibliographystyle{IEEEtran}
+\bibliography{bib/ref}
+\end{document}

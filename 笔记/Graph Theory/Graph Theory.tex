@@ -1,0 +1,1177 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\usepackage{slashed}%支持字母上加斜线
+\theoremstyle{remark}
+\newtheorem*{remark}{remark}
+\theoremstyle{definition}
+\newtheorem{theorem}{THEOREM}[section]
+\theoremstyle{definition}
+\newtheorem{corollary}{COROLLARY}[section]
+\theoremstyle{definition}
+\newtheorem{lemma}{LEMMA}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{definition}
+\theoremstyle{plain}
+\newtheorem*{property}{性质}
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\theoremstyle{definition}
+\newtheorem{axiom}{Axiom}
+\author{Fan}
+\title{Graph Theory}
+\date{2023.8.13}
+\begin{document}
+\maketitle
+\tableofcontents
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+\begin{longtable}{cc}
+        \caption{various notation} \\
+       \multicolumn{1}{c}{notations}&\multicolumn{1}{c}{meanings}\\
+       \hline
+       \endfirsthead
+       \multicolumn{1}{c}{notations}&\multicolumn{1}{c}{meanings}\\
+       \hline\endhead
+       $G$ & Graph\\
+       $\bar{G}$&complement of $G$\\
+       $V(G)$& Vertex-set\\
+       $E(G)$ & Edge-set(family)\\
+       $N_n$& Null graph on $n$ vertices \\
+       $K_n$& Complete graph on $n$ vertices \\
+       $C_n$& Cycled graph on $n$ vertices \\
+       $P_n$& Path graph on $n$ vertices \\
+       $W_n$& Wheel graph on $n$ vertices \\
+       $K_{r,s}$&Complete bipartite graph\\ 
+       $Q_k$& $k-$cube\\
+       $D$& Digraph\\
+       $A(D)$& arc-family\\
+       $D'$& Converse of $D$\\
+       $L(G)$&Line graph of $G$\\
+       $\lambda(G)$&Edge-connectivity of $G$\\
+       $\kappa(G)$& Vertex-connectivity of $G$\\
+       $d(v,w)$&Distance between a vertex $v$ and a vertex $w$\\
+       $\gamma(G)$&Cycle rank of $G$\\
+       $\zeta(G)$&Cutset rank of $G$\\
+       cr$(G)$&Crossing number of $G$\\
+       $G^*$&Dual of $G$\\
+       $g(G)$& Genus of $G$\\
+       $t(G)$&Thickness of $G$\\
+       $\chi (G)$&Chromatic number of $G$\\
+       $P_G(k)$&Chromatic polynomial of $G$\\
+       $\chi'(G)$&Chromatic index of $G$\\
+\end{longtable}
+\newpage 
+\section{Definitions and examples}
+\subsection{Definitions}
+A simple graph $G$ consist of a non-empty finite set $V(G)$ of elements called 
+vertices (or nodes or points) and a finite set $E(G)$ of distinct unordered 
+pairs of distinct elements of $V(G)$ called edges (or lines). We call $V(G)$
+the vertex-set and $E(G)$ the edge-set of $G$. An edge $\{v,w\}$ is 
+said to join the vertices $v$ and $w$, and is usually abbreviated to $vw$.
+
+In any simple graph there is at most one edge joining a given pair of vertices.
+However, many results for simple graphs also hold for  more general objects
+in which two vertices may have several edges joining them; such edges are called multiple
+edges. In addition , we may remove the restriction that an edge must join 
+two distinct vertices, and allow loops- edges joining a vertex to itself.
+The resulting object, with loops and multipls edges allowed, is called a general 
+graph- or , simply, a graph.
+\begin{remark}
+    Every simple graph is a graph, but not every graph is a simple graph.
+\end{remark}
+We call $V(G)$ the vertex-set and $E(G)$ the edge-family of G.
+\begin{remark}
+    The use of word `family' permits the existence of multiple edges.
+\end{remark}
+\begin{remark}
+    In this note, all graphs are finite and undirected, with loops 
+    and multiple edges allowed unless specifically excluded.
+\end{remark}
+
+Two graph $G_1$ and $G_2$ are isomorphic if there is a one-one 
+correspondence between the vertices of $G_1$ and those of $G_2$ 
+such taht the number of edges joining any two vertices of $G_1$ equals
+the number of edges joining the corresponding vertices of $G_2$.
+
+We say that two `unlabelled graphs' are isomorphic if we can assign lables to 
+their vertices so that the resulting `lablled graphs' are isomorphic.
+
+If the two graphs are $G_1$ and $G_2$ and their vertex-sets $V(G_1)$ and $V(G_2)$
+are disjoint, then their union $G_1\cup G_2$ is the graph with vertex-set $V(G_1)\cup V(G_2)$
+and edge-family $E(G_1)\cup E(G_2)$.
+
+A graph is connected if it cannot be expressed as a union of graphs, and 
+disconnected otherwise. Clearly, any disconnected graph $G$ can be expressed 
+as the union of connected graphs. each of which is called a component of $G$.
+
+We say that two vertices $v$ and $w$ of a graph are adjacent if there is an edge 
+$vw$ joining them, and the vertices $v$ and $w$ are then incident with such 
+an edge. We also say that two distinct edges $e$ and $f$ are adjacent if they 
+have a vertex in common.
+
+The degree of a vertex $v$ is the number of edges incident with $v$,
+and is written $\deg(v)$; when calculating the degree of $v$, we usually make 
+the convention that a loop at $v$ contributes 2 (rather than 1). A vertex of degree 
+0 is an isolated vertex and a vertex of degree 1 is an end-vertex.
+
+The degree sequence of a graph consists of the degrees written in increasing 
+order, with repeats where necessary.
+
+\begin{theorem}[Handshaking theorem]
+   In any graph, the sum of all the vertex-degrees is an even number. 
+\end{theorem}
+\begin{remark}
+    Maybe that's why we let a loop contributes 2.
+\end{remark}
+\begin{corollary}
+    In any graph, the number of vertices of odd degree is even.
+\end{corollary}
+A graph $H$ is a subgraph of a graph $G$ if each of its vertices belongs to $V(G)$ and 
+each of its edges belongs to $E(G)$.
+
+We can obtain subgraph by deleting edges and vertices. If $F$ is 
+any set of edges in $G$, we denote by $G-F$ the graph obtained by deleting the 
+edges in $F$. Similarly, if $S$ is any set of vertices in $G$, we denote 
+by $G-S$ the graph obtained by deleting the vertices in $S$ and all 
+edges incident with any of them.
+
+We also denote by $G\verb|\|e$ the graph obtained by taking an edge $e$ and `contracting'
+it- that is, removing it and identifying its end $v$ and $w$, and let them 
+overlap without change other parts of the graph.
+\begin{remark}
+    You can imaging that the edge $e$ shrink to disappear.
+\end{remark}
+If $G$ is a simple graph with vertex-set $V(G)$, its complement $\bar{G}$
+is the simple graph with vertex-set $V(\bar{G})$ in which two vertices are
+adjacent if and only if they are not adjacent in $G$.
+
+If $G$ is a graph without loops, with vertices labelled $\{1,2,\cdots,n\}$,
+its adjacent matrix $A$ is the $n\times n$ matrix whose ijth entry is the 
+number of edges joining vertex $i$ and vertex $j$. If, in addition, the edges 
+are labelled $\{1,2,\cdots,m\}$, its incidence matrix $M$ is the $n\times m$
+matrix whose ijth entry is 1 if vertex $i$ is incident to edge $j$, and is 0 otherwise.
+\subsection{Examples}
+\begin{definition}
+    A graph whose edge-set is empty is a null graph. We denote the null graph on $n$ vertices by $N_n$.
+\end{definition}
+\begin{remark}
+    Each vertex of a null graph is isolated.
+\end{remark}
+\begin{definition}
+    A simple graph in which each pair of distinct vertices are adjacent is a 
+    complete graph. We denote the complete graph on $n$ vertices by $K_n$.
+\end{definition}
+\begin{remark}
+    $K_n$ has $n(n-1)/2$ edges.
+\end{remark}
+\begin{definition}
+    A connected graph in which each vertex has degree 2 is a cycle graph.
+    We denote the cycle graph on $n$ vertices by $C_n$.
+\end{definition}
+\begin{definition}
+    The graph obtained from $C_n$ by removing an edge is the path graph on $n$ 
+    vertices, denoted by $P_n$.
+\end{definition}
+\begin{definition}
+    The graph obtained from $C_{n-1}$ by joining each vertex to a new vertex 
+    $v$ is the wheel on  $n$ vertices, denoted by $W_n$.
+\end{definition}
+\begin{definition}
+    A graph in which each vertex has the same degree is a regular 
+    graph. If each vertex has degree $r$, the graph is regular of 
+    degree $r$ or $r-$regular.
+\end{definition}
+\begin{remark}
+    The null graph $N_n$ is regular of degree 0; the cycle graph $C_n$
+    is regular of degree 2; the complete graph $K_n$ is regular of 
+    degree $n-1$.
+\end{remark}
+\begin{definition}
+    Cubic graphs are graphs that are regular of degree 3.
+\end{definition}
+\begin{definition}
+    If the vertex-set of a graph $G$ can be split 
+    into two disjoint sets $A$ and $B$ so that each edge of $G$ joins a
+    vertex of $A$ and a vertex of $B$, then $G$ is a bipartite graph.
+
+    Alternatively, a bipartite graph is one whose vertices can be colored 
+    black and white in such a way that each edge joins a black vertex (in $A$)
+    and a white vertex (in $B$). 
+
+    We sometimes write $G=G(A,B)$ when we wish to specify the sets $A$ and $B$.
+\end{definition}
+\begin{definition}
+    A complete bipartite graph is a bipartite graph in which each vertex in $A$
+    is joined to each vertex in $B$ by just one edge. We denote the complete bipartite
+    graph with $r$ black vertice and $s$ white vertices by $K_{r,s}$
+\end{definition}
+\begin{definition}
+    The $k-$cube $Q_k$ is the graph whose vertices correspond to 
+    the sequence $(a_1,a_2,\cdots,a_k)$, where each $a_i=0$ or $1$,
+    and whose edges join the sequences that differ in just one place.
+\end{definition}
+\begin{remark}
+    $Q_k$ has $2^k$ vertices and is regular of degree $k$.
+\end{remark}
+\begin{definition}
+    The line graph $L(G)$ of a simple graph $G$ is the graph whose vertices 
+    are in one-one correspondence with the edges of $G$, with two vertices of
+    $L(G)$ being adjacent if and only if the corresponding edges of $G$ are adjacent.
+\end{definition}
+\subsection{Digraphs and infinite graphs}
+A directed graph, or digraph, $D$ consists of non-empty finite set $V(D)$
+of elements called vertices and a finite family $A(D)$ of ordered pairs of elements 
+of $V(D)$ called arcs( or directed edges). We called $V(D)$ the vertex-set 
+and $A(D)$ the arc-family of $D$. An arc $(v,w)$ is usually 
+abbreviated to $vw$.
+
+If $D$ is a digraph, the graph obtained from $D$ by `removing the arrows'
+is the underlying graph of $D$.
+
+$D$ is a simple digraph if the arcs of $D$ are all distinct, and if there 
+are no `loops'(arcs of the form $vv$).
+\begin{remark}
+    The underlying graph of a simple digraph need not be a simple graph.
+\end{remark}
+Two digraphs are isomorphic if there is an isomorphism between their underlying graphs 
+that preserve the ordering of the vertices in each arc.
+
+A digraph $D$ is (weakly) connected if it cannot be expressed as the union 
+of two digraphs, defined in the obvious way. This is equivalent to saying that the 
+underlying graph of $D$ is a connected graph.
+
+Two vertices $v$ and $w$ of a digraph $D$ are adjacent if there is an arc 
+in $A(D)$ of the form $vw$ or $wv$, and the vertices $v$ and $w$ are incident
+with such an arc.
+
+The our-degree of a vertex $v$ of $D$ is the number of arcs of the form 
+$vw$, and is denoted by outdeg $(v)$. Similarly, the in-degree of $v$ is the 
+number of arcs of $D$ of the form $wv$, and is denoted by indeg $(v)$.
+
+\begin{theorem}[Handshaking dilemma]
+   In any digraph, the sum of all the out-degrees is equal to the sum of
+   all the in-degrees. 
+\end{theorem}
+If $D$ is a digraph without loops, with vertices labelled $\{1,2,\cdots,n\}$,
+its adjacency matrix $A$ is the $n\times n$ matrix whose $ij$th entry is the number 
+of arcs from vertex $i$ to vertex $j$.
+\begin{definition}
+    A diagraph in which any two vertices are joined by exactly one arc is called
+    a tournament.
+\end{definition}
+\begin{remark}
+    The underlying graph of a tournament is a complete graph.
+\end{remark}
+\begin{definition}
+    The converse $D'$ if a digraph $D$ is obtained from $D$ by reversing the 
+    direction of each arc.
+\end{definition}
+An infinite graph $G$ consists of an infinite set $V(G)$ of elements called 
+vertices and an infinite family $E(G)$ of unordered pairs of elements of 
+$V(G)$ called edges. If $V(G)$ and $E(G)$ are both countably infinite, 
+then $G$ is a countable graph. For convenience, we only 
+consider the situation where $V(G)$ and $E(G)$ are both infinite sets.
+
+The degree of a vertex $v$ of an infinite graph is the cardinality of the set 
+of edges incident with $v$, and may be finite or infinite. An infinite graph 
+is locally finite if each of its vertices has finite degree. We similarly define 
+a locally countable infinite garph to be one in which each vertex has countable 
+degree.
+\begin{theorem}
+    Every connected locally countable infinite graph is a countable graph.
+\end{theorem}
+\begin{proof}
+    Using the theorem `the union of countable set is still countable'.
+    Start the proof by choosing a vertice from the $V(G)$, then let $A_1$
+    be the set of vertices adjacent to $v$, $A_2$ be the set of all vertices adjacent
+    to a vertex of $A_1$, and so on. $\{v\},A_1,A_2$ is a sequence of sets whose
+    union is countable and contains every vertex of the finite garph, by connectness.
+\end{proof}
+\begin{remark}
+    Actually, the direct definition of connectness doesn't tell us that, 
+    in a connected graph, there is a path connec each pair of vertices.
+    However, we can prove it from the definition.
+\begin{proof}
+    Suppose $G$ is a (infinite) connected graph. If there exists vertices $v$
+    and $w$ such that there isn't exists a path between them. Then, 
+    $G$ can be express as $G_1\cup G_2$, where $G_1$ consists of the 
+    vertices that have a path to $v$ and $G_2$ to $w$.The $V(G_1)$ and $V(G_2)$
+    are disjointed. Otherwise, there is a path between $v$ and $w$.
+    Of course, if $G$ is infinite, then, $G$ can be expressed as 
+    several (maybe infinitely many) graphs' union. Anyway, it is contrary to 
+    the definition of connectness.
+\end{proof}
+Perhaps the proof can begin with `randomly choosing a vertice $v$ from $V(G)$',
+and get a set consists of the vertices that cannot be connected with $v$
+by a path and $v$ itself.
+\end{remark}
+\begin{corollary}
+    Every connected locally finite infinite graph is countable graph.
+\end{corollary}
+\section{Paths and cycles}
+\subsection{Connectivity}
+Given a graph $G$, a walk in $G$ is a finite sequence of edges of the form 
+\[v_0v_1,v_1v_2,\cdots,v_{m-1}v_m \text{ also denoted by }v_0\rightarrow v_1\rightarrow v_2\rightarrow\cdots\rightarrow v_m,\]
+in which any two consecutive edges are adjacent or identical. 
+Such a walk determines a sequence of vertices $v_0,v_1,\cdots,v_m$. We call
+$v_0$ the initial vertex and $v_m$ the final vertex of the walk, and speak of 
+a walk from $v_0$ to $v_m$. The number of edges in a walk is called its 
+length.
+
+A walk in which all the edges are distinct is a trail. If, in addition, the 
+vertices $v_0,v_1,\cdots,v_m$ are distinct(except, possibly, $v_0=v_m$), 
+then the trail is a path. A walk, path or trail is closed if $v_0=v_m$,
+and a closed path with at least one edge is a cycle.
+
+The girth of a graph is the length of its shortest cycle.
+
+In a connected graph, the distance $d(v,w)$ between a vertex $v$ and a vertex $w$
+is the length of the shortest path from $v$ to $w.$
+\begin{remark}
+    A loop is a cycle of length 1, and a pair of multiple edges is a cycle of 
+    length 2. A cycle of length 3 is called a triangle.
+\end{remark}
+\begin{theorem}
+    A graph $G$ is bipartite if and only if every cycle of $G$ has even length.
+\end{theorem}
+\begin{proof}
+    $\Rightarrow)$ Let the vertices in the bipartite colored in 
+    white or black, then the number of white vertices and black vertices 
+    on each cycle should be the same. Thus, there is evne numbers of edges 
+    on a cycle.
+
+    $\Leftarrow)$ Choose a vertex $v$ randomly from $G$.
+    Then, let $A$ be the set of vertices for which the shortest path 
+    from $v$ to them has even length and vertices in $B$ has odd length.
+    Suppose there are two vertices that is both in $A$ or $B$ and 
+    are adjacent. Then, the shortest path from $v$ to these two vertices and
+    the edge incident with them would include a cycle of odd length. 
+    (Find that cycle by erasing the overlap part of the two path, 
+    to satisfy the condition to be a cycle, the remain part 
+    has same length. Thus, adding the edge incident with them, the total
+    length is always odd.) This is contrary to the assumption.
+    Thus, every edges in $G$ is incident with a vertex in $A$ and a 
+    vertex in $B$.
+\end{proof}
+\begin{theorem}
+    Let $G$ be a simple graph on $n$ vertices. If $G$ has $k$ components,
+    then the number $m$ of edges of $G$ satisfies
+    \[n-k\leq m\leq (n-k)(n-k+1)/2\]
+\end{theorem}
+\begin{proof}
+    Prove the lower bound by induction on the number of edges in $G$.
+    The induction hypothesis should be `when there is $m$ edges in $G$, $n-k\leq m$,
+    where $k$ should be the component of $G$ and n the number of vertices in $G$'.
+    When there is $m+1$ edges in $G$, suppose there is the number of the 
+    component and the vertices are $k,n$ respectively. Then,
+    if $m$ is the lower bound, by removing one edge from it, we 
+    can get graph $G'$ with $k+1$ component and $n$ vertices. By 
+    hypothesis, we have $n-(k+1)\leq m-1$ or $n-k\leq m$. Thus, we finish the 
+    proof of lower bound by induction.
+
+For the upper bound, it is obvious that, to achieve the upper bound, 
+each component of $G$ should be a complete graph. Suppose there are 
+two component that both have at least two vertices. We can show that 
+if we move one vertex from one of them to another, the sum of 
+edges of them will increase. Thus, to achieve upper bound, $k-1$ component
+are just one vertex, and the last component is $K_{n-k}$. Therefore we prove 
+the upper bound.
+\end{proof}
+\begin{corollary}
+    Any simple graph with $n$ vertices and more than $(n-1)(n-1)/2$ edges 
+    is connected.
+\end{corollary}
+A disconnecting set in a connected graph $G$ is a set of edges whose deletion 
+disconnects $G$. A cutset is a minimal disconnecting set - that is 
+a diconnecting set, no proper subset of which is a disconnecting set.
+\begin{remark}
+    The definition of cutset doesn't guarantee that there is only one 
+    cutset for $G$, and each cut set may contain different numbers of 
+    edges.
+\end{remark}
+\begin{remark}
+    The deletion of the edges in a cutset always leaves a graph with exactly 
+    two components.
+\end{remark}
+If a cutset has only one edge $e$, we call $e$ a bridge.
+
+These definitions can easily be extended to disconnected graphs.
+If $G$ is any such graph, a disconnecting set of $G$ is a set of 
+edges whose removal increases the number of component of $G$, and 
+a cutset of $G$ is a minimal disconnecting set.
+
+If $G$ is connected, its edge-connectivity $\lambda(G)$
+is the size of the smallest cutset in $G$. We also say that $G$
+is $k-$edge-connected if $\lambda(G)\geq k$.
+\begin{theorem}[Menger]
+   A graph $G$ is $k-$edge-connected if and only if any 
+   two distinct vertices of $G$ are joined by at least $k$ paths, 
+   no two of which have any edges in common. 
+\end{theorem}
+A separating set in a connected graph $G$ is a set of vertices 
+whose deletion disconnects $G$. If a separating set containsonly one vertex 
+$v$, we call $v$ a cut-vertex. These definitons extend immediately to disconnected 
+graphs, as above.
+
+If $G$ is connected and not a complete graph,
+its (vertex) connectivity $\kappa(G)$ is the size of the smallest separating 
+set in $G$. We also say that $G$ is $k-$connected if $G(\kappa)\geq k$.
+\begin{theorem}[Menger]
+   A graph $G$ with at least $k+1$ vertices is $k-$connected if and only if 
+   any two vertices of $G$ are joined by at least $k$ paths, no two 
+   of which have any other vertices in common. 
+\end{theorem}
+\begin{theorem}
+    If $G$ is any connected graph, then 
+    \[\kappa(G)\leq\lambda(G)\leq\delta(G),\]
+    where $\delta(G)$ is the smallest vertex-degree in $G$.
+\end{theorem}
+A walk in a diagraph $D$ is a finite sequence of arcs of the form 
+\[v_0v_1,v_1v_2,\cdots,v_{m-1}v_m.\]
+We sometimes write this sequence as 
+\[v_0\rightarrow v_1\rightarrow\cdots\rightarrow v_m,\]
+and speak of a walk from $v+0$ to $v_m$. In an analogous way, we can define 
+directed trails, directed paths and ditected cycles (or simply trails, 
+paths and cycles, when there is no possibility of confusion).
+\begin{remark}
+    Although a taril cannot contain a given arc $vw$ more than once, it cna 
+    contain both $vw$ and $wv$.
+\end{remark}
+We ay that $D$ is strongly connected if, for any two 
+vertices $v$ and $w$ of $D$, there is a directed path from $v$ to $w$.
+
+For convenience, we define a graph $G$ to be orientable if each edge of $G$
+can be directed so that the resulting digraph is strongly connected; such a
+digraph is an orientation of $G$.
+\begin{theorem}
+    A connected graph $G$ is orientable if and only if each edge of $G$ lies 
+    in at least one cycle.
+\end{theorem}
+\begin{proof}
+    $\Rightarrow)$ This direction is obvious.
+
+    $\Leftarrow)$ First, we can choose two adjacent vertex $v_1$ and $v_2$ from $G$.
+    Suppose $v_1v_2$ is in circle $C:v_1v_2\cdots v_1$.
+    We direct this circle clockwisely.
+    If this circle is exactly the graph itself, then the proof is complete.
+    Otherwise, in the remain part of $G$, there must exist at least one vertex
+    that is adjacent with one of the vertex of $C$. We denote that vertex by $w_1$.
+    By the condition, $w_1v_1$ should be in another circle $C'$. For the part 
+    that is overlapped with $C$, we keep the original direction. 
+    For the other part of $C'$, we also directed them clockwisely.
+    Hiterto, the graph $C\cup C'$ is orientable, since we can regard 
+    the overlapped part as an interchange. The rest can be done in the same 
+    manner. $G=C\cup C'\cup C''\cup\cdots$ and for each step, the graph is orientable.
+\end{proof}
+In an infinite graph $G$, there are essentially three different types of walk in $G$:
+\begin{enumerate}
+    \item a finite walk is defined exactly as above
+    \item a one-way infinite walk with initial vertex $v_0$ is an infinite sequ of edges of the form \[v_0\rightarrow v_1\rightarrow v_2\rightarrow\cdots\]
+    \item a two-way infinite walk is an infinite sequence of edges of the form \[\cdots\rightarrow v_{-2}\rightarrow v_{-1}\rightarrow v_0\rightarrow v_1\rightarrow v_2\rightarrow\cdots\]
+\end{enumerate}
+One-way and two-way infinite trails and paths are defined analogously.
+\begin{theorem}
+   Let $G$ be a connected locally finite infinite graph. Then, for any vertex $v$ of $G$,
+   there exists a one-way infinite path with initial vertex $v$. 
+\end{theorem}
+\begin{remark}
+    Trival as it is, it still need to prove, since it involves infinity.
+\end{remark}
+\begin{proof}
+    For each vertex $z$ other than $v$, there is a non-trival path from $v$
+    to $z$. It follows that there are infinitely many path in $G$ with initial vertex $v$.
+    Since the degree of $v$ is finite, infinitely many paths must start with the 
+    same edge. If $vv_1$ is such an edge, then we repeat this procedure and get 
+    \[v\rightarrow v_1\rightarrow v_2\rightarrow\cdots.\]
+\end{proof}
+\subsection{Eulerian graph and digraphs}
+A connected graph $G$ is Eulerian if there exists a closed trail that includes
+every edge of $G$; such trail is an Eulerian trail. A non-Eulerian graph $G$
+is semi-Eulerian if there exists a (non-closed) trail that includes every edge
+of $G$.
+\begin{remark}
+    Every Eulerian graph is orientable.
+\end{remark}
+\begin{lemma}
+    If $G$ is a graph in which the degree of each vertex is at least 2, then 
+    $G$ contains a cycle.
+\end{lemma}
+\begin{proof}
+    Choose the next vertex on the path not to be previous one, until you cannot 
+    do it.
+\end{proof}
+\begin{theorem}
+    A connected graph $G$ is Eulerian if and only if the degree of each vertex
+    of $G$ is even.
+\end{theorem}
+\begin{proof}
+    $\Rightarrow)$Since a trail cannot contain one edge twice, and a Eulerian
+    trail contains every edge, so that every vertices' degree is even. Thus we 
+    finished the proof.
+
+    $\Leftarrow)$Prove by induction on the edges of a graph whose 
+    vertices all have even degrees.
+    By lemma 2.1., there exists a circle in $G$. If that circle equals $G$,
+    then we finished the proof. Otherwise, we delete that circle from $G$ 
+    and get a new graph $H$. Since every vertice both in $G$ and $H$ have 
+    even degree in $G$ and still have even degree in $H$, for 
+    the fact that $C$ is a circle, $H$ satisfies the induction hypothesis.
+    Then the Eulerian trail can be constructed by starting from a vertex on 
+    $C$ and move clockwisely. Whenever we meet a vertex that is in $H$,
+    then we follow the Eulerian trail of that part of $H$. When we back to 
+    that vertex again, we keep moving clockwisely along $C$, until we reach the 
+    starting vertex.
+    Thus we finished the proof.(When there is only one edge with degree, we actually have a loop.)
+\end{proof}
+\begin{corollary}
+    A connected graph is Eulerian if and only if its set of edges can be split 
+    up into edge-disjoint cycles.
+\end{corollary}
+\begin{proof}
+$\Rightarrow)$ Inmitate the proof in the $\Leftarrow$ direction of the proof of 
+theorem 2.8. and use the $\Rightarrow$ direction of it and lemma 2.1..
+
+$\Leftarrow)$ Use the $\Leftarrow$ direction of theorem 2.8., since the connecting
+vertex of multiple circle still has an even degree.
+\end{proof}
+\begin{corollary}
+    A connected graph is semi-Eulerian if and only if it has exactly two vertices of odd
+    degree.
+\end{corollary}
+\begin{proof}
+    The key is that suppose $H$ is a semi-Eulerian graph, and 
+    $P$ is its semi-Eulerian trail, then, by connecting the head and the end 
+    of $P$ we can get a Eulerian graph, whose vertices all have even degrees.
+\end{proof}
+\begin{theorem}[Fleury's algorithm]
+   Let $G$ be an Eulerian graph. Then the following construction is always 
+   possible, and produces an Eulerian trail of $G$.
+   
+   Start at any vertex $u$ and traverse the edges in an arbitrary manner,
+   subjected only to the following rules:
+   \begin{enumerate}
+    \item erase the edges as they are traversed, and if any isolated vertices result, erase them too;
+    \item at each stage, use a bridge only if there is no alternative.
+   \end{enumerate}
+\end{theorem}
+A connected digraph $D$ is Eulerian if there exists a closed directed trail 
+that includes every arc of $D$; such a trail is an Eulerian trail.
+\begin{remark}
+    The diagraph must be strongly connected for an Eulerian trail to exist.
+\end{remark}
+\begin{theorem}
+    A strongly connected diagraph is Eulerian if and only if, for each vertex 
+    $v$ of $D$,
+    \[ \text{outdeg}(v)=\text{indeg}(v).\]
+\end{theorem}
+\begin{proof}
+    $\Rightarrow)$ This direction is obvious.
+
+    $\Leftarrow)$ We still prove it by induction.
+    When there is only two vertices $v,w$, it is obviously that 
+    when there is n multiple arcs of $wv$, there is also multiple arc of $vw$,
+    and $n\geq 1$. Mealwhile, there maybe some loops. We construct the Eulerian 
+    trail by travelling between $v$ and $w$ and traverse all the loops as 
+    soon as we can.
+
+    Suppose there is a digraph with n vertices that satisfies the condition.
+    It can be easily proof that, there at least exist one circle in 
+    the diagraph. The digraph we get by deleting the circle from the 
+    original digraph exists a Eulerian trail for each component, which share 
+    at least one vertex with the circle. Thus we can construct the 
+    Eulerian trail similarly as the $\Leftarrow)$ direction of the
+    proof of theorem 2.9.
+\end{proof}
+A non-Eulerian digraph $D$ is semi-Eulerian if there exists a 
+(non-closed) directed trail that includes every edge of $G$.
+\begin{corollary}
+    A strongly connected digraph is Eulerian if and only if its set of 
+    edges cna be split up into edge-disjoint directed cycles.
+\end{corollary}
+\begin{corollary}
+    A strongly connected digraph is semi-Eulerian if and only if it has exact
+    two vertices $v,w$ such that outdeg $(v)=$ indeg $(V)+1$, indeg $(w)=$ outdeg $(w)+1$,
+    and for other vertices $z$, outdeg $(z)=$ indeg $(z)$.
+\end{corollary}
+A connected infinite graph $G$ is Eulerian if there exists a two-way 
+infinite trail that includes every edges of $G$; such an 
+infinite trail is a two-way Eulerian trail.
+\begin{remark}
+    The definition require $G$ to be countable.
+\end{remark}
+\begin{theorem}
+    Let $G$ be a countable connected graph which is Eulerian.
+    Then
+    \begin{enumerate}
+        \item $G$ has no vertices of odd degree.
+        \item for each finite subgraph $H$ of $G$, the infinite graph $K$
+        obtained by deleting from $G$ the edges of $H$ has at most two infinite 
+        component;
+        \item if, in addition, each vertex of $H$ has even degree, then $K$
+        has exactly one infinite component.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+   $(1)$ is obvious.
+
+    The key of the proof for $(2),(3)$ is that,
+    let the Eulerian trail for $G$ to be $P$, and separate it into 
+    3 parts: $P^-,P_0,P^+$. $P_0$ is finite and covers all $H$ and thus 
+    $P^-,P^+$ is both infinite. Then, (2) is obvious.
+
+    Let the starting vertex and the end vertex of $P_0$ to be $v,w$.
+    If $v=w$, then we finish the proof of $(3)$. Otherwise, for the other 
+    vertices of $K$, they all have even degree. Meanwhile, $v,w$ is the 
+    only two vertices that have odd degree, by the $\Leftarrow$direcrtion of corollary 2.3., there exist a
+    semi-Eulerian trail. Thus, $K$ has exactly one infinite component.
+\end{proof}
+\begin{remark}
+   The $\Leftarrow$ direcrtion of corollary 2.3. mainly build on the $\Leftarrow$ direction of 
+   theorem  2.8., which is depend on the induction on the number of edge.
+   Since we assume that $G$ is a countable graph, the induction on 
+   the number of edge still valid.
+\end{remark}
+\begin{theorem}
+    If $G$ is a connected countable graph, then $G$ is Eulerian if and only if 
+    the three conditions in theorem 2.11. are satisfied.
+\end{theorem}
+\subsection{Hamiltonian graphs and digraphs}
+A closed trail passing exactly once through each vertex of $G$ must be a cycle,
+and is called a Hamiltonian cycle. A graph with a Hamiltonian cycle is a Hamiltonian graph.
+A non-Hamiltonian graph is semi-Hamiltonian if there exists a path through 
+every vertex.
+\begin{theorem}
+   If $G$ is a simple graph with $n(\geq 3)$ vertices, and if 
+   \[\text{deg}(v)+\text{deg}(w)\geq n\]
+   for each pair of non-adjacent vertices $v$ and $w$, then $G$ is Hamiltonian. 
+\end{theorem}
+\begin{proof}
+    We will prove it by contradiction.
+
+    Suppose there is a graph satisfies the conditions but is 
+    non-Hamiltonian. Then, by adding enough edges, we can change it 
+    into a semi-Hamiltonian graph with a semi-Hamiltonian cycle 
+    \[v_1\rightarrow v_2\rightarrow\cdots v_n,\]
+    where $v_1\neq v_n$. By the condition, there exists an $i$ such that 
+    edge $vv_i$ and $vv_{i-1}$ exists. But this gives us the required 
+    contradiction since 
+    \[v_1\rightarrow v_2\rightarrow\cdots v_{i-1}\rightarrow v_n\rightarrow v_{n-1}\rightarrow v_{i+1}\rightarrow v_i\rightarrow v_1\]
+    is then a Hamiltonian cycle.
+\end{proof}
+\begin{corollary}
+   If $G$ is a simple graph with $n(\geq 3)$ vertices, and if 
+   deg $(v)\geq n/2$ for each vertex $v$, then $G$ is Hamiltonian.
+\end{corollary}
+A digraph $D$ is Hamiltonian if there is a directed cycle that includes every 
+vertex of $D$. A non-Hamiltonian digraph that contains a directed path through 
+every vertex is semi-Hamiltonian.
+\begin{theorem}
+    Let $D$ be a strongly connected digraph with $n$ vertices. 
+    If outdeg $(v)\geq n/2$ and indeg $(v)\geq n/2$ for each vertex $v$,
+    then $D$ is Hamiltonian.
+\end{theorem}
+\begin{theorem}
+    \begin{enumerate}
+        \item Every non-Hamiltonian tournament is semi-Hamiltonian.
+        \item Every strongly connected tournament is Hamiltonian.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    We are going to prove (1) by induction on the number of vertices.
+    The statement is clearly true if the tournament has fewer than four vertices.
+    Assume that every non-Hamiltonian on $n$ vertices is semi-Hamiltonian.
+    Then, for the non-Hamiltonian on $n+1$ vertices. First, by hypothesis,
+    we can construct a semi-Hamiltonian cycle on $n$ vertices and 
+    denote the $n+1$th vertex by $v$.
+
+    For the case that the arc in form $vv_i$ and $v_iv$ both exists, 
+    we can find an i such that $v_iv$ and $vv_{i+1}$ both exists and 
+    add them into the n-vertices semi-Hamiltonian cycle.
+    Otherwise, we can let $v$ connected to the 
+    head or the end of the n-vertices semi-Hamiltonian cycle. 
+
+    We also prove $(2)$ by induction on the number of the vertices of 
+    the cycle that we can construct in a strongly connected tournament.
+
+    When $n=3$. Chose a vertex $v$ in $G$, then, the other vertices in $G$
+    can be classified into two group $A$ and $B$. For every vertex in $A$,
+    there is an arc from that vertex to $v$. For every vertex in $B$, 
+    there is an arc from $v$ to that vertex.
+    Since the graph is strongly conncted there exist an arc $ba$ such that 
+    $a\in A,b\in B$ such that there is a path from any vertex in  $B$ to 
+    any vertex in $A$. Thus, we have a cycle $a\rightarrow v \rightarrow b\rightarrow a$.
+
+    Suppose there is a cycle of length $k$, where $k<n$.
+    Let  
+    \[v_1\rightarrow v_2\cdots\rightarrow v_k\rightarrow v_1\]
+    be such cycle.
+    The remainder of the proof for (2) is similar to the second part of the 
+    proof for (1) and the former part of this proof for (2).
+\end{proof}
+\section{Trees}
+\subsection{Properties of trees}
+A connected graph that has no cycles is a tree.
+\begin{theorem}
+    Let $T$ be a graph with $n$ vertices. Then the following statements are equivalent:
+    \begin{enumerate}
+        \item $T$ is a tree;
+        \item $T$ contains no cycles, and has $n-1$ edges;
+        \item $T$ is connected, and has $n-1$ edges;
+        \item $T$ is connected, and each edge is a bridge;
+        \item any two vertices of $T$ are connected by exactly one path;
+        \item $T$ contains no cycles, but the addition of any new edge creates exactly one cycle.
+    \end{enumerate}
+\end{theorem}
+\begin{proof}
+    $(1)\rightarrow(2)$Since $T$ contains no cycles, if we remove any graph, we 
+    will get two trees or one tree with one edge less, then, we can prove by induction on the number of vertices.
+
+    $(2)\rightarrow(3)$ can be proved by contradiction easily.
+
+    $(3)\rightarrow(4)$ remove one edge and prove by contradiction.
+
+    $(4)\rightarrow(5)$ obvious.
+
+    $(5)\rightarrow(6)$ the former part is ovbious. If an edge $e$ is 
+    added into the graph, since the vertices that $e$ are incident with 
+    are already adjacent with each other, there will be a circle.
+    If there are two cicle, then, by removing the edge $e$, we can 
+    get a cicle in the original graph, which is a contradiction.
+
+    $(6)\rightarrow(1)$ if $T$ is disconnected, then, by adding exactly 
+    one edge between the two components, there will be no cycle.
+\end{proof}
+\begin{corollary}
+    If $G$ is a forest with $n$ vertices an $k$ components, then $G$ has $n-k$ edges.
+\end{corollary}
+By Handshaking lemma, the sum of the degrees of the $n$ vertices of a 
+tree is equal to twice the number of edges $(=2n-2)$.  It follows that if $n>2$,
+any tree on $n$ vertices has at least two end-vertices.
+
+Given any connected graph $G$, we can choose a cycle and remove any one of its edges
+andd the resulting graph remains connected. We repeat this procedure with one of 
+the remaining cycles, continuing until there are no cycles left. The graph that remains 
+is a tree that connects all the vertices of $G$. It is called a spanning tree of $G$.
+
+We can turn each components of a disconnected graph into spanning tree, then we get a 
+spanning forest, and the total number of edges removed in this process 
+is the cycle rank of $G$, denoted by $\gamma(G)$.
+Note that $\gamma(G)=m-n+k$, where $n,m,k$ are the number of vertices, edges and components
+of the original graph.
+
+The cutset rank of $G$ is defined similarly, denoted by $\zeta (G)$. Note that $\zeta(G)=n-k$.
+In the following theorem, the complement of a spanning forest $T$ of a (not necessarily simple)
+graph $G$ is the graph obtained from $G$ by removing the edges of $T$.
+\begin{theorem}
+    If $T$ is any spanning forest of a graph $G$, then 
+    \begin{enumerate}
+        \item each cutset of $G$ has an edge in common with $T$;
+        \item each cycle of $G$ has an edge in common with the complement of $T$.
+    \end{enumerate}
+\end{theorem} 
+\begin{proof}
+    $(1)$ there must be an edge incident with two vertices that are in different complement
+    after the deletion of the cutset.
+
+    If not, then there is a cycle contained in $T$.
+\end{proof}
+The cycles obtained by adding separately each edge of $G$ not contained 
+in $T$, is the fundamental set of cycles associated with $T$, simply referred as 
+a fundamental set of cycles of $G$. Note that the number of cycles in any fundamental 
+set must equal the cycle rank of $G$.
+
+By removing any edges of $T$, we can divides the vertex oset of $T$ into two disjoint
+sets $V_1$ and $V_2$. The set of all edges of $G$ joining a vertex of $V_1$
+to one of $V_2$ is a cutset of $G$, and the set of all cutsets obtained 
+in this way, by removing separately each edge of $T$ is the fundamental set of cutsets 
+associated with $T$.
+\subsection{Counting trees}
+\begin{theorem}
+    There are $n^{n-2}$ distinct labelled trees on $n$ vertices.
+\end{theorem}
+\begin{corollary}
+    The number of spanning trees of $K_n$ is $n^{n-2}$.
+\end{corollary}
+\begin{theorem}
+    Let $G$ be a connected simple graph with vertex set $\{v_1,v_2,\cdots,v_n\}$,
+    and let $M=(m _{ij})$ be the $n\times n$ matrix in which $m_{ii}=\deg(v_i),m _{ij}=-1$
+    if $v_i$ and $v_j$ are adjacent, and $m _{ij}=0$ otherwise. Then 
+    the number of spanning trees of $G$ is equal to the cofactor of any element
+    of $M$.
+\end{theorem}
+\section{Planarity}
+\subsection{Planar graphs}
+A planar graph is a graph that can be drawn in the plane without crossing. Any such drawing is a plane drawing. We use the abbreviation 
+plan graph for a plane drawing of a planar graph. 
+\begin{remark}
+    It is proved that every simple planar graph can be drawn with straight lines.
+\end{remark}
+The crossing number cr $(G)$ of a graph $G$ is the smallest number of crossings that can occur when $G$ is drawn in the plane.
+We have cr $(K_5)$=cr($K_{3,3}$)=1.
+It is clear that every subgraph of a planar graph is planar, and that every graph with a non-planar subgraph must be non-planar.
+\begin{theorem}
+    $K_{3,3}$ and $K_5$ are non-planar.
+\end{theorem}
+We define two graphs to be homeomorphic if both can be obtained from the same graph by inserting new vertices of degree 2 into its edges.
+\begin{theorem}
+    A graph is planar if and only if it contains no subgraph homeomorphic to $K_5$ or $K_{3,3}$.
+\end{theorem}
+We define a graph $H$ to be contractible to $K_5$ or $K_{3,3}$ if we can obtain $K_5$ or $K_{3,3}$ by successively contracting edges of $H$.
+\begin{theorem}
+    A graph is planar if and only if it contains no subgraph contractible to $K_5$ or $K_{3,3}$.
+\end{theorem}
+\begin{theorem}
+    If $G$ is a countable graph, every finite subgraph of which is planar, then $G$ is planar.
+\end{theorem}
+\subsection{Euler's formula}
+If $G$ is a planar graph, then any plane drawing of $G$ divides the set of points of the plane not lying on $G$ into regions, called faces.
+The face with no bound is called the infinite face.
+
+Through sterographic projection, given any face, we can map the original graph to a graph where the given face is the finite face.
+\begin{theorem}
+    Let $G$ be a plane drawing of a connected planar graph, and let $n,m$ and $f$ denote respectively the number of vertices, edges and faces of $G$. Then
+    \[n-m+f=2.\]
+    \begin{proof}
+        If $G$ is a tree, then the formula is trival. Otherwise, we can prove it by induction.
+        When there are $n$ vertices in $G$, since it is not a tree, there is at least one cycle in $G$. Thus we can remove one edge from the cycle 
+        without change its connectness to get a connected graph with $n-1$ vertices. We then finish the proof by the induction hypothesis.
+    \end{proof}
+\end{theorem}
+\begin{remark}
+    Project the polyhedron out onto its circumsphere, and then use sterographic projection to project it down onto the plane.
+    The resulting graph is a 3-connected plane graph in which each face is bounded by a polygon- such graph is called a polyhedral graph.
+\end{remark}
+\begin{corollary}
+    Let $G$ be a polyhedral graph. Then, with the above notation,
+    \[n-m+f=2.\]
+\end{corollary}
+\begin{corollary}
+    Let $G$ be a plane graph with $n$ vertices, $m$ edges, $f$ faces and $k$ components.
+    Then 
+    \[n-m+f=k+1.\]
+\end{corollary}
+\begin{corollary}
+    \begin{enumerate}
+        \item If $G$ is a simple connected planar graph with $(n\geq 3)$ vertices and $m$ edges, then 
+        \[m\leq 3n-6\]
+        \item If, in addition, $G$ has no triangle, then $m\leq 2n-4$.
+    \end{enumerate}
+\end{corollary}
+\begin{corollary}
+    Every simple planar graph $G$ contains a vertex of degree at most 5.
+\end{corollary}
+We define the thickness $t(G)$ of a graph $G$ to be the smallest number of planar graphs that can be superimposed to form $G$.
+\begin{remark}
+    In each planar graph, the vertices keep same as those in the original graph.
+\end{remark}
+\begin{theorem}
+    Let $G$ be a simple graph with $n(\geq 3)$ vertices and $m$ edges. Then the thickness $t(G)$ of $G$ satisfies the inequility
+    \[t(G)\geq\left\lceil m/(3n-6)\right\rceil \text{  and  }t(G)\geq\left\lfloor (m+3n-7)/(3n-6)\right\rfloor .\]
+\end{theorem}
+\begin{remark}
+    $\left\lceil a/b\right\rceil =\left\lfloor (a+b-1)/b\right\rfloor $ where $a,b$ are all positive integer.
+\end{remark}
+\begin{remark}
+    The thickness of a graph is obviously less than or equal its crossing number.
+\end{remark}
+\subsection{Dual graphs}
+Given a plane drawing of a planar graph $G$, we construct another graph $G^*$, called the (geometric) dual of $G$.
+The construction is in two stages:
+\begin{enumerate}
+    \item inside each face $f$ of $G$ we choose a point $v^*$-these points are the vertices of $G^*$.
+    \item corresponding to each edge $e$ of $G$ we draw a line $e^*$ that cross $e$(but no other edge of $G$)
+    and joins the vertices $v^*$ in the faces $f$ adjoining $e$ - these lines are the edges of $G^*$.
+\end{enumerate}
+\begin{remark}
+An end-vertex or a bridge give rise to a loop of $G^*$, and if two faces have more than one edge in common, then $G^*$ has multiple edges.
+\end{remark}
+\begin{remark}
+    If $G$ is isomorphic to $G$, it does not necessarily follow that $G^*$ is isomorphic to $H^*$.
+\end{remark}
+\begin{lemma}
+    Let $G$ be a connected plane graph with $n$ vertices, $m$ edges and $f$ faces, and let its geometric dual $G^*$ have $n^*$
+    vertices, $m^*$ edges  and $f^*$ faces. Then 
+    \[n^*=f,m^*=m \text{ and }f^*=n.\]
+\end{lemma}
+\begin{theorem}
+    If $G$ is a connected plane graph, then $G**$ is isomorphic to $G$.
+\end{theorem}
+\begin{theorem}
+    If $G$ is a connected plane graph, then $G^{**}$ is isomorphic to $G.$
+\end{theorem}
+\begin{theorem}
+    Let $G$ be a planar graph and let $G^*$ be a geometric dual of $G$. Then a set of edges in $G$ forms a cycle in $G$ if 
+    and only if the corresponding set of edges of $G^*$ forms a cutset of in $G^*$.
+\end{theorem}
+\begin{corollary}
+    A set of edges of $G$ forms a cutset in $G$ if and only if the corresponding set of edges of $G^*$ forms a cycle in $G^*$.
+\end{corollary}
+We say that a graph $G^*$ is an abstract dual of a graph $G$ is there is a one-one correspondence bewteen the edges of $G$
+and those of $G^*$, with the property that a set of edges of $G$ forms a cycle in $G$ if and only if the corresponding set of edges of $G^*$
+forms a cutset in $G^*$.
+\begin{theorem}
+    If $G^*$ is an abstract dual of $G$, then $G$ is an abstract dual of $G^*$.
+\end{theorem}
+\begin{theorem}
+    A graph is planar if and only if it has an abstract dual.
+\end{theorem}
+\begin{remark}
+    Two of the key points of the proof is that:
+    \begin{enumerate}
+        \item An edge $e$ is removed from $G$, then the abstract dual of the remaining graph is obtained from $G^*$ by contracting the corresponding edge $e^*$.
+        \item Consequently, if $G$ has an abstract dual, then so does any subgraph of $G$.
+        \item The insertion or removal in $G$ of a vertex of degree 2 results in the addition or deletion of a `multiple edge' in $G^*$.
+        \item It follows that if $G$ has an abstract dual, and if $G'$ is a graph that is homeomorphic to $G$, then $G'$ also has an abstract dual.  
+    \end{enumerate}
+    For the first key point, it is easy to verify it using the numbers of vertices, edges and faces.
+    What's more, if $e$ is in a cycle of the original graph, then, the deletion of it should also break the cutset of the original dual graph,
+    as a result, the two point which are supposed to be separated now become one.
+\end{remark}
+\subsection{Graphs on other surfaces}
+A surface is of genus $g$ if it is topologically homeomorphic to a sphere with $g$ handles.
+The genus of a sphere is 0, and that if a torus is 1.
+
+A graph that can be drawn without crossings on a surface of genus $g$, but not on one of genus $g-1$, is a graph of genus $g$.
+Thus, $K_5$ and $K_{3,3}$ are graphs of genus 1, also called toroidal graphs.
+\begin{theorem}
+    The genus of a graph does not exceed the crossing number.
+\end{theorem}
+\begin{remark}
+    Every unordered pair of line that are crossing. Thus, if three lines are crossing with each other, but they are overlapped at the 
+    same point, they still contribute 3 crossings.
+\end{remark}
+\begin{theorem}
+    Let $G$ be a connected graph of genus $g$ with $n$ vertices, $m$ edges and $f$ faces. Then 
+    \[n-m+f=2-2g.\]
+\end{theorem}
+\begin{remark}
+    In this generalization, a face of a graph of genus $g$ is defined in the obvious way.
+\end{remark}
+\begin{corollary}
+    The genus $g(G)$ of a simple graph $G$ with $n(\geq 4)$ vertices and $m$ edges satisfies the inequility
+    \[g(G)\geq\left\lceil \frac{1}{6}(m-3n)+1\right\rceil \]
+\end{corollary}
+\begin{theorem}
+    $g(K_n)=\left\lceil \frac{1}{12}(n-3)(n-4)\right\rceil  $
+\end{theorem}
+\section{Colouring graphs}
+\subsection{Colouring vertices}
+If $G$ is a graph without loops, then $G$ is $k-$colourable if we can assign one of $k$ colours to each vertex so that adjacent vertices 
+have different colours. If $G$ is $k-$colourable but is not $(k-1)$-colourable, we say that $G$ is $k-$chromatic number of $G$ is $k$,
+and write $\chi(G)=k$.
+\begin{remark}
+    We assume that all graphs here are simple, as multiple edges are irrelevant to out discussion. We also assume, when necessary, that they 
+    are connected.
+\end{remark}
+\begin{remark}
+    $\chi(G)=1$ if and only if $G$ is a null graph. $\chi(G)=2$ if and only if $G$ is a non-null bipartite graph.
+    Note that every tree is $2-$colourable, as is any cycle graph with an even number of vertices.
+\end{remark}
+\begin{theorem}
+    If $G$ is  simple graph with largest vertex-degree $\Delta,$ then $G$ is $(\Delta+1)-$colourable.
+\end{theorem}
+\begin{proof}
+    We can colour one vertex at a time. In other words, we can prove it easily by induciton.
+\end{proof}
+\begin{theorem}
+    If $G$ is a simple connected graph which is not a complete graph, and if the largest vertex-degree of $G$ is $\Delta(\geq 3)$, then 
+    $G$ is $\Delta-$colourable.
+\end{theorem}
+\begin{theorem}
+    Every simple planar graph is $6-$colourable.
+\end{theorem}
+\begin{proof}
+    Use the fact that there are at least one vertex in the planar graph that is of degree at most 5.
+\end{proof}
+\begin{theorem}
+    Every simple planar graph is $5-$colourable.
+\end{theorem}
+\begin{theorem}
+    Every simple planar graph is $4-$colourable.
+\end{theorem}
+\subsection{Chromatic polynomials}
+Let $G$ be a simple graph, and let $P_G(k)$ be the number of ways of colouring the vertices of $G$ with $k$ colours 
+so that no two adjacent vertices have the same colour. $P_G$ is called the chromatic function of $G$.
+\begin{remark}
+    If $G$ is any tree with $n$ vertices, then $P_G(k)=k(k-1)^{n-1}$.
+    If $G$ is the complete graph $K_n$, then $P_G(k)=k(k-1)\cdots(k-n+1)$
+\end{remark}
+\begin{theorem}
+    Let $G$ be a simple graph, then 
+    \[P_G(k)=P_{G-e}(k)-P_{G/e}(k).\]
+\end{theorem}
+\begin{proof}
+    Let $e$ incident with $v$ and $w$. Then, discussion the possibility that $v$ and $w$ is in the same color or not.
+\end{proof}
+\begin{corollary}
+    The chromatic function of a simple graph is polynomial.
+\end{corollary}
+\begin{proof}
+    Repeatedly using the last theorem until the chromatic function we are looking forward is decomposited into several 
+    chromatic function of null graph $N_n$, which is $k^n$.
+\end{proof}
+In the light of this corollary, we can now call $P_G(k)$ the chromatic polynomial of $G$.
+\begin{remark}
+    If $G$ has $n$ vertices, then $P_G(k)$ is of degree $n$, since no new vertices are introduced at any stage
+    and the constuction yield only one null graph on $n$ vertices, which also means that the coefficients of $k^n$ is 1.
+\end{remark}
+We can prove by induction that the coefficients alternate in sign, and that the coefficients of $k^{n-1}$ is $-m$, where
+$m$ is the number of edges of $G$. Since we cannot colour a graph if no colours are available, the constant term of any 
+chromatic polynomial is 0.
+\subsection{Colouring maps}
+We define a map to be a $3-$connected plane graph and define a map to be $k-$colourable-(f) if its faces can be coloured 
+with $k$ colours so that no two faces with a boundary edge in common have the same colour. 
+To avoid confusion, we use $k-$colourable-(v) to mean $k-colourable$ in the usual sense.
+\begin{remark}
+    The infinite face is also need to be coloured.
+\end{remark}
+\begin{theorem}
+    A map $G$ is $2-$colourable-(f) if and only if $G$ is an Eulerian graph.
+\end{theorem}
+\begin{theorem}
+    Let $G$ be a plane graph without loops, and let $G^*$ be a geometric dual of $G$. Then $G$ is $k-$colourable-(v)
+    if and only if $G^*$ is $k-$colourable-(f).
+\end{theorem}
+It follows that we can dualize any theorem on the colouring of the vertices of a planar graph to give a theorem on the colouring of the 
+faces of a map, and conversely.
+\begin{remark}
+    In the Euler's formula, $n,f$ are a pair of dual.
+\end{remark}
+\begin{corollary}
+The four-colour theorem for maps is equivalent to the four-colour theorem for planar graphs.
+\end{corollary}
+\begin{theorem}
+    Let $G$ be a cubic map. Then $G$ is $3-$colourable-(f) if and only if each face is bounded by an even number of edges.
+\end{theorem}
+\begin{theorem}
+    In order to prove the four-colour theorem, it is sufficient to prove that every cubic map is 4-colourable-(f).
+\end{theorem}
+\subsection{The four-colour theorem}
+\begin{theorem}
+    Every cubic map must contain at least one of the following part:
+    \begin{enumerate}
+        \item a triangle 
+        \item a quadrilateral
+        \item two adjacent pentagon
+        \item a pentagon adjacent to a hexagon
+    \end{enumerate}
+    This collection of faces is called an unavoidable set of configurations.
+\end{theorem}
+The four-colour theorem is proved by showing that there exists a unavoidable set of configurations each of which 
+can fit into a 4-coloured map of any kinds (maybe after some necessary switch of colours).
+\subsection{Colouring edges}
+A graph $G$ is $k-$colourable-(e) if its edge can be coloured with $k$ colours so that no two adjacent edges have the same colour.
+If $G$ is $k-$colourable-(e) but not $(k-1)-$colourable-(e), we say that the chromatic index of $G$ is $k$, and write $\chi'(G)=k$.
+\begin{theorem}
+If $G$ is a graph with largest vertex-degree $\Delta$, then 
+\[\Delta\leq\chi'(G)\leq\Delta+1.\]    
+\end{theorem}
+\begin{theorem}
+    $\chi'(K_n)=n$ if $n$ is odd(n $\geq 3$), and $\chi'(K_n)=n-1$ if $n$ is even.
+\end{theorem}
+\begin{theorem}
+    The four-colour theorem is equivalent to the statement that $\chi'(G)=3$ for each cubic map $G$.
+\end{theorem}
+\begin{theorem}
+    If $G$ is a bipartite graph with largest vertex-degree $\Delta$, then $\chi'(G)=\Delta$.
+\end{theorem}
+\begin{corollary}
+    $\chi'(K_{r,s})=\max(r,s)$
+\end{corollary}
+\section{Matching, marriage and Menger's theorem}
+\subsection{Hall's `marriage' theorem}
+A complete matching from $V_1$ to $V_2$ in a bipartite graph $G(V_1,V_2)$
+is a one-one correspondence between the vertices in $V_1$ and some of the vertices in $V_2$, such that corresponding vertices are joined.
+\begin{theorem}
+    Let $G=G(V_1,V_2)$ be a bipartite graph, and for each subset $A$ of $V_1$,
+    let $\varphi(A)$ be the set of vertices of $V_2$ that are adjacent to at least one vertex of $A$. Then a complete matching from $V_1$ 
+    to $V_2$ exists if and only if $\abs{A}\leq\abs{\varphi(A)}$, for each subset $A$ of $V_1.$
+\end{theorem}
+In general, if $E$ is a non-empty finite set, and if $\mathcal{F} =(S_1,S_2,\cdots,S_m)$ is a family of (not necessarily distinct)
+non-empty subsets of $E$, then a transveral of $\mathcal{F}$ is a set of $m$ distinct elements of $E$, one chosen from each set $S_i$.
+We call a transversal of a subfamily of $\mathcal{F}$ a partial transveral of $\mathcal{F}$.
+\begin{remark}
+    Any subset of a partial transveral is a partial transveral. Especially, $\varnothing$ is always a partial transveral.
+\end{remark}
+\begin{theorem}
+    Let $E$ be a non-empty finite set, and let $\mathcal{F}=(S_1,S_2,\cdots,S_m)$ be a family of non-empty subsets of $E$.
+    Then $\mathcal{F}$ has a transveral if and only if the union of any $k$ of the subsets $S_i$ contains at least $k$ elements, for $1\leq k\leq m$.
+\end{theorem}
+\begin{corollary}
+    If $E$ and $\mathcal{F}$ are as before, then $\mathcal{F}$ has a partial transveral of size $t$ if and only if the union of any $k$
+    of the subset $S_i$ contains at least $k+t-m$ elements.
+\end{corollary}
+\subsection{Menger's theorem}
+The paths from $v$ to $w$, no two of which have an edge in common, are called edge-disjoint paths. 
+The paths from $v$ to $w$, no two of which have a vertex in common, are called vertex-disjoint paths.
+A $vw-$disconnecting set of $G$ is a set $E$ of edges of $G$ such that each path from $v$ to $w$ inculdes an edge of $E$.
+A vw-separating set of $G$ is a set $S$ of vertices, other than $v$ or $w$, such that each path from $v$ ro $w$ passes through a vertex of $S$.
+\begin{theorem}
+    The maximum number of edge-disjoint paths connecting two distinct vertices $v$ and $w$ of a connected graph is equal to the 
+    minimum number of edges in a $vw-$disconnecting set.
+\end{theorem}
+\begin{theorem}
+    The maximum number of vertex-disjoint paths connecting two distinct non-adjacent vertices $v$ and $w$ of a graph is equal 
+    to the minimum number of vertices in a $vw-$separating set.
+\end{theorem}
+\begin{corollary}
+    A graph $G$ is $k-$edge-connected if and only if any two distinct vertices of $G$ are connected by at least $k$ edge-disjoint paths.
+\end{corollary}
+\begin{corollary}
+    A graph $G$ with at least $k+1$ vertices is $k-$connected if and only if any two distinct vertices of $G$ are connected by at least 
+    $k$ vertex-disjoint paths.
+\end{corollary}
+\begin{theorem}
+    The maximum number of arc-disjoint paths from a vertex $v$ to a vertex $w$ in a digraph is equal to the minimum number of arcs in a 
+    $vw$-disconnecting set.
+\end{theorem}
+\begin{theorem}
+    Menger's theorem implies Hall's theorem.
+\end{theorem}
+\subsection{Network flows}
+We define a network flow $N$ to be a weighted digraph - that is, a digraph to each arc $a$ of which is assigned a non-negative 
+real number $c(a)$ called its capacity. The out-degree outdeg $(x)$ of a vertex is the sum of the capacities of the arcs of the 
+form $xz$, and the in-degree indeg $(x)$ is similarly defined. 
+\begin{remark}
+    The sum of the out-degrees of the vertices of a network is equal to the sum of the in-degrees.
+\end{remark}
+A vertex with in-degree 0 is a source, and one with out-deg 0 is a sink. Usually we assume that any network has exactly one source $v$ 
+and one sink $w$.
+
+A flow in a network is a function $\varphi$ that assigns to each arc $a$ a non-negative real number $\varphi$(a), called the flow in $a$,
+in such a way that 
+\begin{enumerate}
+    \item for each arc $a$, $\varphi(a)\leq c(a)$
+    \item the out-degree and in-degree of each vertex, other than $v$ or $w$, are equal.
+\end{enumerate}
+The flow in which every arc is 0 is called the zero flow; any other flow is a non-zero flow. An arc $a$ for which 
+$\varphi(a)=c(a)$ is called saturated and the remaining arcs are unsaturated.
+
+It follows from the handshaking dilemma that the sum of the flows in the arcs out of $v$ is equal to the sum of the flow in the arcs 
+into $w$; this sum is called the value of the flow.
+
+A cut in a network is a $vw-$disconnecting set in the corresponding digraph $D$. The capacity of a cut is the sum of the capacities of the 
+arcs in the cut. 
+
+The largest flows of $G$ is are called maximum flows. The cut with smallest capacity is called the minimum cuts.
+\begin{theorem}[Max-flow min-cut theorem]
+   In any network, the value of any maximum flow is equal to the capacity of any minimum cut. 
+\end{theorem}
+\end{document}

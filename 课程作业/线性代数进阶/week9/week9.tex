@@ -1,0 +1,66 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW9}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{7.3.4}
+    设
+    \[A=\begin{pmatrix}
+        1&4&2\\
+        0&-3&4\\
+        0&4&3\\
+    \end{pmatrix}\]
+    求$A^5$.
+\end{problem}
+\begin{solution}
+    \[\lvert\lambda E-A\rvert=(\lambda-1)(\lambda-5)(\lambda+5)\]
+    所以$A$的所有特征值为$1,5,-5$.通过求解$(\lambda E-A)x=0$得到对应的特征向量$\xi_1,\xi_2,\xi_3$分别为
+    $(1,0,0)^{\prime},(2,1,2)^{\prime},(1,-2,1)^{\prime}$。记$(\xi_1,\xi_2,\xi_3)=P$，显然$P$可逆，则有
+    \[AP=Pdiag(1,5,-5)\]
+    \[P^{-1}AP=diag(1,5,-5)\]
+    所以
+    \[A^5=Pdiag(1,5^5,-5^5)P^{-1}=\begin{pmatrix}
+        1&2500&1874\\
+        0&-1875&2500\\
+        0&2500&1875\\
+    \end{pmatrix}\]
+\end{solution}
+\begin{problem}{7.3.7}
+    设 $\mathcal{A}$是$V$的线性变换。证明：
+    \begin{enumerate}
+        \item $\mathcal{A}$的行列式为零的充分必要条件是 $\mathcal{A}$至少有一个特征值为零。
+        \item 如果$\mathcal{A}$是可逆线性变换，则其特征值一定全不为零；又如果$\lambda$是$\mathcal{A}$的特征值，则$\lambda^{-1}$必是$\mathcal{A}^{-1}$的特征值。
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 任取$V$的一组基，记$\mathcal{A}$在其下的矩阵为$A$，则
+
+        \begin{tabular}{rcl}
+        $\mathcal{A}$至少有一个特征值为零&$\Leftrightarrow$&存在一个$\mathcal{A}$的特征值为零 \\
+        &$\Leftrightarrow$&$\exists\alpha\in V,\alpha\neq 0,s.t.\mathcal{A}\alpha=0\alpha=0$\\
+        &$\Leftrightarrow$&$\exists x\in F^n,x\neq 0,s.t.Ax=0$\\
+        &$\Leftrightarrow$&齐次线性方程组$Ax=0$有非零解\\
+        &$\Leftrightarrow$&齐次线性方程组$Ax=0$没有唯一解\\
+        &$\Leftrightarrow$&$\lvert A\rvert=0$\\
+        \end{tabular}
+        \item 假设 $\mathcal{A}$有一特征值为零，则存在$\alpha\in V,\alpha\neq0$使得$\mathcal{A}\alpha=0\alpha=0$，但是$\mathcal{A}0=0$，这与$\mathcal{A}$为可逆线性变换，从而为单射产生矛盾，所以其特征值一定全不为零。如果$\lambda$是$\mathcal{A}$的特征值，则存在$\alpha\in V,\alpha\neq0$使得
+    \[\mathcal{A}\alpha=\lambda\alpha\]
+    又因为$\mathcal{A}$为可逆线性变换，从而在等号两边施加$\mathcal{A}^{-1}$后可得
+    \[\alpha=\mathcal{A}^{-1}\lambda\alpha=\lambda\mathcal{A}^{-1}\alpha\]
+    移项后可得
+    \[\lambda^{-1}\alpha=\mathcal{A}^{-1}\alpha\]
+    即$\lambda^{-1}$必是$\mathcal{A}^{-1}$的特征值。
+    \end{enumerate}
+    .
+\end{solution}
+\end{document}

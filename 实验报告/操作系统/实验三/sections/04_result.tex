@@ -1,0 +1,253 @@
+\section{实验结果}
+\subsection{进程完整的图像}
+在表\ref{User}-\ref{Text}中，我整理了实验过程中所观察到的，且在课堂上介绍过的User结构内容、Proc结构内容和Text结构内容。
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{lll}\toprule
+    变量名称      &含义         &值        \\\midrule
+   \textit{EAX         }&访问现场保护区中EAX寄存器的偏移量 &0               \\
+   \textit{u\_rsav[0]   }&ESP                &0xC03F FF6C=3G+4M-148     \\
+   \textit{u\_rsav[1]   }&EBP                &0xC03F FF84=3G+4M-124     \\
+   \textit{u\_ssav[0]   }&ESP二次保护            &0     \\
+   \textit{u\_ssav[1]   }&EBP二次保护            &0     \\
+   \textit{u\_procp     }&指向该u结构对应的Process结构的指针&0xC012 0B20=3G+1M+130K+800\\
+   \textit{u\_MemoryDecriptor}&封装了进程的图像在内存中的位置、大小等信息&                  见表\ref{MemoryDescriptor}    \\
+   \bottomrule
+\end{tabular}
+\caption{User结构}\label{User}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{lll}\toprule
+    变量名称      &含义         &值        \\\midrule
+   \textit{USER\_SPACE\_SIZE }&用户态空间大小            &0x0080 0000=8M               \\
+   \textit{USER\_SPACE\_PAGE\_TABLE\_CNT     }&用户态页表数量            &2                            \\
+   \textit{USER\_SPACE\_START\_ADDRESS       }&用户态页表起始逻辑地址        &0                            \\
+   \textit{m\_UserPageTableArray             }&相对地址映射表起始逻辑地址      &0xC020 8000=3G+2M+32K                  \\
+   \textit{m\_TextStartAddress               }&代码段起始逻辑地址      &0x0040 1000=4M+4K                      \\
+   \textit{m\_TextSize                       }&代码段大小          &0x3000=12K                      \\
+   \textit{m\_DataStartAddress               }&数据段起始逻辑地址      &0x0040 4000=4M+16K                      \\
+   \textit{m\_DataSize                       }&数据段大小          &0x5000=20K                      \\
+   \textit{m\_StackSize                       }&堆栈段大小          &0x1000=4K                      \\
+   \bottomrule
+\end{tabular}
+\caption{MemoryDecriptor结构}\label{MemoryDescriptor}
+\end{table}
+
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{lll}\toprule
+    变量名称      &含义         &值        \\\midrule
+   \textit{p\_uid       }&用户ID               &   0            \\
+   \textit{p\_pid       }&进程标识数、进程编号         &    3           \\
+   \textit{p\_ppid      }&父进程标识数             &        1       \\
+   \textit{p\_addr      }&PPDA区在物理内存中的起始地址   & 0x0041 1000=4M+68K \\
+   \textit{p\_size      }&进程图像（除代码段以外部分）的长度，以字节为单位  & 0x0000 7000=28K    \\
+   \textit{p\_textp     }&指向该进程运行的代码段的描述符           & 0xC012 23B4=3G+1M+136K+948\\
+   \textit{p\_state     }&进程当前的调度状态（运行、就绪状态）        & Process::SRUN             \\
+   \textit{p\_flag      }&进程标志位（进程图像在内存中）           &              1            \\
+   \textit{p\_pri       }&进程优先数（值越大，优先级越小）          &              101            \\
+   \bottomrule
+\end{tabular}
+\caption{Proc结构}\label{Proc}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{lll}\toprule
+    变量名称      &含义         &值        \\\midrule
+   \textit{x\_daddr    }&代码段副本在盘交换区上的地址     &  0x4738        \\
+   \textit{x\_caddr    }&代码段在物理内存中的起始地址&  0x0040 E000=4M+56K   \\
+   \textit{x\_size     }&代码段长度，以字节为单位  &  0x3000=12K   \\
+   \textit{x\_count    }&共享该代码段的进程数    &  1            \\
+   \textit{x\_ccount    }&共享该代码，且图像在内存的进程数 &  1            \\
+   \bottomrule
+\end{tabular}
+\caption{Text结构}\label{Text}
+\end{table}
+
+\subsection{相对虚实地址映射表}
+表\ref{relative}为我根据表\ref{User}-\ref{Text}以及UNIX V6++的实现方法所绘制的该进程的相对地址映射表。
+表\ref{relative_after}为我根据实验结果填写的相对地址映射表。
+\begin{table}[htbp]
+      \centering
+
+ \begin{tabular}{llllll}\toprule
+ \#&Page Base Address      & &s/u&r/w&p        \\\midrule
+ 0&xxx      & &x&x&x        \\
+ ...&...      & &...&...&...        \\
+ 1024&xxx      & &x&x&x        \\
+ 1025&0        & &1&0&1        \\
+ 1026&1        & &1&0&1        \\
+ 1027&2        & &1&0&1        \\
+ 1028&1        & &1&1&1        \\
+ 1029&2        & &1&1&1        \\
+ 1030&3        & &1&1&1        \\
+ 1031&4        & &1&1&1        \\
+ 1032&5        & &1&1&1        \\
+ 1033&0        & &1&0&0        \\
+ ...&...      & &...&...&...        \\
+ 2046&0        & &1&0&0        \\
+ 2047&6        & &1&1&1        \\
+   \bottomrule
+\end{tabular}
+\caption{相对虚实地址映射表}\label{relative}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+ \begin{tabular}{llll}\toprule
+    页号 & 地址    & 高20位页号  & 低12位标志位（u/s r/w p）\\
+    0           &0xC0208000-0xC0208003&  / &  / \\
+    ...           &...&  ... &  ... \\
+    1024 &0xC0209000-0xC0209003&  / &  / \\
+    1025&0xC0209004-0xC0209007&0x00000&FFD(1111 1111 1101)\\
+    1026&0xC0209008-0xC020900B&0x00001&FFD(1111 1111 1101)\\
+    1027&0xC020900C-0xC020900F&0x00002&FFD(1111 1111 1101)\\
+    1028&0xC0209010-0xC0209013&0x00001&FFF(1111 1111 1111)\\
+    1029&0xC0209014-0xC0209017&0x00002&FFF(1111 1111 1111)\\
+    1030&0xC0209018-0xC020901B&0x00003&FFF(1111 1111 1111)\\
+    1031&0xC020901C-0xC020901F&0x00004&FFF(1111 1111 1111)\\
+    1032&0xC0209020-0xC0209023&0x00005&FFF(1111 1111 1111)\\
+    1033&0xC0209024-0xC0209027&0x00000&FFC(1111 1111 1100)\\
+    ...           &...&  ... &  ... \\
+    2047&0xC0209FFC\-0xC0209FFF&0x00006&FFF(1111 1111 1111)\\
+   \bottomrule
+\end{tabular}
+\caption{根据实验结果得到的相对虚实地址映射表}\label{relative_after}
+\end{table}
+
+\subsection{相关物理页表}
+表\ref{directory}-\ref{table768}为我根据表\ref{User}-\ref{Text}以及UNIX V6++的实现方法所绘制的该进程的4张物理页表。
+表\ref{directory_after}-\ref{page768_after}为我根据实验结果所填写的4张物理页表。
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{llllll}\toprule
+ \#&Page Base Address      & &s/u&r/w&p        \\\midrule
+ 0&0x202        & &1&1&1        \\
+ 1&0x203        & &1&1&1        \\
+ ...&...      & &...&...&...        \\
+ 678&0x201        & &0&1&1        \\
+ ...&...      & &...&...&...        \\
+   \bottomrule
+\end{tabular}
+\caption{Page Directory}\label{directory}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{llllll}\toprule
+ \#&Page Base Address      & &s/u&r/w&p        \\\midrule
+ 0&/        &/&/&/&/        \\
+ ...&...      & &...&...&...        \\
+ 1023&/        &/&/&/&/        \\
+   \bottomrule
+\end{tabular}
+\caption{Page Table0\#}\label{table0}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{llllll}\toprule
+ \#&Page Base Address      & &s/u&r/w&p        \\\midrule
+ 0&/        &/&/&/&/        \\
+ 1&0x040E        &&1&0&1        \\
+ 2&0x040F        &&1&0&1        \\
+ 3&0x0410        &&1&0&1        \\
+ 4&0x0412        &&1&1&1        \\
+ 5&0x0413        &&1&1&1        \\
+ 6&0x0414        &&1&1&1        \\
+ 7&0x0415        &&1&1&1        \\
+ 8&0x0416        &&1&1&1        \\
+ 9&0        &&0&0&0        \\
+ ...&...      & &...&...&...        \\
+ 1022&0        &&0&0&0        \\
+ 1023&0x0417        &&1&1&1        \\
+   \bottomrule
+\end{tabular}
+\caption{Page Table1\#}\label{table1}
+\end{table}
+
+\begin{table}[htbp]
+    \centering
+ \begin{tabular}{llllll}\toprule
+ \#&Page Base Address      & &s/u&r/w&p        \\\midrule
+ 0&0        &/&0&1&1        \\
+ ...&...      & &...&...&...        \\
+ 1022&1022        &/&0&1&1        \\
+ 1023&0x411        &/&0&1&1        \\
+   \bottomrule
+\end{tabular}
+\caption{Page Table768\#}\label{table768}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+ \begin{tabular}{llll}\toprule
+    页号 & 地址    & 高20位页号  & 低12位标志位（u/s r/w p）\\
+    0&0xC0200000-0xC0200003&0x00202&0x027(0000 0010 0111)\\
+    1&0xC0200004-0xC0200007&0x00203&0x027(0000 0010 0111)\\
+    2&0xC0200008-0xC020000B&0x00000&0x000(0000 0000 0000)\\
+ ...      &...&...&...        \\
+    678&0xC0200C00-0xC0200C03&0x00201&0x023(0000 0010 0011)\\
+    679&0xC0200C04-0xC0200C07&0x00000&0x000(0000 0000 0000)\\
+    680&0xC0200C08-0xC0200C0B&0x00000&0x000(0000 0000 0000)\\
+    681&0xC0200C0C-0xC0200C0F&0x00000&0x000(0000 0000 0000)\\
+   \bottomrule
+\end{tabular}
+\caption{根据实验结果得到的一级页表}\label{directory_after}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+ \begin{tabular}{llll}\toprule
+    页号 & 地址    & 高20位页号  & 低12位标志位（u/s r/w p）\\
+    0&0xC0202000-0xC0202003&0x00000&0x067(0000 0110 0111)\\
+    1&0xC0202003-0xC0202007&0x00404&0x004(0000 0000 0100)\\
+ ...      &...&...&...        \\
+   \bottomrule
+\end{tabular}
+\caption{根据实验结果得到的第0张二级页表}\label{page0_after}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+ \begin{tabular}{llll}\toprule
+    页号 & 地址    & 高20位页号  & 低12位标志位（u/s r/w p）\\
+    0&0xC0203000-0xC0203003&0x00404&0x006(0000 0000 0110)\\
+    1&0xC0203003-0xC0203007&0x0040E&0x065(0000 0110 0101)\\
+    2&0xC0203007-0xC020300B&0x0040F&0x065(0000 0110 0101)\\
+    3&0xC020300C-0xC020300F&0x00410&0x065(0000 0110 0101)\\
+    4&0xC0203010-0xC0203013&0x00412&0x067(0000 0110 0111)\\
+    5&0xC0203013-0xC0203017&0x00413&0x067(0000 0110 0111)\\
+    6&0xC0203017-0xC020301B&0x00414&0x067(0000 0110 0111)\\
+    7&0xC020301C-0xC020301F&0x00415&0x067(0000 0110 0111)\\
+    8&0xC0203020-0xC0203023&0x00416&0x067(0000 0110 0111)\\
+    ...      &...&...&...        \\
+    1023&0xC0203FFB-0xC0203FFF&0x00417&0x067(0000 0110 0111)\\
+   \bottomrule
+\end{tabular}
+\caption{根据实验结果得到的第1张二级页表}\label{page1_after}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+ \begin{tabular}{llll}\toprule
+    页号 & 地址    & 高20位页号  & 低12位标志位（u/s r/w p）\\
+    0&0xC0201000-0xC0201003&0x00000&0x003(0000 0000 0011)\\
+    1&0xC0201003-0xC0201007&0x00001&0x003(0000 0000 0011)\\
+    2&0xC0201008-0xC020100B&0x00002&0x003(0000 0000 0011)\\
+    3&0xC020100C-0xC020100F&0x00003&0x003(0000 0000 0011)\\
+ ...      &...&...&...        \\
+    1020&0xC0201FF0-0xC0201FF3&0x003FC&0x003(0000 0000 0011)\\
+    1021&0xC0201FF4-0xC0201FF7&0x003FD&0x003(0000 0000 0011)\\
+    1022&0xC0201FF8-0xC0201FFC&0x003FE&0x003(0000 0000 0011)\\
+    1023&0xC0201FFC-0xC0201FFF&0x00411&0x063(0000 0110 0011)\\
+   \bottomrule
+\end{tabular}
+\caption{根据实验结果得到的第768张二级页表}\label{page768_after}
+\end{table}

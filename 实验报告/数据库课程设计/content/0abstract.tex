@@ -1,0 +1,44 @@
+\noindent\fontsize{12pt}{0}{\fangsong\textbf{摘\quad 要}}
+\addcontentsline{toc}{chapter}{城市共享单车管理与调度系统} 
+{\fangsong
+近年来，共享单车作为“最后一公里”的解决方案得到了广泛的推广，市场中涌现出大量共享单车公司。在整个运营过程中由智能
+技术提供支持，企业负责整个运营过程中的管理。消费者在选择共享单车品牌时，除了定价、押金等经济因素，还会着重考量单车性能、维护质量和单车分布等体验因素。
+同时，由于共享单车市场的快速发展，交通运输部等10部门也对共享单车（互联网租凭自行车）行业发布指导意见，要求“引导有序投放车辆”、“加强互联网租凭自行车标准化建设”、“加强停放管理和监督执法”，“引导用户安全文明用车”等。
+
+综上，共享单车管理与调度系统无论对于共享单车企业提升市场竞争力，还是满足行业指导意见，都至关重要。
+因此，在本项目中，我为一个假想的小型共享单车公司开发共享单车管理与调度系统。该系统采用基于角色的鉴权系统。
+单车和调度人员可以通过系统开放的API接口上传数据；分析团队人员可以通过平台生成查看单车分布图、生成调度日志、生成单车使用情况的空间分布和生成单车状况统计信息；
+管理人员在分析团队人员的权限基础之上，还可以通过平台添加或删除单车或停车区域信息。同时还可以通过平台全局更新共享单车的状态。
+
+
+
+
+本项目在概念设计过程中构建了以下实体集：
+   \textit{bike(\underline{bike\_ID},production\_date,coordinate,\\status,battery\_remaining\_capacity)}；
+   \textit{usage(\dotuline{time},coordinate,action)}；
+   \textit{parking\_area(\underline{parking\_area\_ID},\\name,coordinate,radius)}；
+   \textit{scheduling(\dotuline{time},coordinate,action)}；
+   \textit{to\_be\_reviewed(\dotuline{time},status,proof\_material)}；
+
+
+本项目在概念设计过程中构建了以下关系集：
+   \textit{bike\_usage}：将单车和单车使用记录关联在一起；
+   \textit{contain}：将单车和单车停车区域关联在一起；
+   \textit{bike\_scheduling}：将单车和单车调度记录关联在一起；
+   \textit{bike\_to\_be\_reviewed}：将单车和待审查记录关联在一起；
+
+上述实体集和关系集在逻辑设计过程中被转变为了实体集模式和关系集模式，均满足BC范式。
+
+本系统
+使用Next.js进行全栈开发。
+对于前端，我使用Next.js，React和NextUI来构建页面和组件。使用Tailwind CSS进行样式设计。
+同时，我使用Next.js了最新推出的文件系统路由，将文件自动映射到网页或网页布局；
+对于后端，绝大部分的功能，如用户认证、表单提交和数据处理，我都通过Next.js提供的Server Actions功能来实现。
+对于调度员和单车上传数据的需求，我仍然通过API路由来
+接受他们所上传的信息，但是后续的处理仍然是通过Server Actions来实现。在数据管理部分，我通过Drizzle ORM
+与Postgres数据库进行交互，并且通过数据访问层（DAL）来保障数据安全。
+
+本次实验报告为最终报告设计，包含需求分析、可行性分析、概念设计、逻辑设计、项目管理、项目实现以及总结。
+}
+
+\noindent\fontsize{12pt}{0}{\textbf{关键词：共享单车、管理、调度、数据库、Postgres、Next.js}}

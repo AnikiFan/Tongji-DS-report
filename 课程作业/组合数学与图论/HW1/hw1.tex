@@ -1,0 +1,382 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW1}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\lhead{\sffamily\bfseries{范潇 2254298}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+
+\maketitle
+
+\begin{problem}{1.3}
+    任取 $n+1$个整数，求证其中至少有两个数，它们的差是 $n$的倍数。
+\end{problem}
+\begin{solution}
+    记这 $n+1$个整数按升序排列为 $a_i,i = 0,\cdots, n$，令 $d_i = a_i-a_0 \mod n,i = 1,\cdots,n$，
+    若 $\exists i,s.t. d_i = 0$ ，则 $a_i,a_0$之差为 $n$的倍数。否则，因为 $\forall i,0< d_i<n$，
+    由鸽笼原理可知， $d_1,\cdots,d_n$这 $n$个数中，必有两个数 $d_s,d_t(s\neq t)$取值相同，则 $a_s,a_t$的差为 $n$的倍数。
+    \qed
+\end{solution}
+\begin{problem}{1.6}
+    从 $1,2,\cdots,200$中任取 $100$个整数，其中之一小于 $16$，那么必有两个数，一个能被另一个整除。
+\end{problem}
+\begin{problem}{1.8}
+    任意给定 $52$个数，它们之中有两个数，其和或差是100的倍数。
+\end{problem}
+\begin{solution}
+    记这 $52$个整数按升序排列为 $a_i,i = 1,\cdots, 52$，令 $d_i = a_i \mod 100,i = 1,\cdots,52$。
+    其中每个数恰好属于下列 $51$个集合中的一个
+    \[\{0\},\{1,99\},\{2,98\},\cdots,\{50\}\]
+    由鸽笼原理可知，必有两个数 $d_i,d_j$ 属于同一集合。若 $i=j$，则 $a_i,a_j$之差为 $100$的倍数，否则 它们之和为 $100$的倍数。
+    \qed
+\end{solution}
+\begin{problem}{1.10}
+    在坐标平面上任意给定 $9$个整点，是否必有一个以它们中的三个点为顶点的三角形，其重心也是整点？
+\end{problem}
+\begin{solution}
+    只需证明任给 $9$个整数，其中必有三个数之和为 $3$的倍数即可。
+    
+    任取 $9$个整数 $a_1,\cdots,a_9$， 令 $d_i=a_1\mod 3$，则 $d_i\in \{0,1,2\}$。
+    由鸽笼原理可知，必有 $d_1,\cdots,d_9$中必有三个数相同，它们对应的 $a_i$之和便是 $3$的倍数。
+\end{solution}
+\begin{problem}{1.12}
+    对任意的整数 $N$，存在着 $N$的一个倍数，使得它仅由数字 $0$和 $7$组成。
+\end{problem}
+\begin{solution}
+    令 $a_i = \sum_{j = 0}^i7\times 10^j, i = 0,\cdots, N-1$， 令 $d_i= a_i\mod N, i = 0,\cdots,N-1$。
+    若存在 $i$ \hspace{1ex}s.t.\hspace{1ex} $d_i=0$，则已经找到了所要求的数 $a_i$ 。否则
+    $d_i\in\{1,\cdots,N-1\},i = 0,\cdots,N-1$，由鸽笼原理可知，必有两个数 $d_s,d_t$相同，则 $\lvert a_s-a_t\rvert$便是所要求的数。
+\end{solution}
+\begin{problem}{2.2}
+   比 $5400$大的四位整数中， 数字 $2,7$不出现，且各位数字不同的整数由多少个？ 
+\end{problem}
+\begin{solution}
+    在 $6000-9999$中，符合条件的整数的个数为
+    \[3\cdot 7\cdot 6\cdot 5\]
+    各因子代表各位上能取的数字个数。
+
+    在 $5500-5999$中，符合条件的整数的个数为
+    \[1\cdot 4\cdot 6\cdot 5\]
+    各因子代表各位上能取的数字个数。
+
+    在 $5401-5499$中，符合条件的整数的个数为
+    \[5+5\cdot 5 \]
+    根据十位是否为 $0$使用加法原理。
+
+    综上，共有 $780$种。
+\end{solution}
+\begin{problem}{2.5}
+    现有 $100$件产品，从其中任意抽出 $3$件。
+    \begin{enumerate}
+        \item 共有多少种抽法？
+        \item 如果 $100$件产品中有 $2$件次品，那么抽出的产品中至少有 $1$件次品的概率是多少？
+        \item 如果 $100$件产品中有 $2$件次品，那么抽出的产品中恰好有 $1$件是次品的概率是多少？
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item $\binom{100}{3}$
+        \item $1-\binom{98}{3}/\binom{100}{3}$
+        \item $2\binom{98}{2}/\binom{100}{3}$
+    \end{enumerate}
+\end{solution}
+\begin{problem}{2.7}
+   $8$个棋子大小相同， 其中 $5$个红的， $3$个蓝的。把它们放在 $8\times 8$的棋盘上，每行、每列只放一个，问有多少种方法？若在 $12\times 12$的棋盘上，结果如何？ 
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item $8!\binom{8}{3}$，先确定各个放置棋的位置，再确定哪些列放蓝棋
+        \item $\binom{12}{8}^28!\binom{8}{3}$，先缩小棋盘范围
+    \end{enumerate}
+\end{solution}
+\begin{problem}{2.8}
+   有纪念章 $4$枚、纪念册 $6$本，赠送给 $10$位同学，每人得一件，共有多少种不同的送法？
+\end{problem}
+\begin{solution}
+    $\binom{10}{4}$
+\end{solution}
+\begin{problem}{2.9}
+   \begin{enumerate}
+    \item 从整数 $1,2,\cdots,100$中选出两个数， 使得它们的差正好是 $7$,有多少种不同的选法？
+    \item 如果要求选出的两个数之差小于等于 $7$，又有多少种不同的选法？
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item $93$
+        \item $93+94+\cdots +99=672$
+    \end{enumerate}
+\end{solution}
+\begin{problem}{2.14}
+   有 $n$个不同的整数，从中取出两组来，要求第一组里的最小数大于第二组里的最大数，问有多少种方案？ 
+\end{problem}
+\begin{solution}
+    \[\sum_{i=1}^n2^{i-1}(2^{n-i}-1)=\sum_{i=1}^n2^{n-1}-2^{i-1}=n2^{n-1}-2^{n-1}+1\]
+    按照第二组的最大数的取值分类，此时要求第一组非空。
+\end{solution}
+\begin{problem}{2.16}
+   凸 $10$边形的任意 $3$条对角线不共点，试求该凸 $10$边形的对角线交于多少个点？又把所有的对角线分割成多少段？
+\end{problem}
+\begin{solution}
+   记满足题中条件的凸 $n+2$边形中，由所有对角线交点个数记为 $h_n$。则 $h_n$满足以下递推关系式：
+   \[
+   \begin{cases}
+   h_n=h_{n-1}+\binom{n+1}{3}+n-1&n\geq 2\\
+   h_1 = 0&\\ 
+   \end{cases} 
+   \]
+   下面在该$n+2$边形中任取一个顶点进行分析：
+
+   第一项显然，第三项是由所取顶点的两侧的顶点的连线上的交点个数（被由所选顶点所引出的$n-1$条弦相交）。
+   
+   第二项的解释如下：
+
+在其余 $n+1$个顶点中任取三个组成三角形，在其中，必有且仅有一边，能被其所对的顶点与所选顶点的连线相交，从而形成一个新的交点。由此，新的交点数等于由$n+1$个顶点组成的三角形的个数，也就是第二项。而新增的块数又等于新增交点数，从而得证。
+
+类似地，对角线被分割的段的数量 $f_n$满足的递推关系式为：
+\[
+\begin{cases}
+  f_n=f_{n-1}+3\binom{n+1}{3}+2*(n-1)&n\geq 2\\
+  f_1=0&\\  
+\end{cases}    
+\]
+由此，得出凸 $10$边形的对角线交点个数和对角线被分割的个数分别为$238,686$。
+\end{solution}
+\begin{problem}{2.20}
+   考虑集合 $\{1,2,\cdots,n+1\}$的非空子集
+   \begin{enumerate}
+    \item 证明最大元素恰好是 $j$的子集数为 $2^{j-1}$
+    \item 利用（1）的结论证明
+    \[1+2+2^2+\cdots+2^n=2^{n+1}-1.\]
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+    \item 显然， $\{1,2,\cdots,n+1\}$的最大元素恰好为 $j$的非空子集与 $\{1,2,\cdots,j-1\}$的子集之间形成一一映射 $S\longmapsto S\backslash\{j\}$
+    \item 等式右边为 $\{1,2,\cdots,n+1\}$的非空子集数，而这些非空子集可以按照最大元素大小 $j,1\leq j\leq n+1$进行分类，由加法定理便可得到等式左边。
+    \end{enumerate}
+\end{solution}
+\begin{problem}{2.22}
+   \begin{enumerate}
+    \item 在由 $5$个 $0$和 $4$个 $1$组成的字符串中， 出现 $01$或 $10$的总次数为 $4$的字符串有多少个？
+    \item 在由 $m$个 $0$和 $n$个 $1$组成的字符串中，出现 $01$或 $10$的总次数为 $k$的字符串有多少个？
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    使用插空法，即将 $1$插入 一排 $0$中。
+
+    \begin{enumerate}
+        \item 当 $k$为 奇数时，由于插入给定两个 $0$之间的所有 $1$对于出现次数的总贡献为 $2$ ，字符串一端的 $1$串的总贡献为 $1$，所以
+        此时，有且只有一端以 $1$结尾。剩余的 $k-1$次出现需要由 $(k-1)/2$处 $0$之间的 $1$串贡献。所以总个数为 $2\binom{m-1}{(k-1)/2}\binom{n-1}{(k-1)/2}$，其中
+        各因子的含义为：从两端中选取一端；从 $m-1$个位置中选取 $(k-1)/2$个；将 $n$个 $1$放入上述两步挑选的 $(k+1)/2$个位置上，使得每个位置至少有一个 $1$.
+        \item 当 $k$为偶数时，显然，要么左右两端要么均以 $1$结尾，要么均以 $0$结尾\begin{enumerate}
+            \item 如果左右两端均以 $1$为结尾，类似的有 $1\cdot \binom{m-1}{(k-2)/2}\binom{n-1}{k/2}$
+            \item 如果左右两端均以 $0$为结尾，类似的有 $1\cdot \binom{m-1}{k/2}\binom{n-1}{((k-2)/2)}$
+        \end{enumerate}
+        由加法定理可知，总方案数为 $\binom{m-1}{(k-2)/2}\binom{n-1}{k/2}+\binom{m-1}{k/2}\binom{n-1}{((k-2)/2)}$。
+    \end{enumerate}
+    因此，第一小问所求个数为 $30$。
+\end{solution}
+\begin{problem}{2.25}
+   从 $1$至 $100$的整数中不重复地选取两个数组成有序对 $(x,y)$，使得 $x$与 $y$的乘积 $xy$不能被 $3$整除，共可组成多少对？ 
+\end{problem}
+\begin{solution}
+    因为 
+    \[
+    \begin{array}[H]{rcl}
+        (3a+1)(3b+1)&=&9ab+3(a+b)+1 \\
+        (3a+1)(3b+2)&=&9ab+3(2a+b)+2 \\
+        (3a+2)(3b+2)&=&9ab+3(2a+2b)+4 \\
+    \end{array}    
+    \]
+    所以
+     \[xy \equiv 0 \mod 3\Leftrightarrow x\equiv 0 \mod 3\lor y \equiv 0 \mod 3\]
+    所以所求对数为 $100\cdot 99-(33\cdot 67+67\cdot 33+33\cdot 32)=4422$。
+\end{solution}
+\begin{problem}{2.28}
+   证明下列组合恒等式：
+   \begin{enumerate}
+    \item \[\sum_{k=0}^n(-1)^k\cdot k^2\cdot\binom{n}{k}=0;\]
+    \item \[\sum_{k=0}^n \frac{k+2}{k+1}\binom{n}{k}=\frac{(n+3)\cdot 2^n-1}{n+1};\]
+    \item \[\sum_{k=0}^n \frac{1}{k+2}\binom{n}{k}=\frac{n\cdot 2^{n+1}+1}{(n+1)(n+2)};\]
+   \end{enumerate} 
+\end{problem}
+\begin{solution}
+    令
+\[f(x)=(1-x)^n=\sum_{k=0}^n\binom{n}{k}x^k\cdot(-1)^k\]
+    \begin{enumerate}
+        \item 
+\[(xf^{\prime})^{\prime}(1)= (f^{\prime}+xf^{\prime\prime})(1)=0=\sum_{k=0}^n(-1)^k\cdot k^2\cdot\binom{n}{k},n\geq 3\]
+$n=0,1,2$时显然也成立。
+\item 
+\[(x\int_{0}^xf)^{\prime}(1)=\frac{(n+3)\cdot 2^n-1}{n+1}=\sum_{k=0}^n \frac{k+2}{k+1}\binom{n}{k}\]
+\item 
+\[(\int_{0}^xxf)(1)=\frac{n\cdot 2^{n+1}+1}{(n+1)(n+2)}=\sum_{k=0}^n \frac{1}{k+2}\binom{n}{k}\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{3.4}
+   给出
+   \[\binom{n}{m}\binom{r}{0}+\binom{n-1}{m-1}\binom{r+1}{1}+\cdot+\binom{n-m}{0}\binom{r+m}{m}=\binom{n+r+1}{m}\] 
+   的组合意义。
+\end{problem}
+\begin{solution}
+    等号右边的含义便是从 $\{1,2,\cdot,n+r+1\}$中取 $m$个元素的取法个数。
+
+    等号左边则是根据不包含在所取的 $m$个元素中的 第 $n-m+1$个元素的取值的不同情况使用加法定理。
+    这个元素的可能取值为 $n-m+1,\cdots,n+1$。当取值为 $j$时，$\{1,\cdots,j-1\}$中有 $j-1-(n-m)$个元素被选中，而 $\{j+1,\cdots,n+r+1\}$中有 $m-(j-1-n+m)=m-j+n+1$个元素被选中。从而有等式左侧。
+\end{solution}
+\begin{problem}{3.6}
+   证明 
+   \[\binom{m}{0}\binom{m}{n}+\binom{m}{1}\binom{m-1}{n-1}+\cdots+\binom{m}{n}\binom{m-n}{0}=2^n\binom{m}{n}.\] 
+\end{problem}
+\begin{solution}
+    \[
+        \binom{m}{i}\binom{m-i}{n-i}=\frac{m!}{i!(m-i)!}\cdot\frac{(m-i)!}{(n-i)!(m-n)!}=\frac{n!}{i!(n-i)!}\cdot\frac{m!}{n!(m-n)!}=\binom{n}{i}\binom{m}{n}\]
+        所以
+        \[LHS = \sum_{i=0}^n\binom{n}{i}\binom{m}{n}=2^n\binom{m}{n}\]
+\end{solution}
+\begin{problem}{3.8}
+   求整数 $a,b,c$，使得 
+   \[m^3=a\binom{m}{3}+b\binom{m}{2}+c\binom{m}{1},\]
+   并计算 $1^3+2^3+\cdots+n^3$的值。 
+\end{problem}
+\begin{solution}
+    \[m^3=(a/6)m^3+(-a/2+b/2)m^2+(a/3-b/2+c)m\]
+    比较系数后可得
+\[a=6\quad b=-6\quad c = -5\]
+所以 
+\[\sum_{i = 1}^ni^3=\sum_{i = 1}^n6\binom{i}{3}-6\binom{i}{2}-5\binom{i}{1}= 6\binom{n+1}{4}-6\binom{n+1}{3}-5\binom{n+1}{2}=(\frac{n(n+1)}{2})^2\]
+\end{solution}
+\begin{problem}{3.15}
+   用组合学方法证明恒等式
+   \[\binom{n}{k}-\binom{n-3}{k}=\binom{n-1}{k-1}+\binom{n-2}{k-1}+\binom{n-3}{k-1}.\] 
+\end{problem}
+\begin{solution}
+    左右两侧描述的都是从 $\{1,\cdots,n\}$中挑选至少包含 $1,2,3$中的一个的 $k$组合的方法数。
+    左侧是运用减法法则。右侧则是根据组合中的最小值使用加法法则。
+\end{solution}
+\begin{problem}{3.18}
+   令 $n$和 $k$为正整数，给出以下恒等式的组合学证明：
+   \[n(n+1)2^{n-2}=\sum_{k=1}^nk^2\binom{n}{k}.\] 
+\end{problem}
+\begin{solution}
+    等式两边是“从一个$n$元集合中取一个子集，然后取一个由子集中的元素构成的有序对“这一个行为的方案数。
+
+    等式左边是先取有序对，当有序对中的元素相同时，这个元素有$n$种可能，所取子集便是从剩下的$n-1$个元素组成的集合的子集并上有序对中的元素，个数为$2^{n-1}$，当有序对中的元素不同时，有$n\left(n-1\right)$种可能，子集数则是$2^{n-2}$，从而有
+    \[n2^{n-1}+n\left(n-1\right)2^{n-2}=n\left(n+1\right)2^{n-2}\]
+    种可能。
+
+    而等号右边则是先取子集，然后在子集中取有序对。根据所取子集中的元素个数使用加法法则。
+\end{solution}
+\end{document}

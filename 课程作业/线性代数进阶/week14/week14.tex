@@ -1,0 +1,32 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW14}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{9.5.6}
+    假设$\mathscr{F}$为反称的，则任给一个标准正交基 $\bm{e}_1,\bm{e}_2,\cdots,\bm{e}_n$，记$\mathscr{F}$在其下的矩阵为$(a_{ij})$，则
+    % 对于$\bm{\alpha}=\sum_ik_i\bm{e_i},\bm{\beta}=\sum_jt_j\bm{e_j}$
+    % \[(\mathscr{F}\bm{\alpha},\bm{\beta})\]
+    \[(\mathscr{F}\bm{e}_i,\bm{e}_j)=(\sum_{k}a_{ki}\bm{e}_k,\bm{e}_j)=a_{ji}\]
+    \[(\bm{e}_i,\mathscr{F}\bm{e}_j)=(\bm{e}_i,\sum_{k}a_{kj}\bm{e}_k)=a_{ij}\]
+    又因为
+    \[(\mathscr{F}\bm{\alpha},\bm{\beta})=-(\bm{\alpha},\mathscr{F}\mathbf{\beta})\]
+    且$i,j$取值任意，所以有
+    \[(a_{ij})=(-a_{ji})\]
+    即$(a_{ij})$为反称矩阵。
+
+    若$V_1$是反称线性变换的不变子空间，任取$\bm{\alpha}\in V_1^{\perp}$，对于任意$\bm{\beta}\in V_1$，
+    \[(\mathscr{F}\bm{\alpha},\bm{\beta})=-(\bm{\alpha},\mathscr{F}\bm{\beta})=0\]
+    最后一个等号是因为$\mathscr{F}\bm{\beta}\in V_1=(V_1^{\perp})^{\perp}$。因为$\bm{\alpha},\bm{\beta}$的任意性，所以
+    $\mathscr{F}\bm{\alpha}\in V_1^{\perp}$，即$V_1^{\perp}$也为$\mathscr{F}$的不变子空间。
+\end{problem}
+\end{document}

@@ -1,0 +1,1203 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{ctex}%提供中文支持
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\usepackage{slashed}
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+\theoremstyle{remark}
+\newtheorem*{example}{例}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{定义}
+\theoremstyle{definition}
+\newtheorem{corollary}{引理}[section]
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\author{Fan}
+\title{组合数学}
+\date{2023年秋季}
+\begin{document}
+\maketitle
+\tableofcontents
+\begin{abstract}
+    本笔记结合组合数学课堂内容以及\emph{Introductory Combinatorics}.
+\end{abstract}
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+\begin{longtable}{cc}
+       \caption{常用记号} \\
+       \multicolumn{1}{c}{含义}&\multicolumn{1}{c}{记号}\\
+       \hline
+       \endfirsthead
+       \multicolumn{1}{c}{含义}&\multicolumn{1}{c}{记号}\\
+       \hline\endhead
+ \end{longtable}
+\newpage
+成绩组成为:
+\begin{enumerate}
+    \item$20\%$左右考勤
+    \item$10\%$左右平时成绩 
+    \item$55\%$左右期末考试
+    \item 加分的大作业
+\end{enumerate}
+\newpage
+\section{鸽笼原理}
+\subsection{简单形式}
+\begin{theorem}
+    如果$n+1$个物体分配给$n$个箱子,那么至少有一个箱子里有两个或以上的物品.
+\end{theorem}
+\begin{remark}
+    这里的不同箱子可以理解为不同性质.这些性质构成了物品的一个划分,同时这些性质有类似的地方,
+    但是每个物品有且仅有一个性质.在题目中,通常问的是两个或以上的物品满足某一条件,
+    有时需要根据该条件来构造出合适的物品或者性质.
+\end{remark}
+\begin{example}
+    有$n$对夫妻,从中挑$n+1$人,证明一定至少能挑出一对夫妻.
+    \begin{proof}
+        把$n$个夫妻关系视为$n$个性质,现在有$n+1$个物品要分配给这$n$个性质,
+        由鸽笼原理可知,必有两个物品有同一性质,即有一对夫妻.
+    \end{proof}
+\end{example}
+\subsection{增强形式}
+\begin{theorem}
+    令$q_1,q_2,\cdots,q_n$为正整数.如果
+    \[q_1+q_2+\cdots+q_n-n+1\]
+    个物品分配给$n$个箱子,则一定存在 指标$i$使得
+    第$i$个箱子里至少有$i$个物品.
+\end{theorem}
+\begin{theorem}[平均法则]
+   如果非负$m_1,m_2,\cdots,m_n$的平均数比$r-1$大,那么其中的一个整数大于等于$r$.
+   
+   类似的,如果他们的平均数比$r+1$小,那么至少其中有一个数小于等于$r$;
+   如果他们的平均数大于等于$r$,那么至少有一个数大于等于$r$.
+\end{theorem}
+\subsection{Ramsey问题与Ramsey数}
+\begin{theorem}
+    如果 正整数$m,n\geq 2$,那么存在一个正整数$p$使得 
+    \[K_p\rightarrow K_m,K_n\]
+    即对于一个完全图$K_p$进行红蓝染色,我们总可以得到一个红色的$K_m$,或蓝色的$K_n$.
+\end{theorem}
+更一般地，我们有
+\begin{theorem}
+    对6个顶点的完全图任意进行二染色，都至少有两个同色三角形。
+\end{theorem}
+特别地,我们有 
+\[K_6\rightarrow K_3,K_3\]
+\[K_{9}\rightarrow K_4,K_3\]
+\begin{remark}
+    在证明这些性质时,常用的方法是任取$K_x$中的一个节点,然后利用鸽笼原理得出其要么与它相邻的
+    蓝色边的数量不少于某个数,要么与它相邻的红色边的数量不少于某个数,然后再就两种情况进行分类讨论.
+    \[\begin{matrix}
+            &\text{红色边至少有6条}&\text{蓝色边至少有4条}\\
+        \begin{matrix}
+            \text{蓝色边的数量}\\
+            \text{红色边的数量}\\
+        \end{matrix}
+            &
+        \begin{bmatrix}
+            0 & 1 & 2 & 3 \\
+            9 & 8 & 7 & 6 \\
+        \end{bmatrix} 
+            &
+        \begin{bmatrix}
+            4 & 5 & 6 & 7 & 8 & 9\\
+            5 & 4 & 3 & 2 & 1 & 0\\
+        \end{bmatrix}
+            \\
+    \end{matrix}\]
+    例如通过上图的这种划分，我们可以证明$K_{10}\rightarrow K_4,K_3$.
+    如果我们想要证明更强的结论，往往我们需要通过某些方法来排除掉一些靠中间的情况，
+    因为这些情况无法保证边数较多的同色完全图的存在。
+
+    一个常用的方法是利用奇偶性。 例如在$K_9$中，将其红蓝二染色，如果像之前一样
+    任意取一个点的话。我们只能得到如下这些可能，无法进一步缩减。
+    \[\begin{matrix}
+       \text{蓝色边个数} & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+      \text{红色边个数}&  8 & 7 & 6 & 5 & 4 & 3 & 2 & 1 & 0 \\ 
+    \end{matrix}\]
+    但是我们可以证明，必有一个顶点，与其联结的蓝色边的个数为偶数，否则
+    将与各个顶点联结的蓝色边的个数求和，得到是奇数，而将与各个蓝色边相联结的顶点数
+    求和的话，得到的是偶数，从而得到矛盾。因此当我们讨论与这个顶点联结的边的颜色情况时，
+    我们有
+     \[\begin{matrix}
+        \begin{matrix}
+        \text{红色边个数} \\
+        \text{蓝色边个数}  \\  
+        \end{matrix}
+        &
+        \begin{bmatrix}
+         0 & 1 & 2 & 3 & 4  \\
+         8 & 7 & 6 & 5 & 4  \\
+        \end{bmatrix}
+        &
+        \begin{matrix}
+         \slashed{5} \\
+         \slashed{3} \\
+        \end{matrix}            
+        &
+        \begin{bmatrix}
+         6 & 7 & 8 \\      
+         2 & 1 & 0 \\  
+        \end{bmatrix}
+    \end{matrix}\]
+这样我们便能证明更强的结论$K_9\rightarrow K_4,K_3$
+\end{remark}
+对于固定的$m,n$,我们把满足上述定理的$p$记作$r(m,n)$,显然$r(m,n)=r(n,m)$.
+特别地$r(2,m)=m=r(m,2)$.
+\begin{theorem}
+    对任意的正整数$a\geq 3,b\geq 3$,有
+    \[r(a,b)\leq r(a-1,b)+r(a,b-1)\]
+    若$r(a-1,b),r(a,b-1)$都是偶数，则上面表达式严格成立。
+\end{theorem}
+\begin{theorem}
+    \[r(a,b)\leq \binom{a+b-2}{a-1}\]
+\end{theorem}
+\begin{example}
+    证明在$K_6$中,若任意一个三角形均不等边,则必有一条边既是一个三角形的最短边,又是另外一个三角形的最长边.
+    \begin{proof}
+        若一条边为某个三角形的最长边,我们则将其染为红色,否则为蓝色.由于 
+        \[K_6\rightarrow K_3,K_3\]
+        其中必有一个单色三角形,又因为每个三角形中必有一条红边,所以必有一个红色三角形,该三角形的最短边便是所求的边.
+    \end{proof}
+\end{example}
+\begin{remark}
+    为了利用ramsey定理,我们将物品抽象为图中的点,把物品间的关系抽象为边的颜色.
+\end{remark}
+\begin{theorem}
+    对任意的正整数$a_1,a_2,\cdots,a_k$，有
+    \[r(a_1,a_2,\cdots,a_k)\leq r(a_1,r(a_2,\cdots,a_k))\]
+\end{theorem}
+\begin{theorem}
+    对任意的正整数$a_1\geq 2,a_2\geq 2,\cdots,a_k\geq 2,$有
+    \[
+        \begin{array}{rl}
+            r(a_1+1,a_2+1,\cdots,a_k+1)\leq &r(a_1-1,a_2,\cdots,a_k)+r(a_1,a_2-1,\cdots,a_k)\\
+            &+\cdots+r(a_1,a_2,\cdots,a_k-1)-k+2\\
+        \end{array}
+        \]
+\end{theorem}
+\begin{theorem}
+    对任意的正整数$a_1,a_2,\cdots,a_k$，有
+    \[r(a_1+1,a_2+1,\cdots,a_k+1)\leq \frac{(a_1+a_2+\cdots+a_k)!}{a_1!a_2!\cdots a_k!}\]
+\end{theorem}
+\section{排列组合}
+\subsection{四个基本计数法则}
+假设$S$是一个集合。$S$的一个划分是$S$的一个子集族$\{S_1,S_2,\cdots,S_k\}$,使得
+\[S = \bigcup_i S_i\phantom{111}S_i\cap S_j=\varnothing(i\neq j).\]
+\begin{theorem}[加法原理]
+    假设$S$被划分为$k$个不相交的子集$S_1,S_2,\cdots,S_k$,则$S$中的元素的数量
+    由各个子集中的元素的数量之和给出,即
+    \[ \abs{S}=\sum_i\abs{S_i}\]
+\end{theorem}
+使用该原理的要点在于把$S$给划分为大小适合，且互补重叠的若干个子集。
+
+该原理的另外一个理解方式为：我们要挑选一个物品，从一堆物品中我们有$p$种挑选的方法，
+从另一堆物品中我们有$q$种挑选的方法，那么若从这两堆物品中的一堆挑选物品，我们则有$p+q$种挑选的方法。
+
+\begin{theorem}[乘法原理]
+   假设$S$是由有序数对$(a,b)$组成的集合，其中$a$取自$A$，$\abs{A}=p$，并且
+   对于每一个$a$的取值，$b$有$q$种选择。那么$S$中的元素的数量为$pq$，即
+   \[\abs{S}=p\times q.\]
+\end{theorem}
+当有多个值需要选取，而它们之间存在着一些限制时，为了能够利用乘法原理，我们应该先选取
+受限最多的值。
+\begin{remark}
+    对于每一个$a$的可能值，我们只要求对应的$b$的可能值的数量是相同的，而不要求
+    可能值都相同。
+\end{remark}
+另一种解读方式是：第一个任务有$p$种结果，无论是什么结果，第二个任务都有$q$种结果，
+那么当我们来连续执行这两个任务时，我们将会有$p\times q$种结果。
+\begin{theorem}[减法法则]
+   假设$A$是一个集合，$U$是一个蕴含$A$的更大的集合。则 
+   \[\abs{A}=\abs{U}-\abs{\bar{A}}.\] 
+\end{theorem}
+一般$S$取的是题目所涉及的所有物品构成的集合。
+只有当求解$\abs{A}$比较困难时，而求解$\abs{\bar{A}},\abs{S}$比较容易时，使用减法法则才有意义。
+\begin{theorem}[除法法则]
+   假设$S$是一个有限集，并被划分为了$k$个大小相同的子集。那么这些子集的数量为
+   \[k= \frac{\abs{S}}{\text{一个子集中所含的元素个数}}\] 
+\end{theorem}
+绝大多数的计数问题可以被分为
+\begin{enumerate}
+    \item 计算有序的排列或者有序的选择的数量
+    \begin{itemize}
+        \item 不允许重复
+        \item 允许（有限的）重复
+    \end{itemize}
+    \item 计算无序的排列或者无序的选择的数量
+    \begin{itemize}
+        \item 不允许重复
+        \item 允许（有限的）重复
+    \end{itemize}
+\end{enumerate}
+可重复和不可重复的问题可以转化为多重集和集合的问题。
+\subsection{集合上的排序}
+假设$r$是一个正整数，则一个有着$n$个元素的集合上的$r-$排序，即
+从这$n$个元素中选取$r$个元素的排序。我们用$P(n,r)$来表示这样的排序的数量。
+如果$r>n$，则$P(n,r)=0$. 显然有$P(n,1)=n$. 当$r=n$时，我们简称该集合上的$n-$排序为
+该集合的排序。
+\begin{theorem}
+    若$n,r$为正整数，且$r\leq n$，则
+    \[P(n,r)=n(n-1)(n-2)\cdots(n-r+1)=\frac{n!}{(n-r)!}\]
+\end{theorem}
+对于$n\geq 0$,我们约定$P(n,0)=1$。特别地
+\[P(n,n)=n!.\]
+之前讨论的排列问题都是线性排列，对于环形排列，我们有
+\begin{theorem}
+    一个有$n$个元素的集合上的环形$r-$排序的数量为
+    \[P(n,r)/r=\frac{n!}{r(n-r)!}\]
+    特别地，当$r=n$时，该集合上的环形$n-$排序的数量为$(n-1)!$.
+\end{theorem}
+\subsection{集合上的组合}
+集合上的组合是指从一个集合中选取一些元素，而不考虑元素的顺序。
+因此，从集合上获得一个组合实际上和从集合上获得一个子集是一样的。
+一个集合上的$r-$组合指的是该集合的一个有$r$个元素的子集，我们用$\binom{n}{r}$来表示这种子集的个数。
+显然，$\binom{n}{r}=0$，当$r>n$。同时，$\binom{0}{r}=0$，如果$r>0$。
+特别地，对于非负整数$n$，$\binom{n}{0}=1,\binom{n}{1},\binom{n}{n}=1.$
+同时，我们约定$\binom{0}{0}=1.$
+\begin{theorem}
+    若$0\leq r\leq n,$则
+    \[P(n,r)=r!\binom{n}{r}\]
+    即
+    \[\binom{n}{r}=\frac{n!}{r!(n-r)!}\]
+\end{theorem}
+\begin{example}
+    有15名学生报名了一门数学课，但是有一天只来了12名学生，同时已知教室里有25个座位，
+    请问老师看到学生就坐的可能情况有几种？
+
+    首先对学生进行$12-$组合，然后对于座位进行$12-$排列。
+    \begin{remark}
+        第二步是对于被坐的座位进行$12-$排列，而非对上课的学生进行排序。
+    \end{remark}
+\end{example}
+\begin{corollary}
+    若$0\leq r\leq n$，则
+    \[\binom{n}{r}=\binom{n}{n-r}\]
+\end{corollary}
+\begin{theorem}[帕斯卡公式]
+    对于任意整数$n,k$，若满足$1\leq k\leq n-1$,则
+    \[\binom{n}{k}=\binom{n-1}{k}+\binom{n-1}{k-1}.\]
+\end{theorem}
+\begin{theorem}
+    对于$n\geq 0$,
+    \[\binom{n}{0}+\binom{n}{1}+\binom{n}{2}+\cdots+\binom{n}{n}=2^n.\]
+\end{theorem}
+\begin{remark}
+    这也是一个有着$n$个元素的集合所拥有的所有子集的个数。
+\end{remark}
+\subsection{多重集上的排序}
+\begin{theorem}
+    假设$S$是一个有着$k$种不同元素的多重集，并且每一种元素都有无穷多个，则$S$的$r-$排序的数量为$k^r$.
+\end{theorem}
+\begin{remark}
+    其实只用保证每种元素至少有$r$个元素，上面的结论便可以成立。
+\end{remark}
+\begin{remark}
+    即$\text{选择个数}^{\text{选择次数}}$。
+\end{remark}
+\begin{theorem}
+    假设$S$是一个多重集，其中有$n$个元素，其中有$k$种不同的元素，第$i$种元素有$n_i$个。
+    则$S$上的排序的个数为
+    \[\frac{n!}{n_1!n_2!\cdots n_k!}.\]
+\end{theorem}
+\begin{remark}
+    因此$\binom{n}{r}$也可以理解为一个有着$n$个元素的多重集上的排序，其中$r$个元素相同，另外$n-r$个元素也相同。
+\end{remark}
+该定理的另一种解读方法是：
+\begin{theorem}
+    让$n$为一个正整数，并且$n_1,n_2,\cdots,n_k$也均为正整数。$n=n_1+n_2+\cdots+n_k$。将$n$个物品划分至$k$个带标签的箱子中，其中第$i$个箱子中有$n_i$个物品的方案个数
+    为
+    \[\frac{n!}{n_1!n_2!\cdots n_k!}.\]
+    如果这些盒子没有被贴标签，且$n_1=n_2=\cdots=n_k$.则方案的个数有
+    \[\frac{n!}{k!n_1!n_2!\cdots n_k!}.\]
+\end{theorem}
+\begin{remark}
+    第一种理解方式中，是箱子不动，排列元素，然后用除法原理去的是每种元素中的转置所带来的重复；
+    在第二种理解方式中，是元素不动，将容量为$n$的箱子视为$n$个相同的箱子，然后对箱子进行排列，
+    并用除法原理去的是每个箱子中的元素的转置所带来的重复。
+\end{remark}
+\subsection{多重集上的组合}
+\begin{theorem}
+    假设$S$是一个有$k$种不同元素的多重集，并且每一种元素都有无穷多个，则$S$的$r-$组合的数量为$\binom{r+k-1}{r}$.
+\end{theorem}
+\begin{proof}
+    易知，所求的组合个数等于不定方程
+    \[x_1+x_2+\cdots+x_k=r\]
+    的非负整数解的个数。
+
+    而要要求这个方程的非负整数解的个数，可以将其视为一个有$r+k-1$个元素的多重集，其中$r$个元素为1，其余$k-1$个元素为分隔符，
+    将$r$个1分为$k$份。可以证明这样的分隔方式于方程的解一一对应。因此，
+    所求个数为
+    \[\binom{r+k-1}{r}=\binom{r+k-1}{k-1}.\]
+\end{proof}
+\begin{remark}
+    只需保证每种元素至少有$r$个，上式即可成立。
+\end{remark}
+对于组合方案中每一类物品的数量的限制，可以转化为对于方程
+\[x_1+x_2+\cdots+x_k=r\]
+中解的性质。
+\begin{example}
+    试求不定方程
+    \[x_1+x_2+x_3+x_4=20,\]
+    其中
+    \[x_1\geq 3,x_2\geq 1,x_3\geq 0,x_4\geq 5\]
+    的整数解的个数。 
+
+    我们可以通过变量替换来化简题目。令
+    \[y_1=x_1-3,y_2=x_2-1,y_3=x_3,y_4=x_4-5,\]
+    则我们只需求下列方程的非负整数解
+    \[y_1+y_2+y_3+y_4=11.\]
+    由上一定理，所求的解的个数为
+    \[\binom{11+4-1}{4-1}=\binom{14}{3}.\]
+\end{example}
+\begin{theorem}
+    多重集合$M=\{\infty\cdot a_1,\infty\cdot a_2,\cdots,\infty\cdot a_k\}$要求$a_1,a_2,\cdots,a_k$至少出现
+    一次的$r$组合数为$\binom{r-1}{k-1}$。
+\end{theorem}
+如果我们对于个数的限制是下界，可以用这样的变量替换来解决，如果我们对其上界还有
+限制，则需要利用容斥原理来解决。
+\begin{example}
+    有20根一样的棍子排成一排，从中选取6个，如果它们互不相邻，那么选取的方案有多少种？
+
+    由于是一样的棍子，从中选取6个棍子等于将14根棍子分配在6根棍子旁边，从第一根棍子的左边，
+    到第六根棍子的右边，共有7个位置，设第$i$个位子上有$n_i$个棍子，则根据题意可知
+    \[n_1,n_7\geq 0\phantom{111}n_i>0,i=2,3,\cdots,6\]
+    这就转化为了多重集的组合问题。
+\end{example}
+\begin{example}
+    假设有$2n+1$本相同的书，有三个架子。有多少种放置方式使得任一两个书架上的书的数量之和不超过第三个书架上的书的数量？
+
+    想要满足该条件，只需要保证任何一个书架上的书的数量不超过$n$。接下来我们运用减法原理：
+
+    若不考虑条件是否满足，则共有$\binom{2n+3}{2}$种放置方法。如果任一一个书架上的书的数量大于$n$，则不满足条件，易知
+    最多只有一个书架上的书的数量会超过$n$，因此，不满足条件的放置方案个数为$3\times\binom{n+2}{2}$。所以满足条件的方案个数为
+    \[\binom{2n+3}{2}-3\times \binom{n+2}{2}.\]
+\end{example}
+\begin{example}
+    证明将$n$个$A$以及 至多$m$个$B$进行排序的方案个数为
+    \[\binom{m+n+1}{m+1}\]
+    \begin{proof}
+        我们将该问题转化为在第1个$A$左边，……，第$n$个$A$右边这$n+1$个位置中插入$B$的个数这一问题。
+        有约束
+        \[x_1+\cdots+x_{n+1}\leq m\]
+        所求方案个数即上式的非负整数解的个数。为了将该不等式转化为等式，我们令
+        \[y=m-x_1+x_2+\cdots+x_{n+1}\geq 0,\]
+        则我们有
+        \[y+x_1+x_2+\cdots+x_{n+1}=m.\]
+        所求方案个数即为该不定方程的非负整数解的个数，即
+        \[\binom{m+n+1}{n+1}.\]
+    \end{proof}
+\end{example}
+\begin{remark}
+    在该例中，我们将额外的不等式约束转换为了不定方程解的非负性约束。
+\end{remark}
+在解决排列组合问题时，我们常常通过构造一一对应来解决问题。映射的象集是一个不具有其他约束的集合或多重集上的排列组合问题，
+可以利用公式轻松得出。
+\begin{example}
+    设集合$X=\{x_1,x_2,\cdots,x_m\}$是一个全序集，且$x_1<x_2<\cdots<x_m$，那么由$X$中的元素所能组成的长度为$n$的
+    单调非减的排列个数为
+    \[\binom{m+n-1}{n}\]
+    任给一个满足条件的排列，其对应一个多重集上的$n$组合；而任给一个多重集上的$n$组合，有一个满足条件的排列与之对应，从而形成一一对应。
+\end{example}
+\begin{example}
+    下面通过构造一一映射的方式来证明多重集$\{\infty\cdot a_1,\infty\cdot a_2,\cdots,\infty\cdot a_k\}$上的$r$组合公式：
+    
+    令
+    \[M'=\{\infty\cdot 1,\infty\cdot 2,\cdots,\infty\cdot k\}.\]
+    定义映射
+    \[f:M\text{的}r\text{组合全体}\rightarrow M'\text{的}r\text{组合全体}\]
+    使得 一个有着$n_i$个$a_i$的$M$上的$r$组合，对应着$M'$上的一个$r$组合，有$n_i$个$i$。
+    
+    再令
+    \[M''=\{1,2,\cdots,k+r-1\}.\]
+    定义映射 
+    \[g:M'\text{的}r\text{组合全体}\rightarrow M''\text{的}r\text{组合全体}\]
+    为
+    \[\{b_1,b_2,\cdots,b_r\}\longmapsto \{b_1,b_2+1,b_3+2,\cdots,b_r+r-1\}\]
+    可以证明这是一个一一映射，且象集是一个不具有其他约束的集合$\{1,2,\cdots,k+r-1\}$上的$r$组合问题，从而有
+    \[N=\binom{k+r-1}{r}\]
+\end{example}
+\begin{remark}
+    第一个映射是为了抽象化。第二个映射的关键在于每个数都加了一个不同的数，公差为1，这使得原先的多重集上的$r$组合
+    分散为集合上的$r$组合，也就是原先堆叠在同一个位置上的元素因为加上了不同的数而分散开来。
+\end{remark}
+\begin{example}
+    从$M=\{1,2,\cdots,n\}$中能够取出多少个长为$r$的递增序列$a_1,a_2,\cdots,a_r$，使得$a_{i+1}-a_i\geq s+1(s\geq 0;i=1,2,\cdots,r-1)$？
+
+    构造一个映射
+    \[\text{递增序列}a_1,a_2,\cdots,a_r\longmapsto a_1,a_2-s,\cdots,a_r-(r-1)s\]
+    可以证明这是一个一一映射，且象集是一个不具有其他约束的集合$\{1,2,\cdots,n-(r-1)s\}$上的$r$组合问题，从而有
+    \[N=\binom{n-(r-1)s}{r}\]
+\end{example}
+\begin{remark}
+    这个映射的构造则是将分散的元素进行压缩。之所以并不是将它们堆叠起来，是因为题目中只告诉了两个元素之间的关系，而要想构造出到多重集的映射，要知道多个元素之间的相互关系。
+\end{remark}
+在构造一一映射时，先观察题目中的元素之间的关系，例如之间的间距，然后构造相应的调整函数以形成映射。特别地，
+我们要保证能取到象集中元素为连续的情况，这时对应的原项应该也是满足约束的”连续“序列，例如上例中，当原像为公差为$s$的等差数列时，其对应的像是连续的序列。
+\subsection{排列组合应用：离散概率}
+\begin{example}$n$是一个正整数。假设我们从$1$到$n$之间随机选取一列正整数$i_1,i_2,\cdots,i_n$。
+    求这列正整数中正好只有$n-1$个不同的正整数的概率
+
+    为了正好只有$n-1$个不同的正整数，1到$n$中有一个正整数没有出现，同时有一个正整数出现了两次，
+    其余的正整数都恰好出现了一次。
+
+    选取这个没有出现的正整数，有$n$种可能，选取这个出现了两次的正整数，有$n-1$种可能。
+    这个重复的两个数字在这列正整数中的位置有$\binom{n}{2}$种可能，其余的数字的排列有$(n-2)!$种可能。
+    因此满足条件的可能情况个数为：
+    \[n(n-1)\binom{n}{2}(n-2)!\]
+    从而概率为：
+    \[\frac{n(n-1)\binom{n}{2}(n-2)!}{n^n}.\]
+\end{example}
+\section{二项式系数}
+\subsection{帕斯卡三角}
+\[\begin{matrix}
+    n/k&0&1&2&3&4&5&6&7&\cdots\\
+    0&1\\
+    1&1&1\\
+    2&1&2&1\\
+    3&1&3&3&1\\
+    4&1&4&6&4&1\\
+    5&1&5&10&10&5&1\\
+    6&1&6&15&20&15&6&1\\
+    7&1&7&21&35&35&21&7&1\\
+    \vdots&\cdots&\cdots&\cdots&\cdots&\cdots&\cdots&\cdots&\cdots&\ddots\\
+\end{matrix}\]
+上图即帕斯卡三角，利用帕斯卡公式
+\[\binom{n}{k}=\binom{n-1}{k}+\binom{n-1}{k-1}\]
+以及起始条件
+\[\binom{n}{0}=\binom{n}{n}=1\]
+我们便能推出任一项的值。
+
+帕斯卡三角中的项还可以理解为从左上角到该项的路径数，例如从左上角到第$n$行第$k$项的路径数为$\binom{n}{k}$，
+该路径中，只能向下移动或向右下角移动。
+
+从帕斯卡三角中我们便能归纳出二项式的许多定理。
+\subsection{二项式系数恒等式}
+\begin{theorem}[二项式定理]
+    对于任意的实数$a,b$以及正整数$n$，有
+    \[(a+b)^n=\sum_{k=0}^n\binom{n}{k}a^kb^{n-k}.\]
+\end{theorem}
+特别地，对于任意实数$x$以及正整数$n$，我们有
+\[(1+x)^n=\sum_{k=0}^n\binom{n}{k}x^k.\]
+当$x=-1$时，我们又有
+\[0=(1-1)^n=\sum_{k=0}^n\binom{n}{k}(-1)^k=\binom{n}{0}-\binom{n}{1}+\binom{n}{2}-\cdots+(-1)^n\binom{n}{n}\]
+移项后得到
+\[\binom{n}{0}+\binom{n}{2}+\cdots=\binom{n}{1}+\binom{n}{3}+\cdots,\phantom{111}(n\geq 1).\]
+即，对于一个有着$n$个元素的集合，其含有偶数个元素的子集的个数等于其含有奇数个元素的子集的个数。
+进一步，我们有
+\[\binom{n}{0}+\binom{n}{2}+\cdots=\binom{n}{1}+\binom{n}{3}+\cdots=2^{(n-1)},\phantom{111}(n\geq 1).\]
+组合学的证明方法为：在$n$个元素的集合中取子集时，先判断前$n-1$个元素分别是否在子集中，这样有$2^{n-1}$种可能，
+并且可以分为两大类，一类是已经有偶数个元素在子集中，一类是已经有奇数个元素在子集中。对于第一类情况，如果第$n$个元素在子集中，
+则子集中有奇数个元素，否则子集中有偶数个元素，这两种可能的个数相等，为$2^{n-2}$，对于第二类情况，也是如此。
+
+由于 
+\[\binom{n}{k}=\frac{n(n-1)\cdots(n-k+1)}{k(k-1)\cdots 1},1\leq k\leq n\]
+我们有恒等式
+\[k\binom{n}{k}=n\binom{n-1}{k-1}\]
+\begin{remark}
+    在记忆时，可以“临时”把$\binom{n}{k}$视为$n!/k!$。
+\end{remark}
+进一步，我们有
+\[1\binom{n}{1}+2\binom{n}{2}+\cdots+n\binom{n}{n}=n2^{n-1},(n\geq 1)\]
+通过求导和积分运算，也能够得到许多二项式系数与次幂的关系。
+一般从
+\[(1+x)^n=\sum_{k=0}^n\binom{n}{k}x^k\]
+开始。
+
+\begin{example}
+    对等式两边同时求导可得
+    \[n(1+x)^{n-1}=\sum_{k=0}^n\binom{n}{k}kx^{k-1}\]
+    同乘以$x$可得
+    \[nx(1+x)^{n-1}=\sum_{k=0}^n\binom{n}{k}kx^k\]
+    再次求导后可得
+    \[n(1+x)^{n-1}+nx(n-1)(1+x)^{n-2}=\sum_{k=0}^n\binom{n}{k}k^2x^{k-1}\]
+    把$x=1$代入上式可得
+    \[n2^{n-1}+n(n-1)2^{n-2}=\sum_{k=0}^n\binom{n}{k}k^2\]
+    整理后，我们便得到
+    \[n(n+1)2^{n-2}=\sum_{k=1}^nk^2\binom{n}{k},(n\geq 1)\]
+\end{example}
+我们还可以从组合学的意义来推出一些恒等式，通常等式两边代表对于同一个集合的两种计数方式。
+\begin{example}
+    从有着$2n$个元素的集合中选取$n$个元素时，我们可以直接选取，
+    也可以在前$n$个元素中选取$k$个元素，再从后$n$个元素中选取$n-k$个元素，因此我们有
+    \[\binom{2n}{n}=\sum_{k=0}^n\binom{n}{k}^2.\]
+\end{example}
+\begin{remark}
+    更一般地，我们有Vandermonde恒等式：
+    \[\sum_{i=0}^{r}\binom{m}{i}\binom{n}{r-i}=\binom{m+n}{r}\]
+\end{remark}
+
+我们可以进一步扩展二项式系数的定义，
+\begin{definition}
+    假设$r$是任一实数，$k$是任一整数，则
+\[ 
+\binom{r}{k}=
+\begin{cases}
+    \frac{r(r-1)\cdots(r-k+1)}{k(k-1)\cdots 1},&k\geq 1\\
+    1,&k=0\\
+    0,&k<0
+\end{cases}    
+\]
+\end{definition}
+\begin{remark}
+    “从某些物品中的若干个”这一意义体现在$k$为整数上。
+\end{remark}
+\begin{remark}
+    相应地，帕斯卡三角可以拓展为可数条直线，在$y$轴左侧的直线上的值均为0。
+\end{remark}
+在这种定义下，之前的性质，如帕斯卡公式，仍然成立。
+
+通过不断利用帕斯卡公式展开二项式系数，我们可以得到
+\[\binom{r}{k}=\binom{r-1}{k}+\binom{r-2}{k-1}+\cdots+\binom{r-k}{1}+\binom{r-k-1}{0}+\binom{r-k-1}{-1}.\]
+\[\binom{n}{k}=\binom{0}{k}+\binom{0}{k-1}+\binom{1}{k-1}+\cdots +\binom{n-2}{k-1}+\binom{n-1}{k-1}.\]
+整理后得
+\[\binom{r}{0}+\binom{r+1}{1}+\cdots+\binom{r+k}{k}=\binom{r+k+1}{k}.\]
+\[\binom{n+1}{k+1}=\binom{0}{k}+\binom{1}{k}+\cdots+\binom{n}{k}.\]
+\begin{remark}
+   在帕斯卡三角的路径计数理解方式下，第一个恒等式可以理解为，从给定位置追溯至左上角时，我们循环展开向左上角追溯的路径，而保留了向正上方追溯的路径。 
+   而第二个恒等式则可以理解为循环展开向正上方追溯的路径，而保留了向左上角追溯的路径。
+
+   在第二个恒等式中，为了方便，我们采用的是狭义的二项式系数。
+
+   因此，第一个恒等式对于任一实数$r$和任一整数$k$均成立，而第二个恒等式只对正整数$n$和$k$成立。
+
+   第一个恒等式还可以作如下两个解读：
+
+   从$r+k+1$个物品中挑$k$个，可以按照最前面连续$i$个物品被挑中来进行分类，
+   当最前面的$0$个物品被挑中时，要在最后的连续的$r+k$个物品中挑$k$个，当最前面的
+   连续$k$个物品被挑中时，要在最后的连续$r$个物品中挑$0$个。因为前面$i$个连续物品被挑中，
+   第$i+1$个物品一定没有被挑中。
+
+   还可以理解为$\{\infty\cdot a_1,\infty\cdot a_2,\cdots,\infty\cdot a_{r}\}$
+   的$k$组合数，可以按照$a_1$被选中的个数来进行分类。当有$0$个$a_1$被选中时，
+   问题变为$\{\infty\cdot a_2,\cdots,\infty\cdot a_{r}\}$的$k$组合数，当有$1$个$a_1$被选中时，
+    问题变为$\{\infty\cdot a_2,\cdots,\infty\cdot a_{r}\}$的$k-1$组合数，以此类推。
+\end{remark}
+从一些相异物品中挑出来若干个，我们可以直接挑，或者是可以按照挑的第$i$个物品的可能情况
+\begin{example}
+    给出
+    \[\binom{n+r+1}{m}=\binom{n}{m}\binom{r}{0}+\binom{n-1}{m-1}\binom{r+1}{1}+\cdots+\binom{n-m}{0}\binom{r+m}{m}\]
+    的组合意义。
+
+    观察左右两式，如果我们把组合数的意义理解为从若干个物品中取出若干个物品的方法数量，那么，左右两边都是拿取$m$个物品的个数的方法，
+    唯一的区别在于左式是直接从$n+r+1$个物品中拿，而右式则是从两堆物品个数之和为$n+r$中分别拿取一定数量的物品。我们的目标就是解释为什么
+    用某种方式从$n+r$个物品中取$m$等价于直接从$n+r+1$个物品中拿$m$个物品。前者所用的特定方式实际上就是把从$n+r+1$个物品取转换为$n+r$个物品中取的关键，也就是这种方式已经帮我们确定了某一物品是否要取。由于左右两式都是取$m$个，所以实际上是帮我们确定了有一个元素不取，
+    而这一元素的位置有$m+1$种情况。不妨设这个元素是第二种方法种两堆物品中间的那一个物品，以$\binom{n}{m}\binom{r}{0}$为例，我们已经在前$n$个物品中取了$m$个，那么这个元素实际上是不取的元素的第$n-m+1$个物品。依次类推，右式的含义便是：我们将$n+r+1$个元素排成一排，依次确定
+    是否要取，其中第$n-m+1$个不取的物品可能排第$n+1$个，也可能排$n-m+1$个，也可能是它们之间的值。当排 第$n+1$个时， 
+    意味着在它之前的$n$个元素中已经有$m$个元素被取了，在它之后的$r$个元素中有$0$个被取。以此类推，从而得到右式。
+
+\end{example}
+\subsection{牛顿二项式定理}
+\begin{theorem}
+    对于任意实数$\alpha$，以及实数$0\leq\abs{x}\leq\abs{y}$，有 
+    \[(x+y)^\alpha=\sum_{k=0}^\infty\binom{\alpha}{k}x^ky^{\alpha-k}.\]
+    其中 
+    \[\binom{\alpha}{k}=\frac{\alpha(\alpha-1)\cdots(\alpha-k+1)}{k!}.\]
+\end{theorem}
+该定理等价于对于所有实数$\abs{z}<1$
+\[(1+z)^\alpha=\sum_{k=0}^\infty\binom{\alpha}{k}z^k.\]
+特别地，当$\alpha=-n$时，我们有 
+\[(1+z)^{-n}=\sum_{k=0}^\infty(-1)^k\binom{n+k-1}{k}z^k.\]
+以及
+\[(1-z)^{-n}=\sum_{k=0}^\infty\binom{n+k-1}{k}z^k.\]
+\begin{remark}
+    上式中出现了多重集上的组合相关公式，实际上，由于
+    \[\frac{1}{1-z}=\sum_{k=0}^{\infty}z\]
+    因此左式可以视为$n$个无穷级数
+    \[\sum_{k=0}^{\infty}z^k\]
+    的乘积，右式则是对应项之和。$\binom{n+k-1}{k}$即指$k$个$x$因子要分配给右式中的$n$个无穷级数，
+    即元素个数为$n$的多重集上的$k$组合问题。
+\end{remark}
+进一步，令$n=1$，有 
+\[\frac{1}{1+z}=\sum_{k=0}^\infty(-1)^kz^k.\]
+以及 
+\[\frac{1}{1-z}=\sum_{k=0}^\infty z^k.\]
+当$\alpha=\frac{1}{2},\abs{z}<1$时，我们有 
+\[(1+z)^{1/2}=1+\sum_{k=1}^{\infty}\frac{(-1)^{k-1}}{k\times 2^{2k-1}}\binom{2k-2}{k-1}z^k\]
+
+\subsection{二项式系数的性质}
+\begin{theorem}
+    对于正整数$n$，二项式系数
+    \[\binom{n}{0},\binom{n}{1},\cdots,\binom{n}{n}\]
+    中的最大值为
+    \[\binom{n}{\lfloor n/2\rfloor}=\binom{n}{\lceil n/2\rceil}.\]
+\end{theorem}
+\subsection{多项式系数}
+多项式展开时得到的系数被称为多项式系数。
+\begin{definition}
+    \[\binom{n}{n_1\,n_2\,\cdots\,n_k}=\frac{n!}{n_1!n_2!\cdots n_k!}\]
+    其中$n_1+n_2+\cdots+n_k=n$。
+\end{definition}
+特别地，二项式系数$\binom{n}{k}$可以写为
+\[\binom{n}{k\phantom{111}n-k}.\]
+此时帕斯卡公式也可以写为
+\[ \binom{n}{k\phantom{111}n-k}=\binom{n-1}{k\phantom{111}n-k-1}+\binom{n-1}{k-1\phantom{111}n-k}.\]
+\begin{theorem}
+    对于多项式系数，帕斯卡公式可以推广为
+    \[\binom{n}{n_1\,n_2\,\cdots\,n_k}=\binom{n-1}{n_1-1\,n_2\,\cdots\,n_k}+\cdots+\binom{n-1}{n_1\,n_2\,\cdots\,n_k-1}.\]
+\end{theorem}
+\begin{theorem}
+    令$n$为整数，则对任意$x_1,x_2,\cdots,x_n$，有 
+    \[(x_1+x_2+\cdots+x_n)^n=\sum_{n_1+n_2+\cdots+n_k=n}\binom{n}{n_1\,n_2\,\cdots\,n_k}x_1^{n_1}x_2^{n_2}\cdots x_k^{n_k}.\]
+\end{theorem}
+\begin{remark}
+    多项式系数$\binom{n}{n_1\,n_2\,\cdots\,n_k}$给出的是$x_1^{n_1}x_2^{n_2}\cdots x_k^{n_k}$的系数，本质上是一个多重集上的排列问题。
+    如果是问有多少个不同的项，那么就是一个多重集上的组合问题，答案为
+    \[\binom{n+k-1}{k-1}.\]
+\end{remark}
+\section{容斥原理}
+容斥原理是减法原理的推广，因为它们的思想都是一致的：通过求没有拥有某一性质的物品的个数来拥有这一性质的物品的个数，或者相反。区别在于，容斥原理可以解决同一物品拥有多个
+性质的问题。
+\subsection{容斥原理及其变形}
+令$P_1,P_2,\cdots,P_m$为$m$个$S$集合中的元素所拥有的性质，并让
+\[A_i=\{x|x\in S\land x\in P_i\}.\]
+\begin{theorem}
+    集合$S$中没有任一以上性质的元素个数为
+    \[\begin{array}{rcl}
+    \abs{\overline{A_1}\cap\overline{A_2}\cap\cdots\overline{A_m}}&=&\abs{S}-\sum\abs{A_i}+\sum\abs{A_i\cap A_j}-\sum\abs{A_i\cap A_j\cap A_k}\\
+    &&+\cdots+(-1)^m\abs{A_1\cap A_2\cap \cdots \cap A_m},\\
+    \end{array}\]
+    其中第$k$个求和是对$\{1,2,\cdots,m\}$的$k$元子集进行求和。
+\end{theorem}
+\begin{remark}
+    等号右边将求和记号全部展开后实际上有$2^m$项。
+\end{remark}
+\begin{remark}
+    对于这种计数公式，常用的一种证明方法是对于给定集合中的任一元素分情况讨论。在每一种情况下，它对两侧等式的贡献应该都是相同的。
+\end{remark}
+\begin{theorem}
+    沿用上述记号，则
+    \[
+    \begin{array}{rcl}
+        \abs{A_1\cup A_2\cup\cdots\cup A_m}&=&\sum\abs{A_i}-\sum\abs{A_i\cap A_j}+\sum\abs{A_i\cap A_j\cap A_k}-\cdots \\
+                                            && (-1)^{m+1}\abs{A_1\cap A_2\cap \cdots\cap A_m}\\
+    \end{array}    
+    \]
+\end{theorem}
+\begin{remark}
+    第一个定理是求不拥有任一性质的元素个数，那么用减法原理的思想，就是先用所有元素的个数减去满足这些性质的个数，后续的部分则是容斥原理所特有的。
+    第二个定理是求拥有任意性质的元素个数，那么用加法原理的思想，就是先将满足任意一个性质的元素加起来，后续的部分则是容斥原理所特有的。
+    
+    要注意的是，容斥原理对于拥有多个性质的元素的处理方式是用加法和减法来进行调整，而非在$A_i$的定义上加以限制，所以既是一个元素有着$P_i$以外的性质，但是它仍然属于$A_i$。 
+\end{remark}
+\begin{theorem}
+    当 存在 常数$\alpha_1,\alpha_2,\cdots,\alpha_n$使得 
+    \[ 
+        \begin{array}{rl}
+            \alpha_0=&\abs{S}\\
+            \alpha_1=&\abs{A_1}=\abs{A_2}=\cdots =\abs{A_m}\\
+            \alpha_2=&\abs{A_1\cap A_2}=\cdots =\abs{A_{m-1}\cap A_m}\\
+            \vdots &\\
+            \alpha_m =&\abs{A_1\cap A_2\cap \cdots \cap A_m}.\\
+        \end{array}\]
+        则容斥原理可以简化为
+    \[\begin{array}{rcl}
+    \abs{\overline{A_1}\cap\overline{A_2}\cap\cdots\overline{A_m}}&=&\alpha_0-\binom{m}{1}\alpha_1+\binom{m}{2}\alpha_2-\binom{m}{3}\alpha_3+\cdots +\\
+    &&+(-1)^k\binom{m}{k}\alpha_k+\cdots+(-1)^m\alpha_m.\\
+    \end{array}\]
+\end{theorem}
+下面引入记号$w(k)$，其含义是
+\[\sum_{1\leq i_1<i_2<\cdots<i_k\leq n}\text{同时满足性质} P_{i_1},P_{i_2},\cdots,P_{i_k}\text{的元素个数}.\]
+\begin{remark}
+    例如如果一个元素满足7个性质，那么它对$w(3)$的贡献为$\binom{7}{3}$，对$w(8)$的贡献为0。
+\end{remark}
+特别地，令$w(0)=\abs{S}$。则之前的容斥原理可以表示为
+    \[\begin{array}{rcl}
+    \abs{\overline{A_1}\cap\overline{A_2}\cap\cdots\overline{A_m}}&=&w(0)-w(1)+w(2)-w(3)+\cdots+\\
+    &&(-1)^kw(k)+\cdots (-1)^mw(m)\\
+    \end{array}\]
+记$N(r)$为 集合$S$中恰好有$r$个性质的元素的个数，则有
+\begin{theorem}
+    \[ 
+        \begin{array}{rl}
+            N(r) = &w(r)-\binom{r+1}{r}w(r+1)+\binom{r+2}{r}w(r+2)\\
+            &-\cdots + (-1)^{m-r}\binom{m}{r}w(m)\\
+        \end{array}\]
+\end{theorem}
+\begin{remark}
+    这里实际上是减法原理思想的延申：要求恰好有$r$个性质的元素个数，那么就以至少有$r$个
+    性质的元素个数为基础，减去 至少有$r+1$个性质的元素个数。只不过这里需要容斥原理来辅助。
+\end{remark}
+\subsection{容斥原理的应用}
+在利用容斥原理时，关键是列出集合$P_1,P_2,\cdots,P_n$并求出其中的个数以及其中任意个集合的交的元素个数，同时还要指出$S$的含义及其中元素的个数。
+\subsubsection{有限制重数的$r$组合数}
+一般地，对于多重集$S=\{n_1\cdot x_1,n_2\cdot x_2,\cdots,n_k\cdot x_k\}$，其中$n_1,n_2,\cdots,n_k>0$，
+要求其$r$组合数，可以使用容斥原理。
+
+所用的性质是“组合中$x_i$的个数超过$n_i$”，$S$为$\{\infty\cdot x_1,\infty\cdot x_2,\cdots,\infty\cdot x_n\}$。在求$P_i$的元素个数时，
+相当于求$\{\infty\cdot x_1,\infty\cdot x_2,\cdots,\infty\cdot x_n\}$的$r-n_i$组合和${n_i\cdot x_i}$的并的个数。这可以利用多重集上的组合公式计算。
+对于任意$A_i$的并中所含的元素个数，也可以使用这一方法进行计算。
+
+如果要求$x_1+x_2+\cdots +x_k=s$的整数解，其中$a_i\leq x_i\leq b_i$。则可以先利用
+变量替换将其转换为求$y_1+y_2+\cdots +y_k=s'$的非负整数解，其中$y_i\leq c_i$。
+之后可以利用容斥原理，其中的性质$P_i$为 “解中$y_i \geq c_i+1$”，$S$为$z_1+z_2+\cdots +z_k=s'$的非负整数解。 
+在求满足性质$P_i$的解的个数时，可以利用变量替换：
+\[y_j=z_j,\phantom{222}j\neq i\]
+\[y_i=z_i+c_i+1\]
+使得元素个数为转换后的方程的非负整数解的个数。
+对于任意$A_i$的并中所含的元素个数，也可以使用这一方法进行计算。
+\subsubsection{错排问题}
+集合$\{1,2,\cdots,n\}$的一个错排是该集合的一个满足条件 
+\[i_j\neq j\phantom{111}(1\leq j\leq n)\]
+的全排列 
+\[ i_1i_2\cdots i_n,\]
+即集合$\{1,2,\cdots,n\}$的一个没有一个数字在它的自然顺序位置上的全排列。
+\begin{theorem}
+    对任意正整数$n$，有 
+    \[ D_n=n![1-\frac{1}{1!}+\frac{1}{2!}-\frac{1}{3!}+\cdots +(-1)^n\frac{1}{n!}].\]
+    \begin{proof}
+        记性质$P_i$为 “第i个位置上不满足错排的要求”，即$x_i=i$。
+        
+        则当 性质$P_i$满足时，$i$的位置被确定下来，其他其他位置上没有限制，所以满足性质$P_i$的
+        排列个数为 
+        \[\abs{A_i}=(n-1)!\phantom{111}(1\leq i\leq n).\]
+        更一般地，有 
+        \[\abs{A_{i_1}\cap A_{i_2}\cap \cdots \cap A_{i_k}}=(n-k)!.\]
+        因此由容斥原理可知：
+        \[ 
+            \begin{array}{rl}
+                D_n&=\abs{\overline{A_i}\cap \overline{A_2}\cap \cdots \cap\overline{A_n}}\\
+                & = n!-\binom{n}{1}(n-1)!+\binom{n}{2}(n-2)!-\cdots +(-1)^n\binom{n}{n}0!\\
+                &=n![1-\frac{1}{1!}+\frac{1}{2!}-\frac{1}{3!}+\cdots +(-1)^n\frac{1}{n!}]\\
+            \end{array}\]
+    \end{proof}
+\end{theorem}
+\begin{remark}
+    这个问题还可以利用递归的方式来构造递推函数，然后求出通项。
+\end{remark}
+\subsubsection{有禁止模式的排列问题}
+禁止模式便是指：在$\{1,2,\cdots,n\}$或者多重集的全排序中，不出现某些串$x_{11}x_{12}x_{13}\cdots x_{1r_1},x_{21}x_{22}x_{23}\cdots x_{2r_2},\cdots$。
+
+解决这类问题的基本思想还是使用容斥原理，此时$S$即所有全排列组成的集合，性质$P_i$即“出现第$i$个禁止模式”。
+
+当$x_{ij}\neq x_{mn}, i\neq m$时， 也就是这些禁止模式不相互重叠时， 在计算出现了 若干个禁止模式的排列数时，可以将这些禁止模式视为一个个整体，然后计算转换后的串的全排列。
+
+当出现相互重叠的情况时，则需要具体分析 
+
+\begin{example}
+    用$Q_n$表示$\{1,2,\cdots,n\}$的不出现$12,23,\cdots,(n-1)n$这些模式的全排列的个数，并规定$Q_1=1$。
+    则
+    \[Q_n=n!-\binom{n-1}{1}(n-1)!+\binom{n-1}{2}(n-2)!-\cdots +(-1)^{n-1}\binom{n-1}{n-1}1!.\]
+    我们将性质$P_i$定义为“排列中出现了模式$i(i+1)$”，以 计算$A_i\cap A_j$为例，
+    当两者不重叠时，对应的个数为$n-4+2=n-2$的全排序，当两者重叠时，对应个数为$n-3+1$的全排序，所以有$\alpha_2=(n-2)!$。
+    事实上，我们有$\alpha_k=(n-k)!,k\neq 0$，由于总共有$n-1$个性质，同时$\alpha_0=\abs{S}=n!$，所以
+    \[Q_n=n!-\binom{n-1}{1}(n-1)!+\binom{n-1}{2}(n-2)!-\cdots +(-1)^{n-1}\binom{n-1}{n-1}1!.\]
+\end{example}
+\begin{example}[menage问题]
+    使得下列表格中的每一行没有相同数字的排列$a_1a_2\cdots a_n$称为$\{1,2,\cdots,n\}$的一个二重错排，
+    其个数称为$menage$数，记为$U_n$。
+   \[ 
+    \begin{matrix}
+        1 &2&\cdots & n-1&n\\
+        2&3&\cdots & n&1\\
+        a_1&a_2&\cdots&a_{n-1}&a_n\\
+    \end{matrix}\] 
+    令性质$P_i$为“第$i$列不满足二重错排”。要想求$w(k)$，我们需要先求有多少个$\{1,2,\cdots,n\}$的$k$组合满足 
+    其中的元素对应的列都不满足二重错排，即该数字为$a_k$，则由乘法原理可知$w(k)=a_k\cdot (n-k)!$。$a_k$即从$(1,2),(2,3),\cdots,(n-1,n),(n,1)$这些括号中，从中间$k$个括号中挑选$k$个各不相同的数字的方法数。
+    也就是从序列$1,2,2,3,3,\cdots,n-1,n,n,1,$中挑选满足1.任何两数都不相邻，且不存在两个“1”的序列数。
+    可以证明，从$2n$个位置中取$k$个不相邻位置的方法数位$\binom{2n-k+1}{k}$。所以满足条件1而不满足条件2的方法数为
+    从$2,3,3,4,\cdots,n-1,n$中挑$k-2$个不相邻的数，然后在其两端补上 1得到的序列数，即 
+    \[\binom{(2n-4)-(k-2)+1}{k-2}=\binom{2n-k-1}{k-2}\]
+    从而有 
+    \[ 
+        \begin{array}{rl}
+    w(k)&=[\binom{2n-k+1}{k}-\binom{2n-k-1}{k-2}](n-k)!\\
+    & =\frac{2n}{2n-k}\binom{2n-k}{k}(n-k)!\\
+        \end{array}\]
+        从而 
+        \[U_n=w(0)-w(1)+w(2)-\cdots +(-1)^nw(n)\]
+\end{example}
+\subsubsection{实际依赖于所有变量的函数个数}
+    设函数 
+    \[g:E^k\rightarrow F,\]
+    其中$E=\{e_1,e_2,\cdots,e_n\},F=\{f_1,f_2,\cdots,f_m\}.$则这样的函数个数为
+    \[\abs{F}^{\abs{E^k}}=m^{n^k}.\]
+    如果函数$g$的值不随某个变量$x_i$变化，就称$g$实际上不依赖于变量$x_i$。
+    设性质$P_i$为“函数$g$不依赖于变量$x_i$”，则$\alpha_r$实际上就是 集合$E$中$k-r$个自变量到值域$F$上的函数的个数，
+    即$\alpha_r = m^{n^{k-r}}$。
+
+    实际依赖于所有变量的函数个数从而可以用容斥原理来确定。
+    
+\subsection{有限制位置的排列及棋子多项式}
+一个$n\times n$大小的棋盘，在上面摆放$n$颗棋子，要求每行每列有且仅有一颗棋子，则方法数为$n!$。如果再次基础之上禁止将棋子摆放在棋盘中的一些位置上，则对应的方法数称为有限制位置的排列。
+
+这一排列数可以用容斥原理解决，记性质$P_i$为“第$i$列的禁止位置上有棋子”， 集合$S$为没有禁止位置的棋盘上的合法排列。
+显然，$w(k)=$不同行列中 选$k$个禁止位置的方法数$\cdot(n-k)!$。记不同行列中 选$k$个禁止位置的方法数 为$\alpha_k$。
+则 方法数为
+\[n!-\alpha_1\cdot (n-1)!+\alpha_2\cdot(n-2)!-\cdots +(-1)^n\alpha_n \cdot 0!\]
+
+当$k$比较大时，较难求出$\alpha_k$。为此，我们可以通过交换行列来将原先的大棋盘$B$拆分为若干个行列不重叠的小棋盘$B_i$，
+定义棋盘多项式为
+ \[R(x,B)=\sum_{i=0}^{\infty}\bm{\alpha}_ix^i\]
+ 其中$B$为棋盘，$\alpha_0=1$。则有 
+ \[R(x,B)=\prod_iR(x,B_i)\]
+ 如果无法将$B$拆分为行列不重叠的小棋盘，则可以选择一个禁止位置，得到一个$n\times n$和一个$(n-1)\times (n-1)$的棋盘，前者通过取出掉该禁止位置得到，后者通过取出掉该禁止位置所在的行列得到。
+ 记这两个棋盘分别为$B^{\prime},B^{\prime\prime}$，则 
+ \[R(x,B)=R(x,B')+xR(x,B").\]
+\begin{remark}
+    错排问题可以视为对角线上均为禁止位置的棋盘排列问题。
+\end{remark}
+\subsection{莫比乌斯反演}
+容斥原理本质上是有限偏序集上的莫比乌斯反演的一个例子。
+\begin{remark}
+    实际上可以将条件放宽至“局部有限”
+\end{remark}
+设$n$为一正整数， 记$X_n=\{1,2,\cdots,n\}$，则$(\mathcal{P}(X_n),\subseteq)$是一个偏序集。令
+\[F:\mathcal{P}(X_n)\rightarrow\mathfrak{R}\]
+是一个定义在$X_n$的幂集上的实值函数，我们用其再定义一个函数
+\[G:\mathcal{P}(X_n)\rightarrow \mathfrak{R}\]
+其中 
+\[G(K)=\sum_{L\subseteq K}F(L),\phantom{111}(K\subseteq X_n).\]
+莫比乌斯反演即利用上式来从$G$反推出$F$。我们有
+\[F(K)=\sum_{L\subseteq K}(-1)^{\abs{K}-\abs{L}}G(L),\phantom{111}(K\subseteq X_n).\]
+可以看出，上面两式在形式上十分相似，区别在于上式多了一个因子 
+\[(-1)^{\abs{K}-\abs{L}}.\]
+这一因子即莫比乌斯函数，对于不同形式的反演而言是不同的。
+
+更一般地，对于偏序集$(X,\leq)$，令$\mathcal{F}(X)$为所有
+\[f:X\times X\rightarrow\mathfrak{R}\]
+且满足 当$x\slashed{\leq}y$时，$f(x,y)=0$的函数构成的集合。并且定义两个函数的卷积为$h=f* g$为 
+\[ 
+    h(x,y)=\begin{cases}
+        \sum_{\{z:x\leq z\leq y\}}f(x,z)g(z,y),&\text{当}x\leq y,\\
+        0,& \text{其他}\\
+    \end{cases}\]
+易知，$\mathcal{F(X)}$关于卷积运算封闭。同时，可以证明卷积运算满足结合律。$\mathcal{F(X)}$中有几个特殊函数。第一个是$Kronecker delta$函数$\delta$，定义为 
+\[ 
+    \delta(x,y)=\begin{cases}
+        1,& \text{当}x=y\\
+        0,& \text{其他}\\
+    \end{cases}\]
+    对于卷积运算而言，$\delta$相当于幺元。第二个特殊函数是$zeta$函数$\zeta$，定义为 
+    \[ 
+        \zeta(x,y)=\begin{cases}
+            1,& \text{当}x\leq y\\
+            0,& \text{其他}\\
+        \end{cases}\]
+        这个函数保留了两个元素之间的偏序关系。
+        
+        假设$f$是$\mathcal{F}(X)$中满足 对于任意$y\in X,f(y,y)\neq 0$的函数，则我们定义$\mathcal{F}(X)$中的函数$g$为
+        \[g(y,y)=\frac{1}{f(y,y)},\phantom{111}(y\in X)\]
+        并且有 
+        \[g(x,y)=-\frac{1}{f(y,y)}\sum_{\{z:x\leq z<y\}}g(x,z)f(z,y),\phantom{111}(x<y).\]
+        可以验证，$g$即$f$的逆元
+
+        第三个特殊函数即莫比乌斯函数$\mu$，定义为$\zeta$函数的逆元，所以有
+        \[\sum_{\{z:x\leq z\leq y\}}\mu(x,z)\zeta(z,y)=\delta (x,y),\phantom{111}(x\leq y)\]
+        或者
+        \[\sum_{\{z:x\leq z\leq y\}}\mu(x,z)=\delta (x,y),\phantom{111}(x\leq y)\]
+        这告诉我们：
+        \[\mu(x,x)=1 \text{对于任意}x\]
+        和
+        \[\mu(x,y)=-\sum_{\{z:x\leq z< y\}}\mu(x,z),\phantom{111}(x<y)\]
+        常利用上式并结合关于求和项数的数学归纳法来证明特定形式反演的莫比乌斯函数。
+        \begin{theorem}
+            设$(X,\leq)$为一有最小值$0$的偏序集。令$\mu$为它的莫比乌斯函数，并令$F:X\rightarrow\mathfrak{R}$为定义在$X$上的实值函数。并定义函数$G:X\rightarrow \mathfrak{R}$
+            为
+            \[G(x)=\sum_{\{z:z\leq x\}}F(z),\phantom{111}(x\in X).\]
+            则 
+            \[F(x)=\sum_{\{y:y\leq x\}}G(y)\mu(y,x),\phantom{111}(x\in X).\]
+        \end{theorem}
+        可以证明，对于$\{1,2,\cdots,n\}$上关于整除的偏序集$(X,|)$，其上的莫比乌斯函数定义为
+        \[\mu(1,n)
+        \begin{cases}
+            1,& \text{当}n=1\\
+            (-1)^k& \text{当}n \text{是} k \text{个相异素数的乘积}\\
+            0,& \text{其他}\\
+        \end{cases}\] 
+        可以利用数学归纳法来证明，假设$a,b\in X_n$且$a|b$，则$\mu(a,b)=\mu(1,b/a)$。
+
+        所以我们有：
+        \begin{theorem}
+            令$F$为定义在正整数集上的实值函数。定义正整数集上的实值函数$G$为
+            \[G(n)=\sum_{k:k|n}F(k).\]
+            则 ，对于每个正整数$n$，我们有 
+            \[F(n)=\sum_{k:k|n}\mu(n/k)G(k),\]
+            其中$\mu(n/k)=\mu(1,n/k)=\mu(k,n)$
+        \end{theorem}
+        莫比乌斯反演一般用于求出与偏序关系相关的函数。欧拉函数就是与整除关系紧密相关的一个函数，因为它和质数相关。如果我们知道 函数$F$的一些性质，想要求其表达式，
+        则先求出其莫比乌斯变换
+        \[G(n)=\sum_{\{d:d|n\}}F(d)\]
+        这里不是使用$F$的显式表达式来进行求和，因为 我们还没求出$F$的显式表达式，我们所利用的是$F$的性质，或组合意义。
+        
+        通常函数$G(n)$相对于$F(n)$比较好求，且形式上比较简单。
+        然后利用莫比乌斯反演
+        \[F(n)=\sum_{\{d:d|n\}}\mu(n/d)G(d)\]
+        \begin{example}
+            欧拉函数$\phi(n)$即小于等于$n$且与$n$互素的正整数的个数。
+
+            下面我们先证明：如果$d|n$，那么$\phi(n/d)$的值即 小于等于$n$且与$n$的最大公约数为$d$的正整数的个数。
+
+            如果$k$与$n$的最大公约数为$d$，$k/d$与$n/d$互素。反之，如果$k$与$n/d$互素，则$kd$与$n$的最大公约数为$d$。从而两个集合之间存在一一对应。
+
+            从而有：
+            \[\sum_{\{d:d|n\}}\phi(d)=\sum_{\{d:d|n\}}\phi(n/d)=n\]
+            这是因为$\{1,2,\cdots,n\}$中的任意一个元素与$n$均有且仅有一个最小公约数，且这个公约数一定是$n$的一个因子。而当$\sum_{\{d:d|n\}}$便是对这些因子求和，
+            对于每一个因子，进行求和的是$\{1,2,\cdots,n\}$中与$n$的最大公约数为这个因子的元素个数。从而求和的结果便是$\{1,2,\cdots,n\}$中元素的个数$n$。
+
+            此时$G(n)=n$。带入莫比乌斯反演公式中得：
+            \[\phi(n)=\sum_{\{d:d|n\}}\mu(n/d)d=\sum_{\{d:d|n\}}\mu(d)n/d\]
+        \end{example}
+        在化简关于因子的求和式时，常常利用上述公式。为了利用上述公式，常常使用求和换序，使得莫比乌斯函数位于多重求和公式的最里层，且没有其他变元出现。
+        常用的换序公式有
+        \[\sum_{\{d:d|n\}}f(d)=\sum_{\{d:d|n\}}f(n/d)\]
+        \[\sum_{\{i:i|n\}}\sum_{\{j:j|i\}}f(i,j)=\sum_{\{j:j|n\}}\sum_{\{k:k|n/j\}}f(kj,j)\]
+        对于一般的二重求和换序，可以作如下理解：
+        把待求和项视为二维矩阵中的元素，下标即矩阵中元素的下标。最外层求和告诉我们的是要在哪些行上求和，而里层求和告诉我们的是给定行标后，该在哪些列上求和。
+        所以当我们想要交换求和次序时，我们要先求出来应该在哪些列上求和，并且给定列标后，要在哪些行上求和。
+        而要求在哪些列上求和，实际上就是遍历每个行标，把对应要求和的列标求并。而要求给定列标，要在哪些行标上求和，实际上就得先遍历行标，判断在该行上是否要对给定列标求和。
+        形式化的公式是：
+        \[\sum_{i\in A}\sum_{j\in B(i)}a_{i,j}=\sum_{j\in \bigcup_{i\in A}B_i}\sum_{i\in\{i\in A|j\in B(i)\}}a_{i,j}\]
+
+        对于上述的第二个换序公式，可以作如下解释：$i$是$n$的因子，$j$又是$i$的因子，易知，$j$实际上的取值范围就是$n$的所有因子。而对于固定的$j$，我们要求$i$的范围，使得$i|n$且$j|i$。
+         由于$j$固定，所以$i=kj$，此时$j|i$已经被满足，剩余的约束是$i|n$，即$kj|n$，也即$k|n/j$。由于$i$与$k$可以互相确定，于是我们变将$i$换元成$kj$
+         并将给定$j$时的约束写为$k|n/j$。
+
+         为了进一步化简，往往要将内外求和指标拆分开来，这是要利用第一个换序公式以及第二个换序中所产生$kj$项来消去其中一个因子。
+         
+         例如：
+         \[ 
+            \begin{array}{rcl}
+                h(n)&=&\sum_{\{d:d|n\}}\frac{1}{d}\sum_{\{e:e|d\}} \mu(d/e)k^e\\
+                &=&\sum_{\{e:e|n\}}\left(\sum_{\{m:m|n/e\}}\frac{1}{me}\mu(m)\right)k^e\\
+            \end{array}\]
+            在这里换序过程中，我们利用了换序后，原来内层指标不变，但是外层指标会变为“新内层指标$\times$旧内层指标”的特点，将$\mu$的自变量写为“外层指标/内层指标的形式”
+            如果我们直接将表达式
+            \[\sum_{\{d:d|n\}}\frac{1}{d}\sum_{\{e:e|d\}} \mu(d)k^{d/e}\]
+            进行换序，那么将会遇到两个不利于进一步化简的因子：
+            \[\mu(me)\phantom{111}k^{m}\]
+            后者是因为它并不是一个单独的因子，是和其他有关$m$的因子一起相乘，使得内层求和符号化简起来较困难，阻碍了我们使用欧拉函数进行化简。
+        
+            接着之前的例子继续化简：
+         \[ 
+            \begin{array}{rcl}
+                h(n)&=&\sum_{\{e:e|n\}}\left(\sum_{\{m:m|n/e\}}\frac{1}{me}\mu(m)\right)k^e\\
+                &=&\sum_{\{e:e|n\}}\frac{1}{n}\left(\sum_{\{m:m|n/e\}}\frac{n}{me}\mu(m)\right)k^e\\
+                &=&\sum_{\{e:e|n\}}\frac{1}{n}\phi(n/e)k^e\\
+                &=&\frac{1}{n}\sum_{\{e:e|n\}}\phi(n/e)k^e\\
+            \end{array}\]
+\section{递推关系与生成函数}
+\subsection{递推关系}
+在解决实际问题时，构造递推关系往往可以从边界情况入手。也就是分类讨论某一处，使得不同情况不同时，
+可以归结为更小规模的同一问题。
+\begin{example}
+    对于集合$\{1,2,\cdots,n\}$的一个子集，如果它的最小元素和它的大小相等，我们则称该子集为一个非凡子集。
+    令$g_n$为$\{1,2,\cdots,n\}$的非凡子集数。证明 
+    \[g_n=g_{n-1}+g_{n-2}.\phantom{n\geq 3}\]
+    可以将所有子集按照$n$是否在其中进行分类。当$n$不在子集中时，那么这一类的子集中的非凡子集个数应该是$g_{n-1}$。
+    当$n$在子集中时，对于这样的非凡子集$\{x_1,x_2,\cdots,x_{k-1},n\}$，可以构造出它和$\{x_1-1,x_2-1,\cdots,x_{k-1}-1\}$
+    的一个一一映射，而后者的数量是$g_{n-2}$。
+\end{example}
+\subsection{生成函数}
+许多组合问题实际上可以进行一般化，此时某个特定问题的解可以视为$h(n)$，即一串解中的一个解。例如对于将大小为$n$的集合分为 3个子集这一问题，方案数 
+\[ h(n)=\binom{n+2}{2},\phantom{111}n=1,2,\cdots\] 
+为此，我们利用幂级数这一工具来从代数的角度对其进行研究。
+\begin{definition}[生成函数]
+   对于序列$\{h(n)\}$ ，其生成函数定义为
+   \[\sum_{i=0}^{\infty}h(i)x^i.\]
+\end{definition}
+\begin{definition}[指数生成函数]
+   对于序列$\{h(n)\}$ ，其指数生成函数定义为
+   \[\sum_{i=0}^{\infty}h(i)\frac{x^i}{i!}.\]
+\end{definition}
+前者通常用于解决组合问题，而后者通常用于解决排列问题。
+
+其中$x$的指数可以看作是问题的规模，而$x^i$的系数则可以看作是问题规模为$i$时的方案数。生成函数便是利用多项式的乘法来代替加法定理和乘法定理。
+\begin{example}
+    令$h(n)$为下列方程的非负整数解的个数：
+    \[3e_1+4e_2+2e_3+5e_4=n.\]
+    则 
+    \[\sum_{i=0}^\infty h(i)x^i = \left(\sum_{i=0}^{\infty}(x^3)^i\right)\left(\sum_{i=0}^{\infty}(x^4)^i\right)\left(\sum_{i=0}^{\infty}(x^2)^i\right)\left(\sum_{i=0}^{\infty}(x^5)^i\right)\]
+\end{example}
+这里“问题的规模”实际上就是指方程式中$n$的值。
+
+在多项式系数中，我们有
+\[\binom{n}{n_1\,n_2\,\cdots\,n_k}=\frac{n!}{n_1!n_2!\cdots n_k!}\]
+即 
+\[
+    n!/\binom{n}{n_1\,n_2\,\cdots\,n_k}
+    =n_1!n_2!\cdots n_k!
+\]
+也就是说，多重集上的排列可以由全排列的去重得到，重复数即$\prod_{i=1}^kn_i!$，其中$n_i$个相同元素的贡献为$n_i!$。
+
+
+等号两边取倒数即可得
+\[
+    \binom{n}{n_1\,n_2\,\cdots\,n_k}/n!
+    =1/n_1!n_2!\cdots n_k!
+\]
+实际上我们有 
+\[ \text{方案总数}/n!=\sum_{n_1+n_2+\cdots+n_k=n}1/n_1!n_2!\cdots n_k!\]
+这也就解释了指数生成函数的原理。
+\begin{example}
+    设$h(n)$为$n$位数字中满足：1.每位数字为奇数，$1,3$只出现奇数次的个数。
+
+    则$h(n)$对应的指数生成函数为 
+    \[g^{(e)}(x)=\left(1+\frac{x^2}{2!}+\frac{x^4}{4!}+\cdots\right)^2\left(1+x+ \frac{x^2}{2!}+\cdots\right)^3\]
+\end{example}
+\subsection{齐次递推关系}
+假设序列$\{h_n\}$满足：
+\[h_n=a_1h_{n-1}+a_2h_{n-2}+\cdots+a_kh_{n-k}+b_n,\phantom{111}n\geq k, a_k\neq 0\]
+则称该序列满足$k$阶线性递推关系。如果$a_i$均为常数，则称该关系为常系数关系。如果$b_n=0$，则称该关系为齐次关系。
+
+下面讨论常系数齐次线性递推关系。
+\begin{theorem}
+   令$q$为非零常数，则$h_n=q^n$是常系数齐次递推关系式
+   \[h_n-a_1h_{n-1}-a_2h_{n-2}-\cdots-a_kh_{n-k}=0,\phantom{111}(a_k\neq 0,n\geq k)\]
+   的解当且仅当$q$是下列多项式方程的解
+   \[x^k-a_1k^{k-1}-a_2x^{k-2}-\cdots-a_k=0.\] 
+   如果多项式方程有$k$个不同的解$q_1,q_2,\cdots,q_k$，则 
+   \[h_n=c_1q^n_1+c_2q^n_2+\cdots+c_kq^n_k\]
+   是上述常系数齐次递推关系式的通解。也就是说，给定任意初始值$h_0,h_1,h_2,\cdots,h_{k-1}$，存在常数$c_1,c_2,\cdots,c_k$使得该通解为满足上述常系数
+   齐次递推关系式以及初值的特解。
+\end{theorem}
+上述多项式方程称为该递推关系式的特征方程。
+\begin{theorem}
+    令$q_1,q_2,\cdots,q_t$为下述常系数齐次递推关系式的特征方程的$t$个相异根：
+   \[h_n-a_1h_{n-1}-a_2h_{n-2}-\cdots-a_kh_{n-k}=0,\phantom{111}(a_k\neq 0,n\geq k)\]
+   若$q_i$为 特征方程的$s_i$重根，则通解中其对应的部分为 
+   \[H_n^{(i)}=(c_1+c_2n+\cdots +c_{s_i}n^{s_i-1})q_i^n\]
+   通解为 
+   \[h_n=H_n^{(1)}+H_n^{(2)}+\cdots+H_n^{(t)}.\]
+\end{theorem}
+理论上也可以利用$h_n$的生成函数来求解常系数齐次递推关系式 。令生成函数为$g(x)$，则
+\[ 
+    \begin{cases}
+       g(x)= \sum_{i=0}^{\infty}h_ix^i\\ 
+       -a_1xg(x)= -a_1x\sum_{i=0}^{\infty}h_ix^i\\ 
+       -a_2x^2g(x)= -a_2x^2\sum_{i=0}^{\infty}h_ix^i\\ 
+       \vdots\\
+       -a_kx^kg(x)= -a_kx^2\sum_{i=0}^{\infty}h_ix^i\\ 
+    \end{cases}\]
+    将上述式子累加后，利用递推关系式进行化简，然后利用泰勒展开来求得$g(x)$的展开式，从而求得$h_n$。
+\subsection{非齐次递推关系}$k$阶常系数线性非齐次递推关系的一般形式为
+ \[f(n)=c_1f(n-1)+c_2f(n-2)+\cdots+c_kf(n-k)+g(n)\phantom{111}(n\geq k),\]
+ 其中$c_1,c_2,\cdots,c_k$为常数，$c_k\neq 0,g(n)\neq 0$。该递推关系对应的齐次递推关系为
+ \[f(n)=c_1f(n-1)+c_2f(n-2)+\cdots+c_kf(n-k)\phantom{111}(n\geq k),\]
+\begin{theorem}$k$阶常系数线性非齐次递推关系的通解是其对于的齐次递推关系的通解加上它的一个特解。
+\end{theorem}
+对于一般的$g(n)$，$k$阶常系数非齐次递推关系没有普遍的揭发，只有在某些简单的情况下，可以使用待定系数法来求出特解。
+
+实际上，$g(n),f'(n)$以 1为基础， 如果$g(n)$有$\beta^n$因子，那么$f(n)$就有$\beta^n$因子；
+如果$g(n)$有$n^s$因子，那么$f'(n)$就有$b_sn^s+b_{s-1}n^{s-1}+\cdots+b_1n+b_0$因子。 在此基础之上，如果$\beta$为特征多项式的$m$重根， 
+则$f'(n)$还有$n^m$因子。
+
+使用待定系数法求解非齐次递推关系的步骤为：
+\begin{enumerate}
+    \item 根据$g(n)$写出特解的形式
+    \item 将特解带入递推关系式中，并确定其中的系数
+    \item 将解$f(n)$写为带有未定系数的通解加上已经确定系数了的特解的形式
+    \item 带入初值以确定剩余的未定系数
+\end{enumerate}
+\begin{table}[h]
+    \begin{center}
+        \begin{tabular}{c|c|c}$ g(n)$&特征多项式$P(x)$&特解$f'(n)$的一般形式\\
+       \hline$\beta^n$&$\beta$是$P(x)=0$的$m$重根&$an^m\beta^n$\\$n^s$& 1是$P(x)=0$的$m$重根&$n^m(b_sn^s+b_{s-1}n^{s-1}+\cdots+b_1n+b_0)$\\$n^s\beta^n$ &$\beta$是$P(x)=0$的$m$重根&$n^m(b_sn^s+b_{s-1}n^{s-1}+\cdots+b_1n+b_0)\beta^n$\\
+        \end{tabular}
+    \end{center}
+\end{table}
+当$g(n)=\beta^n$时，我们也可以将其转化为齐次递推关系。
+\begin{example}
+求解递推关系 \[
+\begin{cases}
+    f(n)=2f(n-1)+4^{n-1}\\
+    f(1)=3\\
+\end{cases}    \]
+我们只需将 
+\[4f(n-1)=8f(n-2)+4^{n-1}\]
+与上式相减即可。
+\end{example}
+\subsection{用迭代归纳法求解递推关系}
+一般地，一阶线性递推关系可以表示成
+\[f(n)=c(n)f(n-1)+g(n)\]
+令 
+\[f(n)=c(n)c(n-1)\cdots c(1)h(n)\]
+则有 
+\[h(n)=h(n-1)+\frac{g(n)}{c(n)c(n-1)\cdots c(1)}\]
+这一方法将变系数递推关系转化为常系数递推关系，但是使用的前提是 
+\[c(n)c(n-1)\cdots c(1)\]
+较易求出。
+
+当遇到一阶告辞递推关系时，常常使用变量代换将其转化为一阶线性递推关系。
+\begin{example}
+求解递推关系 \[
+\begin{cases}
+    f(n)=3f^2(n-1)\\
+    f(0)=1\\
+\end{cases}    \]
+我们只需对等号两边取对数即可得到 
+\[\ln f(n)=\ln 3+2\ln f(n-1)\]
+只需令$h(n)=\ln f(n)$即可。
+\end{example}
+\section{特殊计数序列}
+\subsection{斐波那契数列}
+斐波那契数列，即满足递推关系式
+\[ 
+\begin{cases}
+    f(n)=f(n-1)+f(n-2),\phantom{111}(n\geq 3),\\
+    f(1)=1,\phantom{111}f(2)=2\\
+\end{cases}    
+\]
+的数列。
+
+该数列有许多性质，最常用的证明方法便是数学归纳法。
+\subsection{卡特兰数}
+卡特兰数序列，即 
+\[C_0,C_1,C_2,\cdots,C_n,\cdots,\]
+其中 
+\[C_n=\frac{1}{n+1}\binom{2n}{n}.\]
+n个相同元素进出栈的合法序列数便是$C_n$。
+
+可以证明，卡特兰数序列也是方程 
+\[C_n=\sum_{k=0}^{n-1}C_kC_{n-1-k}\phantom{111}(n\geq 1)\]
+的解。
+\subsection{第一类斯特灵数}
+第一类斯特灵数$s(p,k)$的组合意义是$p$元集合形成$k$个非空圆形排列的个数。满足递推关系 
+\[ 
+\begin{cases}
+    s(p,0)=0,&p\geq 1\\
+    s(p,p)=1,&p\geq 0\\
+    s(p,k)=(p-1)s(p-1,k)+s(p-1,k-1)\\
+\end{cases}    
+.\]
+\subsection{第二类斯特灵数}
+第二类斯特灵数$S(p,k)$的组合意义是$p$元集合的$k$划分的个数。
+
+易知，第二类斯特灵数满足递推关系式
+\[ 
+\begin{cases}
+    S(p,p)=1,&p\geq 0\\
+    S(p,0)=0,&p\geq 1\\
+    S(p,k)=S(p-1,k-1)+kS(p-1,k)&1\leq k\leq p-1\\
+\end{cases}    
+\]
+实际上，可以利用容斥原理直接求出斯特灵数$S(n,k)$。 利用除法原理，
+我们先考虑“有序划分”的个数$S'(n,k)$，则无序划分个数，即斯特灵数，便是$S'(n,k)/k!$。
+将性质$A_i$设定为“第$i$个划分为空”，则 
+\[S'(p,k)=\abs{\bigcap_{i}\bar{A_i}}\]
+由于当有$t$个性质同时满足时，首先要从$k$个划分中挑$t$个为空的划分，然后有$p$个元素要放入剩余的$k-t$个划分中，从而
+对应的情况数为 
+\[\binom{k}{t}(k-t)^n\]
+由容斥原理可知 
+\[S'(p,k)=\sum_{t=0}^{k}(-1)^t\binom{k}{t}(k-t)^p\]
+从而有
+\[S(p,k)=\frac{1}{k!}\sum_{t=0}^{k}(-1)^t\binom{k}{t}(k-t)^p\]
+
+\end{document}

@@ -1,0 +1,160 @@
+\usepackage{color}
+\usepackage[dvipsnames,svgnames]{xcolor}%颜色支持
+\definecolor{vscode_backgroundcolor}{rgb}{0,0.14,0.32}
+\definecolor{vscode_localvariablecolor}{rgb}{0.94,0.62,0.64}
+\definecolor{vscode_keywordcolor}{rgb}{0.92,0.73,1}
+\definecolor{vscode_commentcolor}{rgb}{0.55,0.64,0.79}
+\definecolor{vscode_stringcolor}{rgb}{0.05,0.95,0.86}
+\definecolor{vscode_semicolomncolor}{rgb}{1,1,1}
+\definecolor{vscode_headerfilecolor}{rgb}{0.82,0.95,0.65}
+\definecolor{vscode_linenumbercolor}{rgb}{0.52,0.52,0.52}
+\definecolor{vscode_numbercolor}{rgb}{1,0.77.0.56}
+\definecolor{vscode_operatorcolor}{rgb}{0.6,1,1}
+\definecolor{vscode_functioncolor}{rgb}{0.22,0.65,0.96}
+\definecolor{vscode_rulecolor}{rgb}{0.17,0.46,0.65}
+
+\usepackage{amsmath}%必须在amsthm之前
+\usepackage{amsthm}%提供证明,定理等环境
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lmm}{Lemma}[section]
+\newtheorem{cor}{Corollary}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{conj}{Conjecture}[section]
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem*{cond}{Condition}
+\newtheorem{eg}{Example}[section]
+\newtheorem{exer}{Exercise}[section]
+
+\theoremstyle{remark}
+\newtheorem*{rmk}{Remark}
+
+
+\usepackage[strict]{changepage}
+\usepackage{framed}%色块支持
+\definecolor{formalshade}{rgb}{0.95,0.95,1} % 文本框颜色
+% ------------------******-------------------
+% 注意行末需要把空格注释掉，不然画出来的方框会有空白竖线
+
+\definecolor{theorem_bar_color}{RGB}{183, 28, 28}
+\definecolor{theorem_box_color}{RGB}{255, 235, 238}
+\newenvironment{mythm}[1][]{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{theorem_bar_color}\vrule width 2pt}%
+{\color{theorem_box_color}\vrule width 4pt}%
+\colorbox{theorem_box_color}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\begin{thm}[#1]
+    \quad\par
+}
+{%
+\end{thm}
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\definecolor{corollary_bar_color}{RGB}{26, 35, 126}
+\definecolor{corollary_box_color}{RGB}{232, 234, 246}
+\newenvironment{mycor}[1][]{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{corollary_bar_color}\vrule width 2pt}%
+{\color{corollary_box_color}\vrule width 4pt}%
+\colorbox{corollary_box_color}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\begin{cor}[#1]
+    \quad\par
+}
+{%
+\end{cor}
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\definecolor{lemma_bar_color}{RGB}{74, 20, 140}
+\definecolor{lemma_box_color}{RGB}{243, 229, 245}
+\newenvironment{mylmm}[1][]{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{lemma_bar_color}\vrule width 2pt}%
+{\color{lemma_box_color}\vrule width 4pt}%
+\colorbox{lemma_box_color}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\begin{lmm}[#1]
+    \quad\par
+}
+{%
+\end{lmm}
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\definecolor{proposition_bar_color}{RGB}{1, 87, 155}
+\definecolor{proposition_box_color}{RGB}{225, 245, 254}
+\newenvironment{myprop}[1][]{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{proposition_bar_color}\vrule width 2pt}%
+{\color{proposition_box_color}\vrule width 4pt}%
+\colorbox{proposition_box_color}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\begin{prop}[#1]
+    \quad\par
+}
+{%
+\end{prop}
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\definecolor{definition_bar_color}{RGB}{0, 77, 64}
+\definecolor{definition_box_color}{RGB}{224, 242, 241}
+\newenvironment{mydef}[1][]{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{definition_bar_color}\vrule width 2pt}%
+{\color{definition_box_color}\vrule width 4pt}%
+\colorbox{definition_box_color}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\begin{definition}[#1]
+    \quad\par
+}
+{%
+\end{definition}
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}
+
+\definecolor{remark_bar_color}{RGB}{245, 127, 23}
+\definecolor{remark_box_color}{RGB}{255, 253, 231}
+\newenvironment{myrmk}[1][]{%
+\def\FrameCommand{%
+\hspace{1pt}%
+{\color{remark_bar_color}\vrule width 2pt}%
+{\color{remark_box_color}\vrule width 4pt}%
+\colorbox{remark_box_color}%
+}%
+\MakeFramed{\advance\hsize-\width\FrameRestore}%
+\noindent\hspace{-4.55pt}% disable indenting first paragraph
+\begin{adjustwidth}{}{7pt}%
+\begin{rmk}[#1]
+    \quad\par
+}
+{%
+\end{rmk}
+\vspace{2pt}\end{adjustwidth}\endMakeFramed%
+}

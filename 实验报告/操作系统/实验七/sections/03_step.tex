@@ -1,0 +1,445 @@
+\section{实验步骤}
+\subsection{实验4.1}
+\begin{listing}[htbp]
+    \begin{minted}{c}
+#include <stdio.h>
+#include <sys.h>
+#include <file.h>
+void main1()
+{
+    char data1[13]="Hello World!";
+    char data2[13];
+    int fd = 0;
+    int count = 0;
+    fd = creat("Jessy",0666);
+    if (fd>0)
+    {
+        printf("The file %d is created.\n",fd);
+    }
+    else
+    {
+        printf("The file can not be created.\n");
+    }
+    count = write(fd, data1, 13);
+    if (count == 13)
+    {
+        printf("%d characters have been written into the file %d.\n", count,fd);
+    }
+    else
+    {
+        printf("The file can not be written successfully.\n");
+    }
+    close(fd);
+    fd = open("Jessy",3); //以可读可写的方式打开文件
+    count = read(fd, data2, 12);
+    printf("%d characters are read from file %d: %s.", count, fd, data2);
+    printf("\n");
+    close(fd);
+}
+    \end{minted}
+    \caption{fileTest.c}\label{lst:fileTest}
+\end{listing}
+
+执行代码\ref{lst:fileTest}可以得到图\ref{p1true}中的输出结果。当注释掉第28，29行的重新打开文件操作后，可以得到如图\ref{p1false}的结果；
+当把字符串数组 \texttt{data1,data2}的长度都改为12后，得到图\ref{p112}中的输出结果。
+
+代码\ref{lst:fileTest}中以模式0666创建文件，
+对应的是所有用户都有读写权限。由代码\ref{lst:Creat}中的\verb|__asm__ __volatile__ ( "int $0x80":"=a"(res):"a"(8),"b"(pathname),"c"(mode));|，和代码\ref{lst:creat}
+中的\verb@unsigned int newACCMode=u.u_arg[1]&(Inode::IRWXU|Inode::IRWXG|Inode::IRWXO);@\newline 可以看到，该模式确实被传递进\texttt{Creat}中。但是，
+从\verb|this->Open1(pInode, File::FWRITE, 2);|可以看到，\texttt{Creat}函数中还是只以写操作模式打开文件。因此，若想读文件，必须先关闭，然后重新以至少为读操作的模式打开后才能读取文件。
+从代码\ref{lst:RdWr}中的\verb|if ( (pFile->f_flag & mode) == 0 )|语句可以看出，如果所作的读写操作与文件打开的模式不匹配，则会设置错误码后直接返回，此时User结构中的用于存放系统调用返回值的核心栈单元未被修改。
+从代码\ref{lst:Trap}中的\verb|if( User::NOERROR != u.u_error )|可以看到，如果出错码不为\texttt{User::NOERROR}，则会将系统调用的返回值设置为出错码的相反数。
+从代码\ref{lst:read}中的\verb|if ( res >= 0 )|可以看出，如果系统调用返回值不为正数，则会返回-1，因此，在错误输出中，会打印出-1。
+
+之所以将字符串数组长度都修改为12后会出现图\ref{p112}的结果，是因为如代码 \ref{lst:printf}所示，向标准输出的长度由 \texttt{\_sprintf}的返回值决定。而如代码\ref{lst:sprintf}所示，字符串输出对应的长度由 \texttt{sprintf\_string}的返回值决定。
+如代码\ref{lst:sprintfstring}所示，如果并没有特殊的格式规定，返回值将由 \texttt{strlen}的返回值决定。
+如代码\ref{lst:strlen}所示，\texttt{strlen}函数是通过字符串数组中值为0的位置来判断数组的结束位置的，因此
+当两个字符串数组的长度都修改为12后，用户栈中连续24个字节都为非零值，\texttt{strlen}的返回值为24，而\texttt{printf}又是以该返回值来决定输出的长度的，因此会得到该输出。
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+int creat(char* pathname, unsigned int mode)
+{
+    int res;
+    __asm__ __volatile__ ( "int $0x80":"=a"(res):"a"(8),"b"(pathname),"c"(mode));
+    if ( res >= 0 )
+        return res;
+    return -1;
+}
+    \end{minted}
+    \caption{\texttt{creat}}\label{lst:creat}
+\end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+ void FileManager::Creat()
+{
+    Inode* pInode;
+    User& u = Kernel::Instance().GetUser();
+    unsigned int newACCMode = u.u_arg[1] & (Inode::IRWXU|Inode::IRWXG|Inode::IRWXO);
+    pInode = this->NameI(NextChar, FileManager::CREATE);
+    if ( NULL == pInode )
+    {
+        if(u.u_error)
+            return;
+        pInode = this->MakNode( newACCMode & (~Inode::ISVTX) );
+        if ( NULL == pInode )
+        {
+            return;
+        }
+        this->Open1(pInode, File::FWRITE, 2);
+    }
+    else
+    {
+        this->Open1(pInode, File::FWRITE, 1);
+        pInode->i_mode |= newACCMode;
+    }
+}
+    \end{minted}
+    \caption{\texttt{Creat}}\label{lst:Creat}
+\end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+void FileManager::Rdwr( enum File::FileFlags mode )
+{
+    File* pFile;
+    User& u = Kernel::Instance().GetUser();
+    pFile = u.u_ofiles.GetF(u.u_arg[0]);    /* fd */
+    if ( NULL == pFile )
+    {
+        return;
+    }
+    if ( (pFile->f_flag & mode) == 0 )
+    {
+        u.u_error = User::EACCES;
+        return;
+    }
+    u.u_IOParam.m_Base = (unsigned char *)u.u_arg[1];    /* 目标缓冲区首址 */
+    u.u_IOParam.m_Count = u.u_arg[2];        /* 要求读/写的字节数 */
+    u.u_segflg = 0;        /* User Space I/O，读入的内容要送数据段或用户栈段 */
+    if(pFile->f_flag & File::FPIPE)
+    {
+        if ( File::FREAD == mode )
+        {
+            this->ReadP(pFile);
+        }
+        else
+        {
+            this->WriteP(pFile);
+        }
+    }
+    else
+    {
+        pFile->f_inode->NFlock();
+        /* 设置文件起始读位置 */
+        u.u_IOParam.m_Offset = pFile->f_offset;
+        if ( File::FREAD == mode )
+        {
+            pFile->f_inode->ReadI();
+        }
+        else
+        {
+            pFile->f_inode->WriteI();
+        }
+        pFile->f_offset += (u.u_arg[2] - u.u_IOParam.m_Count);
+        pFile->f_inode->NFrele();
+    }
+    u.u_ar0[User::EAX] = u.u_arg[2] - u.u_IOParam.m_Count;
+}
+    \end{minted}
+    \caption{\texttt{RdWr}}\label{lst:RdWr}
+\end{listing}
+
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+void SystemCall::Trap(struct pt_regs* regs, struct pt_context* context)
+{    
+    User& u = Kernel::Instance().GetUser();
+    if ( u.u_procp->IsSig() )
+    {
+        u.u_procp->PSig(context);
+        u.u_error = User::EINTR;
+        regs->eax = -u.u_error;
+        return;
+    }
+    u.u_ar0 = &regs->eax;
+    if(regs->eax == 20)
+        regs->eax = 20;
+    u.u_error = User::NOERROR;
+    SystemCallTableEntry *callp = &m_SystemEntranceTable[regs->eax];
+    unsigned int * syscall_arg = (unsigned int *)&regs->ebx;
+    for( unsigned int i = 0; i < callp->count; i++ )
+    {
+        u.u_arg[i] = (int)(*syscall_arg++);
+    }
+    u.u_dirp = (char *)u.u_arg[0];
+    u.u_arg[4] = (int)context;
+    Trap1(callp->call);        /* 系统调用处理子程序，如fork(), read()等等 */
+    if ( u.u_intflg != 0 )
+    {
+        u.u_error = User::EINTR;
+    }
+    if( User::NOERROR != u.u_error )
+    {
+        regs->eax = -u.u_error;
+        Diagnose::Write("regs->eax = %d , u.u_error = %d\n",regs->eax,u.u_error);
+    }
+    if ( u.u_procp->IsSig() )
+    {
+        u.u_procp->PSig(context);
+    }
+    u.u_procp->SetPri();
+}
+    \end{minted}
+    \caption{\texttt{Trap}}\label{lst:Trap}
+\end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+int read(int fd, char* buf, int nbytes)
+{
+    int res;
+    __asm__ __volatile__ ("int $0x80":"=a"(res):"a"(3),"b"(fd),"c"(buf),"d"(nbytes));
+    if ( res >= 0 )
+        return res;
+    return -1;
+}
+    \end{minted}
+    \caption{\texttt{read}}\label{lst:read}
+\end{listing}
+
+
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+void printf(char* fmt, ... )
+{
+    char buffer[1024];
+    va pva = (va) getvahead(fmt);
+    int count = _sprintf(buffer, fmt, pva);    
+    write(STDOUT, buffer, count);
+}
+    \end{minted}
+    \caption{\texttt{printf}}\label{lst:printf}
+\end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+int _sprintf(char* buffer, char* fmt, va pva)
+{
+    unsigned int va_offset = 0;
+    struct print_spec spec;
+    char* bp = buffer;
+    if ( buffer == 0 ) return -1;
+    spec.fmt = spec.start_fmt = spec.end_fmt = fmt;
+    while( find_spec(&spec) >= 0 )
+    {
+        char* sbp = spec.end_fmt;        
+        while ( sbp < spec.start_fmt ) *bp++ = *sbp++;
+        parse_spec(&spec);        
+        switch( spec.info.spec )
+        {
+        case 'c':
+            bp += sprintf_char(bp, pva, &va_offset);            
+            break;
+        case 's':
+            bp += sprintf_string(bp, &spec.info, pva, &va_offset);
+            break;            
+        case 'd':
+        case 'i':
+        case 'x':
+        case 'X':
+        case 'o':
+        case 'u':
+            bp += sprintf_interger(bp, &spec.info, pva,&va_offset);
+            break;
+        case 'f':
+        case 'F':
+        case 'e':
+        case 'E':
+        case 'g':
+        case 'G':
+            bp += sprintf_double(bp, &spec.info, pva, &va_offset);
+            break;
+        default:
+            break;
+        }        
+    }
+    while ( spec.end_fmt < spec.start_fmt ) *bp++ = *spec.end_fmt++;
+    *bp = 0;
+    return bp - buffer;
+}
+    \end{minted}
+    \caption{\texttt{\_sprintf}}\label{lst:sprintf}
+\end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+int sprintf_string(char* buffer, struct print_info* info, va pva, unsigned int* pva_offset)
+{
+    char* pstr = getva(char*, pva, *pva_offset);
+    int strl = strlen(pstr);
+    int padding = 0;
+    char* bp = buffer;
+    int i;
+    *pva_offset += sizeof(char*);
+    if ( info->width == -1 ) info->width = strl; /* 用户并没有设置宽度值 */
+    if ( info->prec == -1 ) info->prec = strl;
+    if ( info->prec > info->width) info->width = info->prec;
+    padding = info->width - (strl > info->prec ? info->prec : strl);
+    if ( !info->left )/* padding at left */
+    {
+        while ( bp < buffer + padding ) *bp++ = ' ';
+    }
+    for ( i = 0; *pstr && i < info->width - padding; *bp++ = *pstr++, i++ );
+    if ( info->left ) 
+    {
+        while( bp < buffer + info->width ) *bp++ = ' ';
+    }    
+    return info->width;
+}
+    \end{minted}
+    \caption{\texttt{sprintf\_string}}\label{lst:sprintfstring}
+\end{listing}
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+int strlen (char* str)
+{
+    int length = 0;
+    while( *(str++) ) ++length;
+    return( length );
+}
+    \end{minted}
+    \caption{\texttt{strlen}}\label{lst:strlen}
+\end{listing}
+
+\clearpage
+
+\subsection{实验4.2}
+
+本实验所用代码如代码\ref{lst:fileTest2}所示。输出如图\ref{p2}所示。
+
+父进程是通过调用 \texttt{fork}来创建子进程的过程中，将 \texttt{User}结构完全复制给子结构，其中包括指向 \texttt{File}结构的指针以及表明创建进程用户的用户标识的\texttt{u\_uid},\texttt{u\_gid}，而 \texttt{File}结构中的
+\texttt{f\_offset}描述的是文件的读写指针位置，\texttt{f\_flag}描述的是文件的工作模式， \texttt{f\_inode}的描述的是指向打开文件的内存Inode指针，而文件的读写权限记录在 \texttt{Inode}中的 \texttt{i\_mode}中。
+综上，父进程通过复制指向 \texttt{File}结构的指针来实现对于 \texttt{File}结构的共享，从而实现对于读写指针和文件工作模式的共享；通过复制用户标识，来实现读写权限的共享。
+
+之所以父进程要重新上台后要执行 \texttt{seek}语句，是因为其与子进程共享了读写指针位置，而子文件进行写操作后，读写指针位置位于写入内容的末尾，为了读入所写的内容，需要将读写指针置于写入文件的起始位置，即0。
+如果没有 \texttt{seek}语句，输出如图\ref{p2noseek}所示，这是因为此时读入的内容为全0， \texttt{strlen}返回的值为0，从而没有输出。
+
+父子进程执行的 \texttt{close}操作的区别在于：子进程先执行 \texttt{close}操作，此时，子进程只释放自己的 \texttt{u\_ofile}结构，因为父进程还在共享 \texttt{File}结构以及对应的内存\texttt{Inode}结构，所以不进行释放；
+而当父进程执行 \texttt{close}操作时，因为没有其他进程共享 \texttt{File}和相应的内存 \texttt{Inode}结构，所以除了释放自己的 \texttt{u\_ofile}外，还会释放对应的 \texttt{File}结构和内存 \texttt{Inode}结构。
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+#include <stdio.h>
+#include <sys.h>
+#include <file.h>
+void main1()
+{
+    char data1[13]="Hello World!";
+    char data2[13];
+    int fd = 0;
+    int count = 0;
+    int i,j;
+    fd = creat("Jessy",0666); //刚创建好的文件，访问方式是可写
+    if (fd>0)
+    {
+        printf("The file %d is created.\n",fd);
+    }
+    else
+    {
+        printf("The file can not be created.\n");
+    }
+    close(fd);
+    fd = open("Jessy",3); //以可读可写的方式打开文件
+    if(fork())
+    {
+        i=wait(&j);
+        seek(fd,0,0);
+        count = read(fd, data2, 12);
+        printf("%d characters are read from file %d: %s.", count, fd, data2);
+        printf("\n");
+        close(fd);
+    }
+    else
+    {
+        count = write(fd, data1, 13);
+        if (count == 13)
+        {
+            printf("%d characters have been written into the file %d.\n", count,fd);
+        }
+        else
+        {
+            printf("The file can not be written successfully.\n");
+        }
+        close(fd);
+        exit(0);
+    }
+}
+    \end{minted}
+    \caption{fileTest.c}\label{lst:fileTest2}
+\end{listing}
+
+\subsection{实验4.3}
+
+本实验所用代码如代码\ref{lst:fileTest3}所示，对应输出结果如图\ref{p3}所示，与所要求的输出一致。
+
+在代码\ref{lst:fileTest3}中，父进程创建文件后便创建子进程然后入睡，此时父子进程共享 \texttt{File}结构。
+子进程上台后，关闭然后以写方式重新打开文件，这使得父子进程不再共享 \texttt{File}，从而不共享文件读写指针。
+父进程唤醒上台后，关闭然后以只读方式重新打开文件，此时文件读写指针重置，从而无需执行 \texttt{seek}函数。
+
+在代码\ref{lst:fileTest3}中，子进程关闭了两次文件，第一次关闭时只释放了自己的 \texttt{o\_ufile}结构，第二次关闭时仍只释放了自己的 \texttt{o\_ufile}结构；
+父进程也关闭了两次文件，这两次关闭时均释放了 \texttt{o\_ufile}结构、 \texttt{File}结构和内存\texttt{Inode}结构。
+
+\begin{listing}[htbp]
+    \begin{minted}{c}
+#include <stdio.h>
+#include <sys.h>
+#include <file.h>
+void main1()
+{
+    char data[20];
+    int fd = 0;
+    int count = 0;
+    fd = creat("Jessy",0421); 
+    if (fd>0)
+    {
+        printf("The file %d is created.\n",fd);
+    }
+    else
+    {
+        printf("The file can not be created.\n");
+    }
+    if(fork())
+    {
+        wait(&count);
+        close(fd);
+        open("Jessy",1);
+        count = read(fd, data, count);
+        printf("%d characters are read from file %d: %s.", count, fd, data);
+        printf("\n");
+        close(fd);
+    }
+    else
+    {
+        close(fd);
+        open("Jessy",2);
+        count = write(fd, "Hello World!", 12);
+        if (count == 12)
+        {
+            printf("%d characters have been written into the file %d.\n", count,fd);
+        }
+        else
+        {
+            printf("The file can not be written successfully.\n");
+        }
+        close(fd);
+        exit(count);
+    }
+}
+    \end{minted}
+    \caption{fileTest.c}\label{lst:fileTest3}
+\end{listing}

@@ -1,0 +1,54 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW7}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{6.3.1}
+    设$S_1$与$S_2$是线性空间$V$的两个非空子集，证明：
+    \begin{enumerate}
+        \item $S_1\subseteq S_2$时，$span(S_1)\subseteq span(S_2)$
+        \item $span(S_1\cup S_2)=span(S_1)+span(S_2)$
+        \item $S_1\cap S_2\neq\varnothing$时，$span(S_1\cap S_2)\subseteq span(S_1)\cap span(S_2)$，举例说明等号不一定成立。
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 令 $S_1=\{\mathbf{\alpha}_1,\mathbf{\alpha}_2,\cdots,\mathbf{\alpha}_n\}$，因 $S_1\subseteq S_2$，所以设 $S_2=\{\mathbf{\alpha}_1,\mathbf{\alpha}_2,\cdots,\mathbf{\alpha}_n,\mathbf{\beta}_1,\mathbf{\beta}_2,\cdots,\mathbf{\beta}_r\}$。对于$span(S_1)$中任意元素 $\sum_{i=1}^{n}k_i\mathbf{\alpha_i}$，有
+        \[\sum_{i=1}^{n}k_i\mathbf{\alpha_i}=\sum_{i=1}^{n}k_i\mathbf{\alpha_i}+\sum_{i=1}^{r}0\cdot\mathbf{\beta_i}\in span(S_2)\]
+        所以 $span(S_1)\subseteq span(S_2)$.
+        \item 令 $S_1=\{\mathbf{\alpha}_1,\mathbf{\alpha}_2,\cdots,\mathbf{\alpha}_n\},S_2=\{\mathbf{\alpha}_1,\mathbf{\alpha}_2,\cdots,\mathbf{\alpha}_s,\mathbf{\beta}_1,\mathbf{\beta}_2,\cdots,\mathbf{\beta}_r\},(0\leq k\leq n)$。
+        \begin{align*}
+            &\mathbf{\alpha}\in span(S_1\cup S_2)\\
+            \Leftrightarrow&\mathbf{\alpha}=\sum_{i=1}^{n}k_i\mathbf{\alpha_i}+\sum_{i=1}^{r}t_i\mathbf{\beta_i}\\
+            \Leftrightarrow&\mathbf{\alpha}=(\sum_{i=1}^{n}k_i\mathbf{\alpha_i})+(\sum_{i=1}^{s}0\cdot\mathbf{\alpha_i}+\sum_{i=1}^{r}t_i\mathbf{\beta_i})\\
+            \Rightarrow&\mathbf{\alpha}\in span(S_1)+span(S_2)\\
+        \end{align*}
+        又因为
+        \begin{align*}
+            &\mathbf{\alpha}\in  span(S_1)+span(S_2)\\
+            \Leftrightarrow&\mathbf{\alpha}=(\sum_{i=1}^{n}k_i\mathbf{\alpha_i})+(\sum_{i=1}^{s}k_i^{\prime}\mathbf{\alpha_i}+\sum_{i=1}^{r}t_i\mathbf{\beta_i})\\
+            \Leftrightarrow&\mathbf{\alpha}=\sum_{i=1}^{s} k_i\mathbf{\alpha_i}+\sum_{i=s+1}^{n}(k_i+k_i^{\prime})\mathbf{\alpha_i}+\sum_{i=1}^{r}t_i\mathbf{\beta_i}\\
+            \Rightarrow&\mathbf{\alpha}\in span(S_1\cup S_2)\\
+        \end{align*}
+        所以$span(S_1\cup S_2)=span(S_1)+span(S_2)$
+        \item 令 $S_1=\{\mathbf{\alpha}_1,\mathbf{\alpha}_2,\cdots,\mathbf{\alpha}_n,\mathbf{\gamma}_1,\mathbf{\gamma}_2,\cdots,\mathbf{\gamma}_s\},S_2=\{\mathbf{\beta}_1,\mathbf{\beta}_2,\cdots,\mathbf{\beta}_r,\mathbf{\gamma}_1,\mathbf{\gamma}_2,\cdots,\mathbf{\gamma}_s\}$。
+         \begin{align*}
+            &\mathbf{\alpha}\in span(S_1\cap S_2)\\
+            \Leftrightarrow&\mathbf{\alpha}=\sum_{i=1}^{s}k_i\mathbf{\gamma_i}\\
+            \Leftrightarrow&\mathbf{\alpha}=\sum_{i=1}^{s}k_i\mathbf{\gamma_i}+\sum_{i=1}^{n}0\cdot\mathbf{\alpha_i}=\sum_{i=1}^{s}k_i\mathbf{\gamma_i}+\sum_{i=1}^{r}0\cdot\mathbf{\beta_i}\\
+            \Rightarrow&\mathbf{\alpha}= span(S_1)\cap span(S_2)\\
+        \end{align*}
+        取线性空间$V$为三维几何空间，$S_1=\{\vec{i},\vec{j}\},S_2=\{\vec{i},\vec{i}+\vec{j}\}$，则 $span(S_1\cap S_2)$为$x$轴，而$span(S_1)\cap span(S_2)$为$xOy$平面。
+    \end{enumerate}
+    \qed
+\end{solution}
+\end{document}

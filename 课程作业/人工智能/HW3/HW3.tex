@@ -1,0 +1,103 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\usepackage{makecell}
+\usepackage{color}
+\usepackage{geometry}%设置整体页面布局
+\usepackage{pdfpages}
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\title{\textbf{HW3}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+当遇到边缘队列中有多个优先级相同的结点时，按照字典序选择下一个展开的结点。
+\section{DFS}
+\begin{figure}[htbp]
+    \centering
+    \begin{tabular}{ccc}
+       展开结点&边缘队列&goal test\\
+              &S      &          \\
+       S      &SA,SB,SC     &         \\
+       SA      &SB,SC,SAD,SAE,SAG     &         \\
+       SAD      &SB,SC,SAE,SAG     &         \\
+       SAE      &SB,SC,SAG     &         \\
+       SAG      &SB,SC     &   $\surd$      \\
+    \end{tabular}
+\end{figure}
+解序列为SAG
+\section{深度受限搜索与IDS}
+IDS本质上是深度上限逐渐增加的深度受限搜索。深度受限搜索中的 $l$对应的便是IDS中的 $limit$。
+
+l = 1时，无法得到解序列：
+\begin{figure}[!h]
+    \centering
+    \begin{tabular}{ccc}
+       展开结点&边缘队列&goal test\\
+              &S      &          \\
+       S      &SA,SB,SC     &         \\
+       SA      &SB,SC     &         \\
+       SB      &SC     &         \\
+       SC      &     &         \\
+    \end{tabular}
+    \caption{l = 1}
+\end{figure}
+
+l = 2时，由于题中的搜索树的深度为2，所以得到的搜索序列与DFS给出的一致，解序列为SAG：
+\begin{figure}[htbp]
+    \centering
+    \begin{tabular}{ccc}
+       展开结点&边缘队列&goal test\\
+              &S      &          \\
+       S      &SA,SB,SC     &         \\
+       SA      &SB,SC,SAD,SAE,SAG     &         \\
+       SAD      &SB,SC,SAE,SAG     &         \\
+       SAE      &SB,SC,SAG     &         \\
+       SAG      &SB,SC     &   $\surd$      \\
+    \end{tabular}
+    \caption{l = 2}
+\end{figure}
+
+IDS算法先得到l=1时的搜索序列，由于没有达到目标，会继续得到l=2的搜索序列，最后得到解序列 SAG。
+\section{BFS}
+\begin{table}[!hb]
+    \centering 
+    \begin{tabular}{ccc}
+   展开结点&边缘队列&goal test\\
+              &S      &          \\
+       S      &SA,SB,SC     &         \\
+       SA      &SB,SC,SAD,SAE,SAG     &         \\
+       SB      &SC,SAD,SAE,SAG,SBG     &         \\
+       SC      &SAD,SAE,SAG,SBG,SCG     &         \\
+       SAD      &SAE,SAG,SBG,SCG     &         \\
+       SAE      &SAG,SBG,SCG     &         \\
+       SAG      &SBG,SCG     &   $\surd$      \\
+    \end{tabular}
+\end{table}
+解序列为SAG
+\section{UCS}
+解序列为SBG，对应的路径耗散为9
+\begin{table}[!h]
+    \centering 
+    \begin{tabular}{ccc}
+   展开结点&边缘队列&goal test\\
+              &S $^0$      &          \\
+       S $^0$     &SA $^1$,SB $^5$,SC $^8$     &         \\
+        SA $^1$    &SB $^5$,SC $^8$,SAD $^4$,SAE $^8$,SAG $^{10}$     &         \\
+        SAD $^4$   &SB $^5$,SC $^8$,SAE $^8$,SAG $^{10}$     &         \\
+        SB $^5$ &SC $^8$,SAE $^8$,SAG $^{10}$,SBG $^9$     &         \\
+        SAE $^8$ &SC $^8$,SAG $^{10}$,SBG $^9$     &         \\
+         SC $^8$&SAG $^{10}$,SBG $^9$,SCG $^{13}$     &         \\
+         SBG $^9$&SAG $^{10}$,SCG $^{13}$     &     $\surd$    \\
+    \end{tabular}
+\end{table}
+
+\end{document}

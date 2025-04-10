@@ -1,0 +1,399 @@
+\documentclass[a4paper]{article}
+\usepackage{xcolor}%颜色支持
+\definecolor{vscode_backgroundcolor}{rgb}{0.15, 0.2, 0.22}
+\definecolor{vscode_localvariablecolor}{rgb}{0.93,1,0.89}
+\definecolor{vscode_keywordcolor}{rgb}{0.57, 0.52, 1}
+\definecolor{vscode_commentcolor}{rgb}{0.2, 0.34, 0.45}
+\definecolor{vscode_stringcolor}{rgb}{0.76, 0.91, 0.55}
+\definecolor{vscode_semicolomncolor}{rgb}{1,1,1}
+\definecolor{vscode_headerfilecolor}{rgb}{0.93,1,0.89}
+\definecolor{vscode_linenumbercolor}{rgb}{0.2, 0.34, 0.45}
+\definecolor{vscode_numbercolor}{rgb}{0.96, 0.54, 0.42}
+\definecolor{vscode_parametercolor}{rgb}{0.96, 0.54, 0.42}
+\definecolor{vscode_operatorcolor}{rgb}{0.53, 0.85, 0.99}
+\definecolor{vscode_callablecolor}{rgb}{0.36, 0.62, 0.96}
+\definecolor{vscode_rulecolor}{rgb}{0.22, 0.28, 0.31}
+\definecolor{vscode_classcolor}{rgb}{1, 0.8, 0.42}
+\definecolor{vscode_selfcolor}{rgb}{0.97, 0.31, 0.43}
+
+\usepackage{listings}%高亮代码块支持
+\lstloadlanguages{Python}
+\lstdefinestyle{MyPython}{
+    extendedchars=false,
+    numbers=left,
+    firstnumber=auto,
+    frame=leftline,
+    backgroundcolor=\color{vscode_backgroundcolor},
+    framerule=0.5ex,
+    columns=fixed,
+    language=Python,
+    basicstyle=\ttfamily\color{vscode_localvariablecolor},
+    % commentstyle=\color{vscode_commentcolor},
+    keywordstyle=\color{vscode_keywordcolor},
+    stringstyle=\color{vscode_stringcolor},
+    morecomment=[l][\color{vscode_commentcolor}]{\#},
+    morecomment=[s][\color{vscode_headerfilecolor}]{"""}{"""},
+    numberstyle=\code\color{vscode_linenumbercolor},
+    morekeywords={
+        None,
+        True,
+        yield,
+        False,
+    },
+    alsoletter={
+        =+-*<>^&
+        % ;0123456789
+        % 0,1,2,3,4,5,6,7,8,9
+    },%把;设置为可以识别的letter，也可以使用otherkeywords，但是无法将其和其他keywords区分开来
+    emph={=,+,-,*,>,<,<<,>>,^,+=,&},emphstyle=\color{vscode_operatorcolor},
+    % alsoletter={!,\%,&,*,-,+,=,/,<,>},
+    emph={[2]%一些全局的函数和可调用对象
+    DataFrame,
+    arange,
+    interp2d,
+    f,
+    subplots,
+    contour,
+    show,
+    clabel,
+    getWalls,
+    AnyFoodSearchProblem,
+    print,
+    range,
+    scatter,
+    spline,
+    UnivariateSpline,
+    diff,
+    len,
+    append,
+    array,
+    sqrt,
+    sum,
+    mean,
+    as,
+    figure,
+    scatter
+    },emphstyle={[2]\color{vscode_callablecolor}},
+    emph={[5]
+    self},emphstyle={[5]\color{vscode_selfcolor}},
+    % emphstyle={[3]\color{vscode_parametercolor}}
+     % emph={[3]0,1,2,3,4,5,6,7,8,9},emphstyle={[3]\color{yellow}},
+    tabsize=4,
+    rulecolor=\color{vscode_rulecolor},
+    breaklines=true,
+}
+\lstset{
+    style=MyPython,
+}
+\input{header.tex}
+
+\title{时间序列}
+\author{姓名：范潇{\quad}学号：2254298{\quad}日期：\today}
+\date{}
+\begin{document}
+\maketitle
+\section{(8.1)}
+我利用Python完成了本题的求解。
+
+采用趋势移动平均法所得到的模型的误差为19.35.
+
+当$\alpha=0.3$时，直线指数平滑预测模型的误差为4.43；当$\alpha=0.6$时，直线指数平滑预测模型的误差为7.10。
+
+综上，采用$\alpha=0.3$的直线指数平滑预测模型较优。当使用该模型时，对于1982年和1985年产量的预测分别为143.83亿和163.12亿。
+
+本题所用的代码如下：
+\begin{lstlisting}
+import numpy as np
+from math import *
+data = [
+    [1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981],
+    [80.8, 94.0, 88.4, 101.5, 110.3, 121.5, 134.7, 142.7]
+]
+val = [80.8, 94.0, 88.4, 101.5, 110.3, 121.5, 134.7, 142.7]
+predict = val[:3]
+for i in range(3,len(val)):
+    predict.append(np.mean(np.array(val[i-3:i])))
+err = sqrt(sum((np.array(val[3:])-np.array(predict[3:]))**2)/(len(val)-3))
+print("================  Q1 ====================")
+print(f"true value:{val}")
+print(f"prediction:{predict}")
+print(f"err:{err}")
+
+
+
+s1,s2 = 87.7,87.7
+S1=[s1]
+S2=[s2]
+alpha = 0.3
+for i in range(2,len(val)):
+    S1.append(alpha*val[i]+(1-alpha)*S1[-1])
+    S2.append(alpha*S1[-1]+(1-alpha)*S2[-1])
+exp_prediction = []
+exp_prediction.append(s1)
+for i in range(1,len(val)):
+    exp_prediction.append((1+1/(1-alpha))*S1[i-1]-S2[i-1]/(1-alpha))
+
+err = sqrt(sum((np.array(val[:])-np.array(exp_prediction[:]))**2)/(len(val)))
+print("================  Q2 ====================")
+print("alpha = 0.3")
+print(f"true value:{val}")
+print(f"prediction:{exp_prediction}")
+print(f"err:{err}")
+
+S1=[s1]
+S2=[s2]
+alpha = 0.6
+for i in range(2,len(val)):
+    S1.append(alpha*val[i]+(1-alpha)*S1[-1])
+    S2.append(alpha*S1[-1]+(1-alpha)*S2[-1])
+exp_prediction = []
+exp_prediction.append(s1)
+for i in range(1,len(val)):
+    exp_prediction.append((1+1/(1-alpha))*S1[i-1]-S2[i-1]/(1-alpha))
+
+err = sqrt(sum((np.array(val[:])-np.array(exp_prediction[:]))**2)/(len(val)))
+print("alpha = 0.6")
+print(f"true value:{val}")
+print(f"prediction:{exp_prediction}")
+print(f"err:{err}")
+
+
+s1,s2 = 87.7,87.7
+S1=[s1]
+S2=[s2]
+alpha = 0.3
+for i in range(2,len(val)):
+    S1.append(alpha*val[i]+(1-alpha)*S1[-1])
+    S2.append(alpha*S1[-1]+(1-alpha)*S2[-1])
+exp_prediction = []
+exp_prediction.append(s1)
+for i in range(1,len(val)):
+    exp_prediction.append((1+1/(1-alpha))*S1[i-1]-S2[i-1]/(1-alpha))
+
+err = sqrt(sum((np.array(val[:])-np.array(exp_prediction[:]))**2)/(len(val)))
+print("================  Q3 ====================")
+print(S1)
+print(S2)
+a = 2*S1[-1]-S2[-1]
+b = alpha*(S1[-1]-S2[-1])/(1-alpha)
+print(a,b)
+print("1982预测产量为：",a+b)
+print("1985预测产量为：",a+4*b)
+\end{lstlisting}
+
+输出为图\ref*{q1}
+\begin{figure}[!h]
+    \centering
+    \includegraphics*[width = \textwidth]{q1.png}
+    \caption{第一题程序输出}\label{q1}
+\end{figure}
+\newpage
+\section{(8.2)}
+我利用Python完成了本题的求解。
+
+首先我分别测试了$\alpha$值为$0.1,0.2,\cdots,0.9$时三次指数平滑法得到的模型拟合误差。
+经过比较，当$\alpha=0.5$时，模型拟合误差最小，所以最后选取$\alpha=0.5$。这样得到的
+三次指数平滑法对于1983年和1985年的全国社会商品零售额分别为2858.3亿元和3465.8亿元。
+
+本题所用的代码如下：
+\begin{lstlisting}[emph={[3]alpha},emphstyle={[3]\color{vscode_parametercolor}},emph={[4]RegressionModel,GameState,MinimaxAgent,AlphaBetaAgent},emphstyle={[4]\color{vscode_classcolor}}]
+import numpy as np
+from math import *
+data = [[1960, 1961, 1962, 1963, 1964, 1965, 1966, 1967, 1968, 1969, 1970, 1971, 1972, 1973, 1974, 1975, 1976, 1977, 1978, 1979, 1980, 1981, 1982],
+ [696.9, 607.7, 604.0, 604.5, 638.2, 670.3, 732.8, 770.5, 737.3, 801.5, 858.0, 929.2, 1023.3, 1106.7, 1163.6, 1271.1, 1339.4, 1432.8, 1558.6, 1800.0, 2140.0, 2350.0, 2570.0]]
+val = [696.9, 607.7, 604.0, 604.5, 638.2, 670.3, 732.8, 770.5, 737.3, 801.5, 858.0, 929.2, 1023.3, 1106.7, 1163.6, 1271.1, 1339.4, 1432.8, 1558.6, 1800.0, 2140.0, 2350.0, 2570.0]
+
+def third_exp_predict(alpha):
+    init = np.mean(val[:3])
+    S1,S2,S3 = [init],[init],[init]
+    for i in range(1,len(val)):
+        S1.append(alpha*val[i]+(1-alpha)*S1[i-1])
+        S2.append(alpha*S1[i]+(1-alpha)*S2[i-1])
+        S3.append(alpha*S2[i]+(1-alpha)*S3[i-1])
+    prediction = [init]
+    for i in range(1,len(val)):
+        prediction.append((3-3*alpha+alpha*alpha)*S1[i-1]/(1-alpha)**2-(3-alpha)*S2[i-1]/(1-alpha)**2 + S3[i-1]/(1-alpha)**2)
+    err = sqrt(sum((np.array(prediction)-np.array(val))**2)/len(val))
+
+    print(alpha)
+    print(err)
+    print(S1)
+    print(S2)
+    print(S3)
+# 用于选取最佳alpha值
+# alphas = np.linspace(0.1,0.9,9)
+# for i in range(len(alphas)):
+#     third_exp_predict(alphas[i])
+
+# alpha取0.5时err最小
+best = 0.5
+s1 = 2343.3
+s2 = 2122.8
+s3 = 1920.8
+a = 3*s1-3*s2+s3
+b = ((6-5*best)*s1-2*(5-4*best)*s2+(4-3*best)*s3)*best/(2*(1-best)*(1-best))
+c = (s1-2*s2+s3)*best*best/(2*(1-best)*(1-best))
+# print("1982年预测值：",a)
+print("1983年预测值：",a+b+c)
+print("1985年预测值：",a+3*b+9*c)
+\end{lstlisting}
+\newpage
+\section{(8.3)}
+我利用Python完成了本题的求解。
+
+首先我绘制了所给数据的折线图，如图\ref{q2}。
+\begin{figure}[!h]
+    \centering
+    \includegraphics*[width = \textwidth]{q2.png}
+    \caption{第二题数据}\label{q2}
+\end{figure}
+
+可以看到，数据大致成线性，因此采用直线指数平滑预测模型和一阶差分指数平滑模型。
+
+通过分别设定$\alpha=0.1,0.2,\cdots,0.9$，得到对于直线指数平滑模型，最佳参数为$\alpha=0.3$，对应的
+拟合误差为0.48；对于一阶差分指数平滑模型，最佳参数为$\alpha=0.4$，对应的拟合误差为0.5.
+
+选取最佳参数后，直线指数平滑模型预测出的1985年和1990年的粮食产量分别为13.7，16.4；
+一阶差分平滑模型预测出的1985年和1990年的粮食产量分别为13.1,16.3。
+
+本题所用的代码如下：
+\begin{lstlisting}[emph={[3]alpha},emphstyle={[3]\color{vscode_parametercolor}},emph={[4]RegressionModel,GameState,MinimaxAgent,AlphaBetaAgent},emphstyle={[4]\color{vscode_classcolor}}]
+import matplotlib.pyplot as plt
+import numpy as np
+from math import *
+val = [3.78,4.19,4.83,5.46,6.71,7.99,8.60,9.24,9.67,9.87,10.49,10.92,10.93,
+       12.39,12.59,]
+plt.figure()
+plt.scatter(range(len(val)),  val)
+plt.show()
+
+def second_exp_predict(alpha):
+    init = np.mean(val[:2])
+    S1,S2 = [init],[init]
+    for i in range(2,len(val)):
+        S1.append(alpha*val[i]+(1-alpha)*S1[-1])
+        S2.append(alpha*S1[-1]+(1-alpha)*S2[-1])
+    prediction = [init]
+    for i in range(1,len(val)):
+        prediction.append((1+1/(1-alpha))*S1[i-1]-S2[i-1]/(1-alpha))
+    err = sqrt(sum((np.array(prediction)-np.array(val))**2)/len(val))
+
+    print(alpha)
+    print(err)
+    print(S1)
+    print(S2)
+
+def first_diff_predict(alpha):
+    init = np.mean(val[:2])
+    predict_diff =[0]
+    prediction = [val[0]]
+    for i in range(1,len(val)):
+        predict_diff.append(alpha*diff[i-1]+(1-alpha)*predict_diff[i-1])
+        prediction.append(predict_diff[i]+val[i-1])
+
+    err = sqrt(sum((np.array(prediction)-np.array(val))**2)/len(val))
+    print(alpha)
+    print(predict_diff)
+    print(err)
+
+# 用于选取最佳alpha值
+# alphas = np.linspace(0.1,0.9,9)
+# for i in range(len(alphas)):
+#     print()
+#     second_exp_predict(alphas[i])
+
+best = 0.3
+s1 = 11.33
+s2 = 10.05
+a = 2*s1-s2
+b = best*(s1-s2)/(1-best)
+print("二次指数平滑1985年预测值：",a+2*b)
+print("二次指数平滑1990年预测值：",a+7*b)
+
+diff = [0] + [val[i]-val[i-1] for i in range(1,len(val))]
+
+# 用于选取最佳alpha值
+# alphas = np.linspace(0.1,0.9,9)
+# for i in range(len(alphas)):
+#     print()
+#     first_diff_predict(alphas[i])
+best = 0.4
+diff_predict = best*diff[-1]+(1-best)*0.761
+print("一次差分平滑1985年预测值：",12.59+diff_predict)
+print("一次差分平滑1990年预测值：",12.59+7*diff_predict)
+\end{lstlisting}
+\newpage
+\section{(8.4)}
+我在Matlab的实时编辑器中完成了本题的求解。
+
+得到的模型为
+\[y_t = 1.2276y_{t-1}-0.68478y_{t-2}+\varepsilon_t-0.5022\varepsilon_{t-1}\]
+其中$y_t=x_{t+1}-x_t$为差分数组。
+
+得到的10步预测值分别为
+6470,
+6879,
+7393,
+8027,
+8743,
+9483,
+10202,
+10882,
+11536,
+12190.
+
+实时编辑器页面如下一页所示。
+\newpage
+\section{(8.5)}
+我在Matlab的实时编辑器中完成了本题的求解。
+
+首先我绘制了所给数据的折线图，如图\ref{q5}。
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics*[width =0.5 \textwidth]{q51.jpg}
+    \caption{第五题数据}\label{q5}
+\end{figure}
+
+可以看到，数据成周期性，周期大致为10。所以我先对原始数据进行差分处理，转化为差分序列$y_t = x_{t+10}-x_t$。
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics*[width = 0.5\textwidth]{q52.jpg}
+    \caption{差分序列}\label{q52}
+\end{figure}
+
+从图\ref*{q52}可以看到，经过差分后，在大部分时间段内，序列较平稳。
+
+接着，我尝试建立ARMA模型，根据AIC值选取最佳参数。经比较，当p=3,q=10时，AIC值最小。
+同时，在该参数下，模型能够通过LBQ检验。
+
+通过选取出的模型得到的后两年的预测值分别为2737和2077。
+
+实时编辑器页面如后所示。
+\newpage
+\section{(8.6)}
+我在Matlab的实时编辑器中完成了本题的求解。
+
+首先我绘制了所给数据的折线图，如图\ref{q6}。
+
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics*[width = 0.5\textwidth]{q6.jpg}
+    \caption{第六题数据}\label{q6}
+\end{figure}
+
+可以看到，各个季度的变化趋势基本一致，且相对大小较为稳定。因此，我先以年为单位进行
+时间序列模型。然后我计算根据所给数据计算出各季度的数据对于一整年数据的贡献平均占比。
+综合两者，得到对于未来各季度的估计。
+
+对于时间序列，我尝试建立ARMA模型，根据AIC值选取最佳参数。经比较，当p=2,q=3时，AIC值最小。
+同时，在该参数下，模型能够通过LBQ检验。
+
+通过选取出的模型得到的后两年的预测值分别为242和237。乘以比例系数后，得到后8各季度的预测数据分别为
+58.3,61.0,61.0,61.9,57.3,59.9,59.9,60.8。
+
+实时编辑器页面如后所示。
+\newpage
+\end{document}

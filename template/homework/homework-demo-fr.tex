@@ -1,0 +1,141 @@
+\documentclass[11pt,
+  % twoside,
+  logo = {example-image},
+  % logo height = 1cm,  % logo width = 2cm,
+  title in boldface,
+  % title in sffamily,
+  theorem in new line,
+  % remove qed,
+  colored solution,
+]{homework}
+
+%% For highlighting the code in this document
+\usepackage{newverbs}
+\newverbcommand{\cverb}{\color{red!50!orange}}{}
+
+%% Below is the main document
+
+
+\UseLanguage{French}
+
+
+\title{Le sujet, semaine 1}
+\author{Prénom NOM}
+% \date{\today, Lieu}
+% \date{\today[only-year-month], Lieu}
+\date{\TheDate{2024-01-01}, Lieu}
+
+
+\begin{document}
+
+
+\textcolor{gray!55}{(Si vous souhaitez écrire la réponse directement...)}
+
+\begin{problem}
+    Voici la solution / la preuve.
+\end{problem}
+
+
+\bigskip\textcolor{gray!55}{(Si vous souhaitez énoncer le problème puis écrire votre réponse...)}
+
+\begin{problem}[Description brève]
+    Vous pouvez également énoncer le problème ici...
+\end{problem}
+
+\begin{solution}
+    ... puis écrire la solution ici...
+\end{solution}
+
+\bigskip\textcolor{gray!55}{(Si vous préférez \textquote{Preuve} au lieu de \textquote{Solution}...)}
+
+\begin{solution}[Preuve]
+    ... ou une preuve comme ça...
+    \begin{lemma}[Vous pouvez écrire ici quelques descriptions]\label{lem}
+        Un résultat auxiliaire.
+    \end{lemma}
+    \begin{proof}
+        La preuve \cref[de]{lem}, où l'on utilise la formule suivante (notez l'utilisation de \cverb|\qedhere|) :
+        \[
+            \infty = \infty + 1.
+            \qedhere % pour placer le symbole Q.E.D. au bon endroit
+        \]
+    \end{proof}
+    \begin{fact}[Cet énoncé ne requiert aucune preuve]
+        \proofless
+        Utilisez \cverb|\proofless| pour transformer la boîte creuse marquant la fin d'un environnement de type théorème en une boîte solide.
+    \end{fact}
+    ... et les étapes restantes...
+\end{solution}
+
+
+\bigskip\textcolor{gray!55}{(Vous pouvez également écrire \texttt{answer} au lieu de \texttt{solution} si vous le souhaitez...)}
+
+\begin{answer}
+    L'utilisation de l'environnement \verb|answer| est exactement le même que celui de \verb|solution|.
+\end{answer}
+
+
+\bigskip\textcolor{gray!55}{(Si vous préférez le style classique...)}
+
+\begin{proof}
+    L'environnement habituel \verb|proof| fonctionne également.
+\end{proof}
+
+
+\bigskip\textcolor{gray!55}{(Si vous souhaitez répondre individuellement à chaque sous-question d'un problème...)}
+
+\begin{problem}[Un problème avec de nombreuses sous-questions]
+    \begin{enumerate}
+        \item La première question.
+
+        \begin{solution}
+            La réponse à la première question.
+        \end{solution}
+
+        \item La deuxième question.
+
+        \begin{enumerate}
+            \item La première sous-question.
+
+            \begin{solution}
+                La réponse à la première sous-question.
+            \end{solution}
+
+            \item La deuxième sous-question.
+
+            \begin{solution}
+                La réponse à la deuxième sous-question.
+            \end{solution}
+
+        \end{enumerate}
+
+        \item La troisième question.
+
+        \begin{solution}
+            La réponse à la troisième question.
+        \end{solution}
+
+    \end{enumerate}
+    Utilisez \cverb|\noqed| (ou \cverb|\noQED|) à la fin pour supprimer le Q.E.D. symbole qui marque la fin du problème actuel.
+    \noQED
+\end{problem}
+
+
+\bigskip\textcolor{gray!55}{(Si vous souhaitez numéroter l'exercice manuellement...)}
+
+\ManualNumbering{exercise}{A.1.1}
+\begin{exercise}[Un exercice avec une numérotation manuelle]
+    Utilisez \cverb|\ManualNumbering| pour configurer manuellement la numérotation. Cette numérotation ne sera appliquée qu'au prochain environnement spécifié.
+\end{exercise}
+
+\begin{exercise}
+    Retour à la numérotation normale.
+\end{exercise}
+
+
+\bigskip\textcolor{gray!55}{(S'il y a une question que vous n'arrivez pas à résoudre pour le moment...)}
+
+\DNF<la description>
+
+
+\end{document}

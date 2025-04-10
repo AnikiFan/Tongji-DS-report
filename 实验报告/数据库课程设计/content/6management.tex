@@ -1,0 +1,51 @@
+\chapter{项目管理}
+\thispagestyle{empty}
+\section{框架选择}
+本项目采用Next.js作为全栈框架。它是一个开源的 JavaScript 框架，基于 React 构建，旨在简化和优化现代 Web 应用的开发。它提供了很多开箱即用的功能，能够帮助开发者构建快速、可扩展的 Web 应用，尤其适用于静态网站生成（SSG）、服务器端渲染（SSR）和客户端渲染（CSR）。
+
+Next.js具有以下特点：
+\begin{enumerate}
+    \item \textbf{服务器端渲染（SSR）}：
+    Next.js 支持服务器端渲染，这意味着页面的 HTML 可以在服务器上预先渲染，然后传送给客户端。这有助于提高 SEO（搜索引擎优化）性能，因为搜索引擎可以直接读取渲染好的 HTML。
+    
+    \item \textbf{静态站点生成（SSG）}：
+    Next.js 支持通过静态站点生成（SSG）功能，在构建时生成静态 HTML 页面。这对于内容更新不频繁的应用非常有效，能显著提高性能。
+    
+    \item \textbf{API 路由}：
+    Next.js 可以用来构建 API 服务，允许开发者在同一个项目中同时处理前端和后端逻辑。开发者可以在 \texttt{pages/api} 目录下创建 API 路由，从而处理服务器端的请求。
+    
+    \item \textbf{增量静态生成（ISR）}：
+    Next.js 提供了增量静态生成功能，允许开发者在生产环境中动态地更新静态页面。开发者可以设置页面的重新生成周期，这对于需要定期更新内容的应用非常有用。
+    
+    \item \textbf{自动代码拆分}：
+    Next.js 会自动拆分 JavaScript 代码，按需加载页面，确保每个页面只加载它需要的 JavaScript，提升页面加载速度。
+    
+    \item \textbf{文件系统路由}：
+    在 Next.js 中，路由是基于文件系统的。只要在 \texttt{pages} 目录下创建相应的文件或目录，就会自动生成对应的路由。
+    
+    \item \textbf{静态文件支持}：
+    Next.js 允许开发者将静态文件（如图片、字体、JSON 等）放置在 \texttt{public} 目录中，并自动生成可访问的 URL。
+    
+    \item \textbf{类型支持}：
+    Next.js 完全支持 TypeScript，可以直接在项目中使用 TypeScript，无需额外配置。
+    
+    \item \textbf{React 特性}：
+    由于 Next.js 基于 React，开发者可以利用 React 的所有特性，如组件化开发、Hooks、Context 等。
+\end{enumerate}
+\section{开发平台}
+本项目使用的开发平台如下：
+\begin{itemize}
+    \item \textbf{开发语言}：TypeScript；
+    \item \textbf{开发框架}：采用Next.js作为全栈框架；
+    \item \textbf{集成开发环境}：VSCode,WebStorm；
+    \item \textbf{版本控制工具}：Git；
+    \item \textbf{前期设计工具}：Adobe XD；
+    \item \textbf{代码托管平台}：GitHub；
+    \item \textbf{依赖管理工具}：pnpm；
+    \item \textbf{数据库管理工具}：DataGrip，pgAdmin4；
+    \item \textbf{数据库}：PostgreSQL+PostGIS；
+    \item \textbf{ORM框架}：DrizzleORM；
+    \item \textbf{CSS框架}：Tailwind CSS；
+    \item \textbf{组件库}：NextUI；
+    \item \textbf{地理空间数据可视化平台}：Deck.gl,Mapbox；
+\end{itemize}

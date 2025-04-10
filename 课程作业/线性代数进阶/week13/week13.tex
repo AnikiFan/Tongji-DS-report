@@ -1,0 +1,37 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW13}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{9.3.4}
+    设
+    \[A =\begin{pmatrix}
+        \bm{\alpha}_1^{\top}\\
+        \bm{\alpha}_2^{\top}\\
+        \vdots\\
+        \bm{\alpha}_m^{\top}\\
+    \end{pmatrix}\]
+    则
+    \[\bm{W(A)}=span\{\bm{\alpha}_1,\bm{\alpha}_2,\cdots,\bm{\alpha}_m\}\]
+    记方程$\bm{AX=0}$的基础解系为
+    \[\bm{\xi}_1,\bm{\xi}_2,\cdots,\bm{\xi}_r\]
+    则
+    \[\bm{N(A)}=span\{\bm{\xi}_1,\bm{\xi}_2,\cdots,\bm{\xi}_r\}\]
+    \[(\bm{\xi_i,\alpha_j})=0,\forall 1\leq i\leq r,1\leq j\leq m\]
+    所以$\forall \bm{\alpha}\in \bm{W(A)},\bm{\xi}\in\bm{N(A)}$
+    \[(\bm{\alpha,\xi})=(\sum_{i}k_i\bm{\alpha_i},\sum_jt_j\bm{\xi_j})=\sum_{i}\sum_jk_it_j(\bm{\alpha_i},\bm{\xi_j})=0\]
+    即
+    \[\bm{W(A)}\perp \bm{N(A)}\]
+    从而$\bm{W(A)},N(A)$之和为直和。又因为$\dim(W(A))+\dim(N(A))=n$，所以
+    \[\mathbb{R} ^n=\bm{W(A)}\oplus \bm{N(A)}\]
+\end{problem}
+\end{document}

@@ -1,0 +1,138 @@
+\documentclass[11pt,
+  % twoside,
+  logo = {example-image},
+  % logo height = 1cm,  % logo width = 2cm,
+  title in boldface,
+  % title in sffamily,
+  theorem in new line,
+  % remove qed,
+  colored solution,
+]{homework}
+
+%% For highlighting the code in this document
+\usepackage{newverbs}
+\newverbcommand{\cverb}{\color{red!50!orange}}{}
+
+%% Below is the main document
+
+
+\title{The Subject, Week 1}
+\author{Author NAME}
+% \date{\today, Location}
+% \date{\today[only-year-month], Location}
+\date{\TheDate{2024-01-01}, Location}
+
+
+\begin{document}
+
+
+\textcolor{gray!55}{(If you wish to write the answer directly...)}
+
+\begin{problem}
+    Here lies the solution / proof.
+\end{problem}
+
+
+\bigskip\textcolor{gray!55}{(If you wish to state the problem and then write your answer...)}
+
+\begin{problem}[Brief description]
+    You may also state the problem here...
+\end{problem}
+
+\begin{solution}
+    ... and write the solution here...
+\end{solution}
+
+\bigskip\textcolor{gray!55}{(If you prefer \textquote{Proof} instead of \textquote{Solution}...)}
+
+\begin{solution}[Proof]
+    ... or a proof like this one...
+    \begin{lemma}[You may write some description here]\label{lem}
+        Some auxiliary result.
+    \end{lemma}
+    \begin{proof}
+        The proof of \cref{lem}, where we use the following formula (note the use of \cverb|\qedhere|):
+        \[
+            \infty = \infty + 1.
+            \qedhere % To place the Q.E.D. symbol in the right place.
+        \]
+    \end{proof}
+    \begin{fact}[This statement requires no proof]
+        \proofless
+        Use \cverb|\proofless| to change the hollow box marking the end of a theorem-type environment into a solid one.
+    \end{fact}
+    ... and the rest steps...
+\end{solution}
+
+
+\bigskip\textcolor{gray!55}{(You may also write \texttt{answer} instead of \texttt{solution} if you wish...)}
+
+\begin{answer}
+    The usage of the \verb|answer| environment is exactly the same as \verb|solution|.
+\end{answer}
+
+
+\bigskip\textcolor{gray!55}{(If you prefer the classical proof style...)}
+
+\begin{proof}
+    The usual \verb|proof| environment also works.
+\end{proof}
+
+
+\bigskip\textcolor{gray!55}{(If you wish to answer each sub-question of a problem separately...)}
+
+\begin{problem}[A problem with many sub-questions]
+    \begin{enumerate}
+        \item First question.
+
+        \begin{solution}
+            The solution of the first question.
+        \end{solution}
+
+        \item Second question.
+
+        \begin{enumerate}
+            \item First sub-question.
+
+            \begin{solution}
+                The solution of the first sub-question.
+            \end{solution}
+
+            \item Second sub-question.
+
+            \begin{solution}
+                The solution of the second sub-question.
+            \end{solution}
+
+        \end{enumerate}
+
+        \item Third question.
+
+        \begin{solution}
+            The solution of the third question.
+        \end{solution}
+
+    \end{enumerate}
+    Use \cverb|\noqed| (or \cverb|\noQED|) at the end to suppress the Q.E.D. symbol that marks the end of the current problem.
+    \noQED
+\end{problem}
+
+
+\bigskip\textcolor{gray!55}{(If you wish to number the exercise manually...)}
+
+\ManualNumbering{exercise}{A.1.1}
+\begin{exercise}[An exercise with custom numbering]
+    Use \cverb|\ManualNumbering| to manually set the numbering. This number will only be applied to the next specified environment.
+\end{exercise}
+
+\begin{exercise}
+    Back to normal numbering.
+\end{exercise}
+
+
+\bigskip\textcolor{gray!55}{(If there is a question that you can't figure out how to solve at the moment...)}
+
+\DNF<some description>
+
+
+\end{document}

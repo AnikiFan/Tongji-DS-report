@@ -1,0 +1,33 @@
+\chapter{项目概述}
+\section{主要内容与目标}
+本次项目的主要内容为神经网络的搭建与应用。
+
+首先，项目要求我们实现感知机，然后搭建神经网络以完成非线性回归、数字分类以及语言识别。
+\section{已有代码}
+下面对已有代码中与本项目的具体实现相关的代码进行分析。
+\subsection{nn.py}
+该文件提供了用于搭建神经网络的一系列节点：
+\begin{enumerate}
+    \item Consant：由浮点数组成的二维数组；
+    \item Parameter：可训练的感知机或神经网络，提供了用于更新参数的方法update；
+    \item DotProduct：对它的输入进行点积运算；
+    \item Add：逐元素的矩阵加法；
+    \item AddBias：为特征向量添加一个偏置值；
+    \item Linear：对输入进行线性变换；
+    \item ReLU：ReLU激活函数；
+    \item SquareLoss：平方损失函数；
+    \item SoftmaxLoss：SoftmaxLoss损失函数。
+\end{enumerate}
+
+同时，还提供了一下两个函数：
+\begin{enumerate}
+    \item gradients：给定损失函数对于给定参数的梯度；
+    \item as\_scalar：将给定节点以Python中的数值类型返回。
+\end{enumerate}
+\subsection{backend.py}
+该文件提供了本项目中所需要使用的数据集，提供了以下方法：
+\begin{enumerate}
+    \item iterate\_once：返回数据集中的一批数据，返回的类型为一个二元组(x,y)，其中x,y分别为特征和标签，类型均为Constant结点，大小分别为“批的大小$\times$特征数量”，“批的大小$\times$输出大小”；
+    \item iterate\_forever：一个不断从数据集中返回数据的迭代器；
+    \item get\_validation\_accuracy：返回在验证集上得到的准确率。
+\end{enumerate}

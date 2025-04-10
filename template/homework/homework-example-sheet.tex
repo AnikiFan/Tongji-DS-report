@@ -1,0 +1,159 @@
+\documentclass[a4paper, 11pt,
+  % twoside,
+  formal title,
+  title in boldface,
+  % title in sffamily,
+  % theorem in new line,
+  % remove qed,
+  colored solution,
+  hide solution,          % Use this option to hide the solutions/answers
+]{homework}
+
+
+% EDIT THE FOLLOWING INFORMATION AS NEEDED
+
+\pretitle{%
+    \scshape
+                    The University
+    \hfill
+                    The Program \& Level
+    \\
+                    Course ID \& Course Name
+    \hfill
+                    Year 2024--25
+}
+
+\title{%
+                    Sheet 1. Title of the current file
+}
+\author{}
+\date{%
+                    % \TheDate{2024-01-01}
+}
+
+
+\begin{document}
+
+
+Here starts the main text.
+
+
+\section*{First theme}
+
+We shall show that...
+
+\begin{problem}
+    A preliminary result.
+\end{problem}
+
+\begin{solution}
+    \blindtext
+\end{solution}
+
+\begin{problem}[Brief description]
+    One step ahead.
+
+    \blindtext
+\end{problem}
+
+\begin{solution}
+    \blindtext[2]
+\end{solution}
+
+At this stage, we may conclude that...
+
+
+\section*{Second theme}
+
+Now we look at...
+
+\begin{problem}[Some prepration]
+
+    This is the prepration for...
+
+    \begin{enumerate}
+
+        \item
+            First question.
+
+            \begin{solution}
+                \blindtext
+            \end{solution}
+
+        \item
+            Second question.
+
+            \begin{solution}
+                \blindtext
+            \end{solution}
+
+        \item
+            Third question.
+            \qedhere
+
+            \begin{solution}
+                \blindtext
+            \end{solution}
+
+    \end{enumerate}
+\end{problem}
+
+\begin{problem}[Another problem with many sub-questions]
+    \leavevmode % so that the first item start in new line
+    \begin{enumerate}
+
+        \item
+            First question.
+
+            \blindtext
+
+            \begin{solution}
+                \blindtext[2]
+            \end{solution}
+
+        \item
+            Second question.
+
+        \begin{enumerate}
+            \item
+                First sub-question.
+
+                \blindtext
+
+                \begin{solution}
+                    \blindtext[2]
+                \end{solution}
+
+            \item
+                Second sub-question.
+
+                \blindtext
+
+                \begin{solution}
+                    \blindtext[2]
+                \end{solution}
+
+        \end{enumerate}
+
+        \item
+            Third question.
+
+            \blindtext[2]
+
+            \begin{solution}
+                \blindtext[2]
+            \end{solution}
+
+        \item
+            Conclusion.
+            \qedhere
+
+            \begin{solution}
+                \blindtext
+            \end{solution}
+
+    \end{enumerate}
+\end{problem}
+
+
+\end{document}

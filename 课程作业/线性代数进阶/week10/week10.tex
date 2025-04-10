@@ -1,0 +1,32 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW10}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\begin{problem}{7.4.4}
+    显然
+    \[f(A)=0\Leftrightarrow f(A_i)=0,i=1,\cdots,s\]
+    所以 
+    \[m_A(A_i)=0,i=1,\cdots,s\]
+    又因为
+    \[f(A_i)=0\Rightarrow m_{A_i}\mid f,i=1,\cdots,s\]
+    所以 
+    \[m_{A_i}\mid m_A\]
+    即$m_A$为$m_i,i=1,\cdots,s$的公倍式。任取$m_i,i=1,\cdots,s$的一个公倍式$f$，存在$g_i$使得$f=g_im_i$，因此 
+    \[f(A_i)=g_i(A_i)m_i(A_i)=g_i(A_i)\cdot 0=0,i=1,\cdots,s\]
+    从而 
+    \[f(A)=0\]
+    所以$f$为$A$的一个零化多项式。因此
+    \[m_A\mid f\]
+    即$m_A$为$m_i,i=1,\cdots,s$的最小公倍式。
+\end{problem}
+\end{document}

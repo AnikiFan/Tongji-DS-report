@@ -1,0 +1,1303 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\usepackage{slashed}
+\theoremstyle{remark}
+\newtheorem*{remark}{remark}
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}[subsection]
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\author{Fan}
+\title{Graph Theory Exercises}
+\date{2023.8.13}
+\begin{document}
+\maketitle
+\pagestyle{plain}
+\tableofcontents
+\printindex
+\section{Definitions and examples}
+\subsection{Definitions}
+\begin{problem}
+   If $G$ is a simple  graph with at least two vertices, prove that $G$ 
+   must contain two or more vertices of the same degree. 
+   \begin{proof}
+    Suppose $G$ has n vertices $(n\geq 2)$ and none of its vertices has the 
+    same degree. We can also assume that there is no isolated vertice, since 
+    there is atmost one isolated vertice and won't contribute to 
+    other vertices' degrees. Thus, we have n vertices with at least 1 degree.
+    However, since the graph is simple, each vertices can have n-1 degrees at 
+    most. Thus, there must be two vertices with same degree.
+   \end{proof}
+\end{problem}
+\begin{problem}
+    \begin{enumerate}
+        \item Show that there are exactly $2^{n(n-1)/2}$ labelled simple graph on v vertices.
+        \item How many of these have exactly m edge. \index{unsolved problem 1.0.2.2.}
+    \end{enumerate}
+    \begin{proof}
+        We will prove by induction.
+        When $n=1$, the only vertice has to be isolated vertice. Thus there 
+        is only one possibility, which is agree with $2^{n(n-1)/2}$.
+
+        Suppose when $n=k$ then equation is valid. Then, when $n=k+1$, 
+        we can regard this situation as adding one vertice into $n$ vertices.
+        The new vertex can choose whether to adjacent with other vertices, 
+        thus we have totally $2^{n(n-1)/2}\cdot 2^{n}=2^{n(n+1)/2}$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a graph with $n$ vertices and $m$ edges, and let $v$ be 
+    a vertex of $G$ of degree $k$ and $e$ be an edge of $G$. How many vertices 
+    and edges have $G-e,G-v$ and $G\verb|\|e$.
+
+    $G-e$ has $n$ vertices and $m-1$ edges.
+    $G-v$ has $n-1$ vertices and $m-k+l$ edges, where l is the number of the loops incident with $v$.
+    $G\verb|\|e$ has $n-1$ vertices and $m-s$ edges, where $s$ is the number of edges that is in the same edge-family with $e$.
+\end{problem}
+\begin{problem}
+    If $G$ is a graph without loops, what can you say about the sum of the 
+    entries in 
+    \begin{enumerate}
+        \item any row or column of the adjacency matrix of $G$?
+        \item any row of the incidence matrix $G$?
+        \item any column of the incidence matrix of $G$?
+    \end{enumerate}
+
+        Nothing.
+        Nothing.
+        It must be 2.
+\end{problem}
+\subsection{Challenge problems}
+\begin{problem}
+A simple graph that is isomorphic to its complement is self-complementary.
+Prove that, if $G$ is self-complementary, then $G$ has $4k$ or $4k+1$ 
+vertices, where $k$ is an integer.
+\begin{proof}
+    $G\cup G'=K_n$. Since $G$ and $G'$ has same amounts of edges, the 
+    number of $K_n$'s edge is even. Thus $n(n-1)/2$ must be an even number.
+    Therefore, $n=4k$ or $n=4k+1$.
+\end{proof}
+\end{problem}
+\begin{problem}
+    If $G$ is a simple graph with edge-set $E(G)$, the vector space of $G$
+    is the vector space over the field $Z_2=\{0,1\}$ of integers modulo 2,
+    whose elements are subsets of $E(G)$. The sum $E+F$ of two such subsets 
+    $E$ and $F$ is the set of edges in $E$ or $F$ but not in both, and 
+    scalar multiplication is defined by $1\cdot E=E$ and $0\cdot E=\varnothing$.
+    Show that this define a vector space over $Z_2$, and find a basis for it.
+    \index{unsolved problem 1.2.2.}
+\end{problem}
+\begin{problem}
+    Prove that, if $G$ is regular of degree $k$, then $L(G)$ is regular of degree $2k-2$.
+    \begin{proof}
+        Since $G$ is regular of degree $k$, for each edge $wv$, each of its end 
+        has other $k-1$ edges that is incident with it. Thus, the vertex isomorphic to
+        the edge $vw$ has $2k-2$ edge that is incident with it.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Find an expression for the number of edges of $L(G)$ in terms of the degrees of 
+    the vertices of $G$.
+
+    \[\sum_{V(G)}\frac{\text{deg}v(\text{deg}v-1)}{2}\]
+\end{problem}
+\begin{problem}
+    Show that an infinite graph $G$ can be drawn in Euclidean 3-space if $V(G)$
+    and $E(G)$ can each be put in one-one correspondence with a subset of the 
+    set of real numbers.
+    \begin{proof}
+        \index{unsolved problem 1.2.5.}
+    \end{proof}
+\end{problem}
+\section{Paths and cycles}
+\subsection{Connectivity}
+\begin{problem}
+    Prove that a simple graph and its complement cannot both be disconnected.
+    \begin{proof}
+    Suppose graph $G$ has at least two component.
+    For vertex $v$ and $w$, if they are in the different component, then 
+    in $\bar{G}$, they are connected. If they are in the same component, 
+    then we can choose vertex $z$ in other component, so that in $\bar{G}$,
+    we have $w\rightarrow z\rightarrow w$. Thus, for every pair of vertices in 
+    $\bar{G}$, there exists a path connect them. Therefore, $\bar{G}$ is connected.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that a graph is $2-$edge-connected if and only if any two distinct 
+    vertices are joined by at least two paths with no edges in common.
+    \begin{proof}
+        Since $G$ is connected, for any two distinct vertices $v$ and $w$ in 
+        $G$, there exists a path $P$ that joins them. Suppose there is another 
+        path $P'$ that also joins them. If there are no two paths that have no 
+        edges in common. Then, $P$ and $P'$ 
+        \index{unsolved problem 2.1.2.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that a graph with at least three vertices is $2-$connected if and only if 
+    any two distinct vertices are joined by at least two path with no other 
+    vertices in common.
+    \index{unsolved problem 2.1.3.}
+\end{problem}
+\begin{problem}
+    A tournament $T$ is irreducible if it is impossible to split 
+    the set of vertices of $T$ into two disjoint set $V_1$ and 
+    $V_2$ so that each arc joining a vertex of $V_1$ and a vertex of 
+    $V_2$ is directed from $V_1$ to $V_2$.
+    Prove that a tournament is irreducible if and only if it is strongly 
+    connected.
+    \index{unsolved problem 2.1.4.}
+\end{problem}
+\subsection{Euler graphs and digraphs}
+\begin{problem}
+    Let $G$ be a connected graph with $k(>0)$ vertices of odd degree.
+    Show that the minimum number of trails, that together include every edge 
+    of $G$ and that have no edges in common, is $k/2$.
+    \begin{proof}
+        By Handshaking theorem, $k$ must be an even number.    
+
+    We then proof by induction.
+    When $k=2$, there is a semi-Eulerian trail, thus the minimal number is $1$.
+    Suppose then $k-2$ is an even number, the minimal number is $(k-2)/2$.
+    Then, when there is $k$ vertices with odd degrees.
+    Suppose there are no vertices with odd incidence are adjacent. Then, 
+    the original graph can be separated into two graph:
+    one of them consists of all the vertices with even degree and 
+    $k-2$ vertices with odd degree and all the edges that is incident with them.
+    By induction hypothesis, this part can have minimal number of $(k-2)/2$.
+    Another graph consists of all the vertices of even degree and two 
+    vertices with odd degree that are not included in another part and the 
+    edges incident with them. By corollary 2.3. there is a semi-Eulerian.
+    Thus, the minimal number of second part is $1$. Therefore, the minimal 
+    number for the original graph is $k/2$.
+
+    If there are at least two vertices with odd degree that are adjacent,
+    then, by removing one edge incident with these two vertices, we can 
+    get a graph with only $k-2$ vertices with odd degree. Thus, by induction 
+    hypothesis, the total minimal number is $k/2$.
+
+    \begin{remark}
+        Actually, we only prove that the minimal number is less than $k/2$.
+        We can also prove that the minimal number is greater than $k/2$.
+        When $k=2$, obviously, the minimal number is greater than $1$.
+        Then, on the basis of a given graph, we can add a pair of vertices that 
+        is only adjacent with each other. Then, if when there is $k$ vertices 
+        with odd degree, the minimal number is greater than $k/2$. Then, when there is 
+        $k+2$ vertices with odd degree, the minimal number is greater than $k/2+1=(k+2)/2$.
+        Thus we finish the proof.
+    \end{remark}
+    \end{proof}
+    \begin{remark}
+        The proof given by the answer is more elegent.
+
+        Connect the $k$ vertices in pair by adding $k/2$ edges,
+        then get the Eulerian trail. Finally, remove the added edges to 
+        get $k/2$ trail.
+
+        However, it seems that it doesn't prove it is the minimal number.
+    \end{remark}
+\end{problem}
+\subsection{Hamiltonian graphs and digraphs}
+\begin{problem}
+    Prove that, for every $n$, $Q_n$ is Hamiltonian.
+    \begin{proof}
+        For $n=1,2,3$, it is obvious to give out the Hamiltonian cycle.
+        Suppose when $n=k$, there is a Hamiltonian cycle for $Q_n$, which is 
+        \[\cdots\rightarrow Y\rightarrow X\rightarrow Z\rightarrow\cdots\rightarrow Y\rightarrow X\rightarrow Z\rightarrow\cdots\]
+        where $X,Y,Z$ are all a string consists of n's 1 or 0.
+        Then we can construct the Hamiltonian cycle for $Q_{k+1}$:
+        \[\overline{X0}\rightarrow\overline{X1}\rightarrow(\text{along the direction of the former cycle})\rightarrow\overline{Y1}\rightarrow\overline{Y0}\]
+        \[\rightarrow \text{(against the direction of the former cycle)}\rightarrow\overline{Z0}\rightarrow\overline{X0}\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that, if $G$ is a bipartite graph with an odd number of vertices, 
+    then $G$ is non-Hamiltonian.
+    \begin{proof}
+   If a graph is non-Hamiltonian, then, any subgraph of it is also non-Hamiltonian.
+   Thus, we only need to prove that a complete bipartite is non-Hamiltonian,
+   which is obvious. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a graph with $n$ vertices and (n-1)(n-2)/2+2 edges.
+    Use Ore's theorem to prove that $G$ is Hamiltonian.
+    \begin{proof}
+        The graph can be obtained by removing $n-3$'s edges from 
+        $K_n$. Suppose there is a pair of disjoint vertices $v,w$ that 
+        doesn't satisfy the condition of theorem 2.13., then, $\deg(v)+\deg(w)\leq n-1$.
+        Thus, we must remove at least $1+(2n-2)-(n-1)=n'$s edges from $K_n$.
+        Thus, there is no such vertices in the given graph. Therefore, it is a 
+        Hamiltonian. 
+    \end{proof}
+\end{problem}
+\subsection{Challenge problems}
+\begin{problem}
+    Let $G$ be a simple garph on $2k$ vertices containing no triangles.
+    Prove, by induction on $k$, that $G$ has at most $k^2$ edges.
+    \begin{proof}
+       When $k=1$, $G$ has two vertices. Since $G$ is a simple graph, it 
+       is obvious that it can have at most $1$ edges. 
+
+       Suppose when $n=k$, in order not to have triangle in $G$, 
+       $G$ can have at most $k^2$ edges.
+       When $n=k+1$, there is $2k+2$ vertices in $G$. For any $2k$ vertices 
+       in the graph $G$, by induciton hypothesis, there are at most 
+       $k^2$ edges that are incident with any two of them. 
+       Then, we can separate the $2k+2$ vertices into $v,w$ and 
+       other $2k$ vertices. Since there is no triangle, there is atmost
+       $k^2$ edges incident with vertex in the latter group.
+       And there are atmost $2k+1$ edges left: $vw$ and $vz,wz$ for every 
+       vertex $z$ in the latter group. Thus, there is at most, $k^2+2k+1=(k+1)^2$ edges.
+\begin{remark}
+    Such upper bound can be achieved in $K_{k,k}$
+\end{remark}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a connected graph with vertex-set $\{v_1,v_2,\cdots,v_n\}$,
+    m edges and $t$ triangles. 
+    \begin{enumerate}
+        \item If $A$ is the adjacency matrix of $G$, prove that the number 
+        of walks of length 2 from $v_i$ to $v_j$ is the $ij$th entry of the 
+        matrix $A^2$. Deduce that $2m=$ the sum of the diagonal entries of $A^2$.
+        \item Obtain a corresponding result for the number of walks of length $3$ 
+        from $v_i$ to $v_j$ and deduce that $6t=$ the sum of the diagonal entries of $A^3$. 
+    \end{enumerate}
+    \begin{proof}
+        \[A^2(i;j)=\sum_{k=1}^{n}A(i;k)A(k;j)\]
+        Since
+        \[
+        \begin{array}{rl}
+            A(i;k)A(k;j)\neq 0&\Leftrightarrow A(i;k)\neq 0 \text{ and }A(k;j)\neq 0\\
+            &\Leftrightarrow v_i \text{ is adjacent with }v_k \text{ and }v_k \text{ is adjacent with }v_j\\ 
+        \end{array}
+    \]
+    If there is $n$ walks, then there is $n$ different $k,$ thus $A^2(i;j)=n$.
+    If $A^2(i;j)=n,$ then there should be $n$ different $k,$ thus there is $n$ different walks.
+
+    Since every edge provide 2 different walk by traversing along it twice,
+    whose starting point is the two vertices incident with the edges respectively.
+
+    We can regard $A^3$ as $A^2 A$, then we can proof it similarly.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    \begin{enumerate}
+    \item Prove that, if two distinct cycles of a graph $G$ each contains an edge $e$,
+    then $G$ has a cycle that doesn't contain $e$.
+    \item Prove a similar result with `cycle' replaced by `cutsets'.
+    \end{enumerate}
+    \begin{proof}
+        Obviously, the union of two cycle without $e$ is the desitred cycle.
+
+        Suppose $A,B$ is the distinct cutset but both have $e$.
+        Then, $A\cup B$ is no a cutset but has a subset that is cutset.
+        \index{unsolved problem 2.4.3.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that, if $C$ is a cycle and $C^*$ is 
+    a cutset of a connected graph $G$, then $C$ and $C^*$ have an even number 
+    of edges in common.
+    \begin{proof}
+        Since a cutset will separate a graph into two, say, $A$ and $B$,
+        and cutset has no unnecessary edges. Then, every edge in the cutset 
+        should incident with one vertex in $A$ and one vertex in $B$.
+        Otherwise, if we remove that edge from cutset, the graph can still be
+        separated into two part.
+
+        Thus, if there is one edge that is both in $C$ and $C^*$. Then, 
+        say that edge is $ab$ and $a$ is in $A$ and $b$ is in $B$.
+        Then, the part of the circle that is connected to the vertex $a$ should 
+        be separated into $A$, to the vertex $b$ separated into $B$.
+        Thus, there must be even edges that is both in $C$ and $C^*$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that, if $S$ is any set of edges of $G$ with an even number 
+    of edges in common with each cutset of $G$, then $S$ can be split into 
+    edge-disjoint cycles.
+    \index{unsolved problem 2.4.5.}
+\end{problem}
+\begin{problem}
+    A set $E$ of edges of a graph is independent if $E$ contains no 
+    cycle of $G$. Prove that 
+    \begin{enumerate}
+        \item any subset of an independent set is independent.
+        \item if $I$ and $J$ are independent sets of edges with $\abs{J}>\abs{I}$,
+        then there is an edge $e$ that lies in $J$ but not in $I$ with the 
+        property that $I\cup\{e\}$ is independent.
+    \end{enumerate}
+    Prove also that (1) and (2) still hold if we replace the word `cycle' by `cutset'.
+    \begin{proof}
+        The first question is very easy to prove.
+
+        For the second question, since $\abs{J}>\abs{I}$, there exists 
+        an edge $e$ that lies in $J$ but not in $I$. Suppose there is no 
+        such edges that statify the given conditons, then, for every edge $e$
+         that lies in $J$ but not in $I$, $I\cup \{e\}$ is there is a circle.
+         However, $I$ is independent, which means that $I$ has a semi-Eulerian
+         trail and has two vertices with odd degrees. To form a circle, 
+         every edge that lies in $J$ but not in $I$ is incident with those two 
+         vertices whose degree are odd. Therefore, there can only be one such edge,
+         since $J$ is independent and thus has no multiple edges. We denote that very
+         edge by $e$. Thus, we can get $J$ by adding $e$ into $I$. However, 
+         this means that there is an Eulerian trail in $J$, thus there must be 
+         a circle in $J$, which is a contradiction.
+
+        When we replace `cycle' by `cutset', (1) is still obvious.
+        \index{unsolved problem 2.4.6.}
+        \begin{remark}
+            Maybe this problem is closely related to the previous two problems.
+        \end{remark}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $V$ be the vector space of a graph $G$
+    \begin{enumerate}
+        \item Use corollary 2.4 to show that, if $C$ and $D$ are cycles of $G$,
+        then their sum $C+D$ can be written as a union of edge-disjoint cycles.
+        \item Deduce that the set of such unions of cycles of $C$ forms a subspace $W$
+        of $V$ (the cycle subspace of $G$), and find its dimension.
+        \item Show that the set of unions of edge-disjoint cutsets of $G$ forms 
+        a subspace $W^*$ of $V$(the cutset subspace of $G$), and  find its dimension.
+    \end{enumerate}
+    \index{unsolved problem 2.4.7.}
+\end{problem}
+\begin{problem}
+    Show that the line graph of a simple Eulerian graph is Eulerian.
+    \begin{proof}
+        Suppose $G$ is a simple Eulerian graph with Eulerian cycle.
+        Then, every vertices in $G$ has even degree.
+        Thus, for every edges, each vertex that it is incident with is 
+        also adjacent to an odd number of edges. Thus, every edge is 
+        adjacent with odd numbers of other edges. Therefore, in $L(G)$,
+        every vertex has even degree. Thus, $L(G)$ is also a Eulerian graph.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    If the line graph of a simple graph $G$ is Eulerian, must $G$ 
+    be Eulerian?
+    \begin{proof}
+        We only need to prove that $L(L(G))=G$.
+
+        Since the number of the vertices in $L(L(G))$ equal the number of 
+        the edges in $L(G)$, which is equal to the number of the vertices in $G$.
+        And each pair of vertices in $L(L(G))$ is adjacent if and only if the corresponding
+        edges is adjacent in $L(G)$, which happens if and only if the corresponding pair of vertices is 
+        adjacent in $G$. Thus, $L(L(G))$ is isomorphic to $G$. Thus, the answer is yes.
+    \end{proof}    
+\end{problem}
+\begin{problem}
+    Let $T$ be a tournament. The score of a vertex of $T$ is its out-degree,
+    and the score sequence of $T$ is the sequence formed by arming the scores of its 
+    vertices in non-decreasing order. Prove that, if $(s_1,s_2,\cdots,s_n)$ is the 
+    score-sequence of a tournament $T$, then 
+    \begin{enumerate}
+        \item $s_1+s_2+\cdots+s_n=n(n-1)/2$;
+        \item for each positive integer $k<n,s_1+s_2+\cdots+s_k\geq k(k-1)/2$,with strict inequility 
+        for all $k$ if and only if $T$ is strong connected.
+        \item $T$ is transitive if and only if $s_k=k-1$ for each $k$
+    \end{enumerate}
+    \begin{proof}
+        The first question is trival, since there are $n(n-1)/2$ edges at all.
+
+        For the second question, since for the match in the $k's$ team,
+        no metter who wins, it will contribute to the sum, thus $s_1+\cdots+s_k\geq k(k-1)/2$.
+        When the equation is valid, these $k$'s team don't win unless they are fighting
+        with the team other than these $k's$ teams. Thus, obviously, the $k$'s team 
+        is isolated from the outside, since there is no path from outside from inside.
+        Such path only exists when it is a strict inequility.
+
+        \index{unsolved problem 2.4.10.3.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a Hamiltonian graph and let $S$ be any set of $k$ vertices in $G$.
+    Prove that the graph $G-S$ has at most $k$ component.
+    \begin{proof}
+        The deletion of $k$ vertices will at most cut the Hamiltonian cycle into 
+        $k's$ path, thus at most $k's$ components.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    What is the maximum number of edge-disjoint Hamiltonian cycles in $K_{2k+1}$?
+\end{problem}
+\section{Trees}
+\subsection{ Properties of trees}
+\begin{problem}
+    Prove that every tree is a bipartite graph
+    \begin{proof}
+        Choose a vertes $v$ in the tree $T$, and color it 
+        white. Then, since $T$ is connected, there is a shortest 
+        path join each othere vertex in $T$ to $v$. Color the 
+        vertex whose corresponding shortest path's leng is even 
+        white. If odd, color black.
+        When a vertex is about to color, there suppose to be 
+        only one vertex adjacent to it has already been colored,
+        otherwise, there will be a color. Thus, we can get a bipartite.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    If $G$ is a connected graph, a centre of $G$ 
+    is a vertex $v$ with the property that the maximum 
+    of the distances betweenn $v$ and the other vertices of $G$
+    is as small as possible. Prove that every tree has either one centre 
+    or two adjacent centres.
+    \begin{proof}
+       Since we are talking about finite graph, there is at least one such 
+    center. Even we remove one end-vertex from the graph, the center stay the 
+    same, unless the center is exactly that end-vertex, which will only 
+    only happen when there are only two vertices. So there can only be at most 
+    2 center.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    \begin{enumerate}
+    \item Let $C^*$ be a set of edges of a graph $G$. Show that, if $C^*$
+    has an edge in common with each spanning forest of $G$, then $C^*$
+    contains a cutset.
+    \item Obtain a corresponding result for cycles.
+    \end{enumerate}
+    \begin{proof}
+        We only need to prove that if a edge is in every spanning tree of $G$, 
+        then, it is a bridge.
+
+        It is obvious that it is in every possible circle or in none of them.
+
+        In the first case, then, by removing that edge we can get a 
+        tree with $n-1$ edges, which means that there are $n$ edges in 
+        the original graph and the circle rank of it is $1$. Thus there 
+        is only one cicle. Obviously, that edge is not a loop, then,
+        it is in a circle consists of many edges, which is contrary to the hypothesis.
+
+        In the second case, suppose only one of the vertices incident with that edge 
+        is in  a cycle. Then, the part of the graph on the other side of 
+        the edge is a tree, and thus it is a bridge. 
+        Soppose the two vertices incident with that edge are in the circle $C_1$
+        and $C_2$, then, there is no other edges that is also connected with 
+        both cycles, otherwise that edge will be in a cycle. Thus, it is a 
+        bridge.
+
+        The corresponding result is that `let $C$ be a set of edges of a graph 
+        $G$, if $C$ has a edge that has no common edge with any spanning forest of $G$, then  
+        $C$ contain a cycle' 
+
+        We only need to prove that one of the edge of $C$ is a loop.
+        Since that edge have no common edge with any spanning forest,
+        then, that edge must be in a cycle with no more that one edge, which means 
+        that it is a loop.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $T_1$ and $T_2$ be spanning trees of a connected graph $G$.
+    \begin{enumerate}
+        \item If $e$ is any edge of $T_1$, show that there exists 
+        an edge $f$ of $T_2$ such that the graph $(T_1-\{e\})\cup \{f\}$
+        (obtained from $T_1 $on replacing $e$ by $f$)
+        is also a spanning tree.
+        \item Deduce that $T_1$ can be `transformed' into $T_2$ by replacing the edges of $T_1$
+        one at a time by edges of $T_2$ in such a way that a spanning tree is obtained at 
+        each stage.
+    \end{enumerate}
+    \index{unsolved problem 3.1.4.}
+\end{problem}
+\subsection{Counting trees}
+\begin{problem}
+    Let $\tau(G)$ be the number of spanning trees in a connected graph $G$.
+Prove that, for any edge $e$, $\tau(G)=\tau(G-e)+\tau(G\verb|\|e)$.
+\begin{proof}
+   First, it is easy to show that, if the deletion of a 
+   edge doesn't break the spanning tree, then, it is still the spanning tree 
+   of the graph with one edge less. 
+
+   $\tau(G-e)$ equal the number of the spanning trees that won't be break 
+   by the deletion of edge $e$. For those spanning tree, if we 
+   let the original graph change into $G\verb|\|e$, we will get a circle, because
+   there is already a path included in the spanning tree that join the 
+   vertices joined by $e$.
+   For the spanning trees break by the deletion, by getting $G\verb|\|e$,
+   we can get a new spanning tree.
+
+   Thus we finished the proof.
+    
+\end{proof}
+\end{problem}
+\subsection{Challenge problems}
+\begin{problem}
+   Show that if $H$ and $K$ are subgraphs of a connected graph $G$, and if $H\cup K$ and $H\cap K$ are defined in the obvious way, then 
+   the cutset rank $\zeta$ satisfies:
+   \begin{enumerate}
+    \item $0\leq\zeta(H)\leq\abs{E(H)}$(the number of edges of $H$)
+    \item if $H$ is a subgraph of $K$, then $\zeta(H)\leq\zeta(K)$
+    \item $\zeta(H\cup K)+\zeta(H\cap K)\leq\zeta(H)+\zeta(K)$.
+   \end{enumerate} 
+   \begin{proof}
+   (1) Since the cutset rank equal the $n-1$ for a connected graph with n vertices and the subgraph of a connected graph is also connected,
+   $0=1-1\leq\zeta(H)\leq\abs{V(H)}-1$. What's more, since $H$ is connected, the minimal number of the edge is $\abs{V(H)}-1$, 
+   achieved when $H$ is a tree. Thus we finished the proof of the first inequility. 
+
+   A subgraph of a connected graph is still connected but may have less vertices, thus we have second inequility.
+
+   Obviously, we the sum of the vertices of the graph on each sides are equal. Since $H,K$ are all 
+   connected, $H\cap K$ are also connected. Since $H\cup K$ may be disconnected, consist of two component and 
+   the formula for cutset tank is $\zeta(G)=n-k$. We got the inequility with $\leq$.
+   \end{proof}
+\end{problem}
+\begin{problem}
+    Let $V$ be the vector space associated with a simple connected graph $G$, and let $T$ be a spanning tree of $G$.
+    \begin{enumerate}
+        \item Show that the fundamental set of cycles associated with $T$ forms a basis for the cycle subspace $W$.
+        \item Obtain a corresponding result for the cutset subspace $W^*$.
+        \item Deduce that the dimensions of $W$ and $W^*$ are $\gamma(G)$ and $\zeta(G)$, respectively.
+    \end{enumerate}
+    \index{unsolved problem 3.3.2.}
+\end{problem}
+\begin{problem}
+    Use the matrix-tree theorem to prove Cayley's theorem.
+    \begin{proof}
+       The matrix-tree theorem tells us about how many spanning tree can be construct in a given graph and 
+       Cayley's theorem tells us how many tree can be constrcted, given a certain number of vertices. 
+       \index{unsolved problem 3.3.3.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $T(n)$ be the number of labelled trees on $n$ vertices.
+    \begin{enumerate}
+        \item By counting the number of ways of joining a labelled tree on $k$ vertices and one on $n-k$ vertices, prove that 
+        \[2(n-1)T(n)=\sum_{k=1}^{n-1}\binom{n}{k} k(n-k)T(k)T(n-k)\]
+        \item Deduce the identity 
+        \[\sum_{k=1}^{n-1}\binom{n}{k}k^{k-1}(n-k)^{n-k-1}=2(n-1)n^{n-2}\]
+    \end{enumerate}
+    \begin{proof}
+        If we want to get a tree with $n$ vertices after joining, then, we can get $T(n)$ different trees.
+
+        Given $n$ labelled vertices, to run through all the condition, first, we have to classify all the condition 
+        according to the number of the vertices in the each components, one is $k$ and the other one is $n-k$, where $k=1,2,\cdots,n-1$.
+        Thus we have the $\sum_{k=1}^{n-1}$ on the RHS. Now, given a certain $k$, we need to run through all the possibility according to 
+        the different trees with $k$ vertices an $n-k$ vertices, thus we have $T(k)T(n-k)$ on the RHS. Finally, we 
+        have two choose one vertex from each component and join them to form the tree with $n$ vertices. Thus we have $k(n-k)$ on the RHS.
+        Since we have $k$ from $1$ to $n-1$, we repeat once. THus we have $2$ on the LHS. What's more, since every tree with $n$ vertices 
+        can be constrcted by join one vertex from a component with $k$ vertices and another one from a component with $n-k$ vertices,
+        where $k$ keep the same, we actually repeat $(n-1)$ times on the basis of the former repeat, leading to the $(n-1)$ on the LHS. 
+        Thus we finished the proof.
+
+       By substituting $T(n)$ with $n^{n-2}$,  we can get the second formula. 
+    \end{proof}
+\end{problem}
+\section{Planarity}
+\subsection{Planar graph}
+\begin{problem}
+    Which complete graphs and complete bipartite garphs are planar?
+    \begin{proof}
+        Since by contracting one vertex to any other vertex of a complete graph, we can get 
+        another complete graph with one less vertex, only $K_n(n\leq 4)$ are planar.
+
+        In the same manner, we can know that $K_{a,b}$ is planar if and only if at least one of them is less than $3$.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    \begin{enumerate}
+        \item For which values of $k$ is the $k-$cube $Q_k$ planar?
+        \item For which values of $r,s$ and $t$ is the complete tripartite graph $K_{r,s,t}$planar?
+    \end{enumerate}
+    \begin{proof}
+        For $k$ less than 5, because if $k\geq 5$, then the cube graph can be concracted into a $K_5$.
+        When $k\geq 5$, there are at least 32 vertices with degree at least 5. So we have enough vertices and 
+        degrees to allow it to be contracted into $K_5$, which is easy to prove.
+
+        For the second question, obviously, there can be at most one number that is greater than 2.
+
+        Suppose $r\leq s\leq t$. When $r=s=1$, there is no constrain for $t$. When $r=1,s=2$, if $t\geq 3$, then, 
+        one of its subgraph is $K_{3,3}$. Thus $t= 2$. When $r=s=2$, due to the former discussion, $t\leq 2$.
+        It is easy to construct a planar complete graph $K_{2,2,2}$.
+        Overall, only $K_{1,1,n},K_{1,2,2},K_{2,2,2}$ is planar.
+    \end{proof}
+\end{problem}
+\begin{problem}
+   If two homeomorphic graphs have $n_i$ vertices and $m_i$ edges $(i=1,2)$, show that 
+   \[m_1-n_1=m_2-n_2\]
+   \begin{proof}
+    Suppose the original graph $G$ has $n_0$ vertices and $m_0$ edges. 
+    When ever we add a vertex on its edge, we got a graph with an extra vertex and an extra edge, thus the 
+    difference between the number of the vertices and the number of the edges stay same.
+   \end{proof}
+\end{problem}
+\begin{problem}
+    A graph is outerplanar if $G$ can be drawn in the plane so that all of its vertices lie on the exterior boundary.
+    \begin{enumerate}
+        \item Show that $K_4$ and $K_{2,3}$ are not outerplanar.
+        \item Deduce that, if $G$ is an outerplanar graph, then $G$ contains no subgraph homeomorphic or contractible to $K_4$ or $K_{2,3}$.
+    \end{enumerate}
+    \begin{proof}
+        The first question can be answered by experienment.
+
+        For the second question, suppose $G$ is an outerplanar graph, and contains a subgraph that is homeomorphic or contractible to those two 
+        graph. It is obviously that, a subgraph of a outerplanar graph is still an outerplanar graph. What's more, during the process of 
+        homeomorphic and contractible, an outerplanar graph won't become a non-outerplanar graph. The rest of the proof is then obvious.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    By placing the vertices at the point $(1,1^2,1^3),(2,2^2,2^3),\cdots$prove that any simple graph can be drawn without crossings in 
+    Euclidean three-dimensional space so that each edge is represented by a straight line.
+    \index{unsolved problem 4.1.5.}
+\end{problem}
+\subsection{Euler's formula}
+\begin{problem}
+    \begin{enumerate}
+        \item Use Euler's formula to prove that, if $G$ is a connected planar graph of girth 5 with $n$ vertices and $m$ edges, then $m\leq \frac{5}{3}(n-2).$Deduce that the Petersen graph is non-planar.
+        \item Obtain an inequility, generalizing that in part (1), for connected planar graphs of girth $r$.
+    \end{enumerate}
+    \begin{proof}
+      We shall give the genral version directly.
+      Since the girth of the planar graph is $r$, every face of that graph is at least bounded by $r$ edges. It follows that 
+      \[2m\geq rf,\]  
+      where the factor 2 is because of the fact that each edge is adjacent to 2 faces at the same time.
+
+      Since 
+      \[n-m+f=2,\]
+      we have 
+      \[ 2m\geq r(2+m-n)\]
+      or 
+      \[ m\leq \frac{r}{r-2}(n-2)\]
+      When $r=5$, we get the inequility in $(1)$. Petersen graph has $10$ vertices and $15$ edges, which does not satisfy the inequility when $r=5$ 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a polyhedron (or polyhedral graph), each of whose faces is bounded by a pentagon or hexagon.
+    \begin{enumerate}
+        \item Use Euler's formula to show that $G$ must have at least 12 pentagonal faces.
+        \item Prove, in addition, that if $G$ is such a polyhedron with exactly three faces meeting at each vertex(such as a football), then $G$ has exactly 12 pentagonal faces.
+    \end{enumerate}
+    \begin{proof}
+        \index{unsolved problem 4.2.2.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a siple plane graph with fewer than 12 faces, in which each vertex has degree at least 3.
+    Use Euler's formula to show that $G$ has a face bounded by at most four edges.
+\begin{proof}
+    If the graph satisfying all the condition have no face bounded by less than 4 edges, then
+    \[
+    \begin{cases}
+        n-m+f=2\\
+        f<12\\
+        3n\leq 2m\\
+        5f\leq 2m\\
+    \end{cases}
+    \]
+    We get 
+    \[15n+15f=30+15m\leq 10m+6m\]
+    or 
+    \[30\leq m.\]
+    However
+    \[f=2+m-n\geq 2+m=\frac{2}{3}m=2+\frac{m}{3}=12\]
+    which is contrary to the second inequility.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a simple connected cubic graph, and let $C_k$ be the number of $k-$sided faces.
+    By counting the number of vertices and edges of $G$, prove that
+    \[3C_3+2C_4+C_5-C_7-2C_8-3C_9-\cdots=12 \]
+    \begin{proof}
+        \[
+    \begin{cases}
+        3n=\sum_{k=3}^{\infty}kC_k\\
+        n-m+f=2\\
+        2m=\sum_{k=3}^{\infty}kC_k\\
+        f=\sum_{k=3}^{\infty}C_k\\
+    \end{cases}
+    \]
+    The first equation is about the relationship bewteen the number of vertices and the number of edges in cubic graph.
+    The second equation is the Euler's formula.
+    The third equation is about the number of the edges.
+    The fourth equation is about the number of the faces.
+
+    By combining these there equations, we have 
+\[6\sum_{k=3}^{\infty}C_k-\sum_{k=3}^{\infty}kC_k=12.\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a simple graph with at least 11 vertices, and let $\bar{G}$ be its complement.
+    Prove that $G$ and $\bar{G}$ cannot be both planar.
+    \begin{proof}
+        If both graph are planar, then
+        \[
+        \begin{cases}
+            m+\bar{m}=\frac{n(n-1)}{2}\\
+            n=\bar{n}\geq 11\\
+            m\leq 3n-6\\
+            \bar{m}\leq 3\bar{n}-6\\
+        \end{cases}
+        \]
+        thus we have 
+        \[\frac{2}{n(n-1)}\leq 6n-12\]
+        or 
+        \[n^2-13n+24\leq 0\]
+        which is contrary to $n\geq 11$.
+    \end{proof}
+\end{problem}
+\subsection{Dual graph}
+\begin{problem}
+    Use the duality to prove that there exists no plane graph with five faces, each pair of which shares  an edge in common.
+    \begin{proof}
+        If $G$ is a graph satisfying all the conditions, then, its dual graph is $K_5$, whose dual graph doesn't exists, which 
+        is contrary to the fact that the dual graph of a dual graph is its original graph.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that if $G$ is a disconnected plane graph, then $G^{**}$ is not isomorphic to $G$.
+    \begin{proof}
+        It is obvious that if $G$ is a disconnected plane graph, then, each of its components is a connected plane graph.
+        Since the dual of a connected plane graph is a connected graph, because each pair of faces of the original graph is separated by at least one edge,
+        and the vertex corresponding to the infinite graph of the original graph is obviously adjacent to at least one vertex of each 
+        dual graph of the original components. Thus, $G^*$ is connected. So is $G^{**}$. As a result, $G$ and $G^{**}$ are not 
+        isomorphic to each other.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Dualize the result of Exercises 4.2.2.
+    \begin{proof}
+        \index{unsolved problem 4.3.3.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that, if $G$ is a $3-connected $ plane graph, then its geometric dual is a simple graph.
+    \begin{proof}
+        If its geometric dual is not a simple graph, then there are loops or multiple edges.
+        Since the original graph is also the dual graph of its dual graph, there should be a vertex with 2 degrees or 3 degrees,
+        which is a contradiction.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a connected plane graph, prove that $G$ is bipartite if and only if its dual $G^*$ is Eulerian.
+    \begin{proof}
+        If $G$ is a bipartite, then, every cycle of $G$ has even length. In other words, every face of $G$ is bounded edges of even number.
+        Thus, every vertex in $G^*$ is of even degrees.
+
+        If $G^*$ is Eulerian, then, it is can be split into separate cycles.
+        Then, it is planar and thus have a dual graph. If we color white the vertex, in $G$, corresponding to the infinite face of $G^*$.
+        Since the circle form a chain with inclusion relation, we can color the vertex corresponding to the face of the biggest circle,
+        that is not overlapped by other samller cycle ,in each chain black, the second white and so 
+        on. Thus we get a bipartite $G$.
+    \end{proof}
+    \begin{remark}
+        In the above proof, we regard $G^*$ as geometric dual. It should be considered as abstract dual, because every geometric dual is a
+        abstract dual, but not every abstract dual is a geometric dual.
+    \end{remark}
+\end{problem}
+\begin{problem}
+    Prove that if $G$ is a connected plane graph, then any spanning tree in $G$ correspond to the complement of a spanning tree in $G^*$.
+    \begin{proof}
+    Since every cycle in $G$ is corresponding to a cutset in $G^*$. Then, the number of the edges in the complement of the spanning tree in $G$
+    equal to the one of the spanning tree in $G^*$. If we switch $G$ with $G^*$, the statement is still valid. 
+    \index{unsolved problem 4.3.6.}
+    \end{proof}
+\end{problem}
+\subsection{Graphs on other surfaces}
+\begin{problem}
+    Show that there is no graph of genus $g\geq 1$ such that is regular of degree 4 and in which each face is triangle. 
+    \begin{proof}
+        If there is such graph that is has genus greater than or equal 1 and satisfies other conditions, then 
+        \[
+        \begin{cases}
+            n-m+f=2-2g\\
+            g\geq 1\\
+            2m=4n\\
+            3f=2m\\
+        \end{cases}
+        \]
+        It follows that 
+        \[12n-12m+12f=24-24g=6m-12m+8m=2m\]
+        or 
+        \[12g=12-m< 12,\]
+        which is contrary to the second inequility. 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Obtain a lower bound, analogous to that of Corollary 4.6. for a graph containing no triangles.
+    \begin{proof}
+        If in $G$, there is no triangles, then 
+        \[\begin{cases}
+           n-m+f=2-2g\\
+           2m\geq 4f\\ 
+        \end{cases}\]
+        What's more, $g$ is an integer. Thus we have 
+        \[\left\lceil 1+\frac{1}{4}(m-2n)\right\rceil \leq g.\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Deduce that $g(K_{r,s})\geq\left\lceil \frac{1}{4}(r-2)(s-2)\right\rceil $.
+    \begin{proof}
+       We can deduce it directly from the result of the last question, since $n=r+s,m=rs$. 
+    \end{proof}
+\end{problem}
+\subsection{Challenge problem}
+\begin{problem}
+Let $G$ be a planar graph with vertex-set $\{v_1,v_2,\cdots,v_n\}$, and let $p_1,p_2,\cdots,p_n$ be any $n$ distinct points in the plane.
+Given a heuristic argument to show that $G$ can be drawn in the plane in such a way that the point $p_i$ represents the vertex $v_i$, for each $i$.
+\begin{proof}
+\index{unsolved problem 4.5.1.}    
+\end{proof}
+\end{problem}
+\begin{problem}
+    If $r$ and $s$ are both even, prove that 
+    \[\text{cr}(K_{r,s})\leq\frac{1}{16}rs(r-2)(s-2),\]
+    and obtain corresponding results when $r$ and/or $s$ is odd.
+    \begin{proof}
+        Place the $r$ vertices along the $x-$axis with $\frac{1}{2}r$ vertices on each side of the origin,
+        and the $s$ vertices along the $y-$axis in a similar way; then join up the vertices by straightline segments and count the crossing.
+        Then we have 
+        \[\begin{array}{rl}
+            \text{cr}(G)&=4\cdot[(\frac{r}{2}-1)(\frac{s}{2}-2)+(\frac{r}{2}-2)(\frac{s}{2}-3)+\cdots+2\cdot 1]\\
+                        &=
+        \end{array}
+    \]        
+    \index{unsolved problem 4.5.2.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that 
+    \[t(K_{r,s})\geq\left\lceil \frac{rs}{2r+2s-4}\right\rceil \]
+    \begin{proof}
+        Since there is no triangles in bipartite, so is the each layer of it.
+        It follows that, for each layer of the graph satisfies
+        \[m_i\leq 2r+2s-4\]
+        By summing up all $t(K_{r,s})$ inequility, we have 
+        \[\sum_{i=1}^{t(K_{r,s})}m_i=rs\leq (2r+2s-4)t(K_{r,s})\]
+        or 
+        \[ t(K_{r,s})\geq \left\lceil \frac{rs}{2r+2s-4}\right\rceil \]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    By splitting $K_{r,s}$ into a number of copies of $K_{2,s}$, prove that, if $r$ is even, then $t(K_{r,s})\leq r$, 
+    and deduce from the last question that  
+    \[t(K_{r,s})=\frac{1}{2}r \text{ if } s>\frac{1}{2}(r-2)^2\]
+    \begin{proof}
+        Obviously,
+        \[t(K_{r,s})\leq \frac{r}{2}\]
+        When $s>\frac{1}{2}(r-2)^2$
+        \[\left\lceil \frac{rs}{2r+2s-4}\right\rceil> \left\lceil \frac{\frac{1}{2}r(r-2)^2}{2r+(r-2)^2-4}\right\rceil=\frac{r}{2}-1   \]
+        Thus 
+        \[\frac{r}{2}\geq t(K_{r,s})\geq \left\lceil \frac{rs}{2r+2s-4}\right\rceil\geq \frac{r}{2} \]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a polyhedral graph and let $W$ be the cycle subspace of $G$.
+    \begin{enumerate}
+        \item Show that the polygons bounding the finite faces of $G$ form a basis for $W$.
+        \item Deduce Corollary 4.1.
+    \end{enumerate}
+    \index{unsolved problem 4.5.5.}
+\end{problem}
+\begin{problem}
+    A graph $G^*$ is a Whitney dual of $G$ is there is a one-one correspondence between $E(G)$ and $E(G^*)$ such that for each subgraph $H$
+    or $G$ with $V(H)=V(G)$, the corresponding subgraph $H^*$ of $G^*$ satisfies 
+    \[\gamma(H)+\zeta(\bar{H}^*)-\zeta(G^*)\]
+    where $\bar{H}^*$ is obtained from $G^*$ by deleting the edges of $H^*$.
+    \begin{enumerate}
+        \item Show that this generalizes the idea of a geometric dual.
+        \item Prove that, if $G^*$ is a Whitney dual, then $G$ is a Whitney dual of $G^*$
+    \end{enumerate} 
+    \index{unsolved problem 4.5.6.}
+\end{problem}
+\begin{problem}
+    \begin{enumerate}
+        \item Let $G$ be a non-planar graph that can be drawn without crossings on a Mobius strip. Prove that, with the usual notation, $n-m+f=1$
+        \item Show that $K_5$ and $K_{3,3}$ can be drawn without crossings on the surface of a Mobius strip.
+    \end{enumerate}
+    \index{unsolved problem 4.5.7.}
+\end{problem}
+\section{Colouring graphs}
+\subsection{Colouring vertices}
+\begin{problem}
+    What is the chromatic number of the complete tripartite graph $K_{r,s,t}?$
+    \begin{proof}
+        Is 3.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    What is the chromatic number of the $k-$cube $Q_k$?
+    \begin{proof}
+        The chromatic number of the cube is $2$.
+        When $k=1,2,3$, it is obvious, because there are two vertices in that graph.
+        We are now going to finish the proof by induction.
+        Suppose when $n=k$, $Q_k$'s chromatic number is 2.
+        Since we have already prove that there is a Hamiltonian cycle in $Q_k$, 
+        we can denote $Q_k$ by 
+        \[X_0\rightarrow X_1\rightarrow\cdots\rightarrow X_0.\]
+        $Q_{k+1}$ include two $Q_k$, 
+        and the edge joining $\overline{X_i0}$ and $\overline{X_i1}$.
+        Since every vertices in $Q_{k+1}$ is of degree $k+1$, there is no other 
+        edges connecting the two $Q_k$.
+
+        By induction hypothesis, we can only use two colours to colour the first $Q_{k}$, say white and black.
+        Then, we can colour the second $Q_k$ with the same pattern but in the opposite colour.
+
+        It is obvious that we colour the $Q_{k+1}$ with only two colours correctly.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a simple graph with $n$ vertices, which is regular of $d$. By considering the number of vertices that can be 
+    assigned the same colour, prove that $\chi(G)\geq \frac{n}{n-d}$
+\end{problem}
+\begin{proof}
+   Since there are only $n$ vertices in the graph and each vertex is regular of $d$, the number of vertices that can be assigned the same 
+   colour won't be greater than $n-d$, otherwise there must be two adjacent vertices in the same colour.
+   Thus, then number of the colours in that graph is greater than or equal $\frac{n}{n-d}$
+\end{proof}
+\begin{problem}
+    Let $G$ be a simple planar graph containing no triangles.
+    \begin{enumerate}
+        \item Using Euler's formula, show that $G$ contains a vertex of degree at most 3.
+        \item Use induction to deduce that $G$ is $4-$colourable.
+    \end{enumerate}
+    \begin{proof}
+        If $G$ is a simple planar graph containing no triangles and no vertices of degree less than 4, 
+        then 
+    \[\begin{cases}
+        n-m+f=2\\
+        2m\geq 4f\\
+        2m\geq 4n\\
+    \end{cases}\]
+    It follows that 
+    \[4m\geq 4n+4f=8+4m,\]
+    which is absurd.
+
+    We will prove that $G$ is $4-$colourable by the induction on the number of the vertices in $G$.
+    When there are less than 5 vertices in $G$, the statement is trival.
+    When there are $k$ vertices in $G$, there is a vertex $v$ whose degree is less than 4.
+    By deleting vertex $v$, we get a graph with $k-1$ vertices. By the induction hypothesis, that graph 
+    can be coloured by 4 vertices. Since $v$'s degree is less than 4, after adding that vertex into the graph,  
+    we can always colour it properly.
+    \end{proof}
+\end{problem}
+\subsection{Chromatic polynomials}
+\begin{problem}
+    \begin{enumerate}
+        \item Prove that the chromatic polynomial of $K_{2,s}$ is 
+        \[k(k-1)^s+k(k-1)(k-2)^s\]
+        \item Prove that the chromatic polynomial of $C_n$ is $(k-1)^n+(-1)^n(k-1)$
+    \end{enumerate}
+    \begin{proof}
+       Two of the vertices in $K_{2,s}$ can be coloured white, and the other coloured black.
+       If we have other $k$ colours, we can first colour one of the white vertex. Thus we have $k$
+       choice. If another white vertex is coloured the same, then, each of the black vertex have $k-1$ choices.
+       Otherwise, another white vertex have $k-1$ choice and each of the black vertex have $k-2$ choices.
+       Thus, the total choice we have is 
+       \[k(k-1)^s+k(k-1)(k-2)^s\]
+
+       For the second equation, we are going to prove by induction on the edge of the cycle graph.
+       When $n=1,2$, the equation is obviously valid.
+       When $n=i$,
+       \[\begin{array}{rl}
+        P_{C_i}(k)&=P_{C_i-e}(k)-P_{C_i/e}(k)\\
+        &=k(k-1)^{i-1}-P_{C_{i-1}}\\
+        &=k(k-1)^{i-1}-(k-1)^{i-1}-(-1)^{i-1}(k-1)\\
+        &=(k-1)^i+(-1)^i(k-1)\\
+       \end{array}
+       \]
+       Thus we finish the proof.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that, if $G$ is a disconnected simple graph, then its chromatic polynomial $P_G(k)$ is the product of the chromatic polynomials 
+    of its components. What can you say about the degree of the lowest non-vanishing term?
+\begin{proof}
+    Since the colouring of each components won't interfere each other, given certain kinds of colour, the 
+ number of the colouring plan is exactly the product of each component's number of colouring plan.
+ Thus we finished the proof. Since each component's chromatic polynomial's constant term is 0, and it is not a 
+ zero polynomial, thus, the degree of the lowest non-vanishing term is greater than the number of the components.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a simple graph with $n$ vertices and $m$ edges. Use induction on $m$, together with Theorem 5.6. to prove that 
+    \begin{enumerate}
+        \item the coefficient of $k^{n-1}$ is $-m$
+        \item the coefficients of $P_G(k)$ alternate in sign.
+    \end{enumerate}
+    \begin{proof}
+       When $m=0$, the chromatic polynomial is $k^n$, when $m=1$, the chromatic polynomial is $k^{n-1}(k-1)$, which all satisfies the two 
+       statements. Suppose when there are $i$ edges the statements are valid.
+       Then, when we have a simple graph $G$ with $n+1$ vertices, since $P_G=P_{G-e}-P_{G/e}$, where $e$ is an edge in $G$ and thus 
+       the two chromatic polynomial are belong to simple graph with $i$ edges. What's more, the highest degree of each chromatic polynomial is 
+       $n$ and $n-1$ respectively. Since the $k^{n-1}$'s coefficients is $m-1$ and $1$ respectively, we have proved the first statement.
+       Since the $n$th, $n-2$th,$\cdots$ terms of the first chromatic polynomial have positive coefficients, by induction hypothesis and 
+       the fact that the highest term's coefficient is 1, and the other coefficient is negative. Meanwhile, in the second chromatic polynomial,
+       the sign is inversed, which means that the first chromatic polynomial has the same sign as $-P_{G/e}$. Thus, the second statement is true.
+       \begin{remark}
+        It seems that when proving the second statement, we still need the inducion hypothesis on the number of vertices.
+       \end{remark}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that if 
+    \[P_G(k)=k(k-1)^n,\]
+    then $G$ is a tree on $n$ vertices.
+    \begin{proof}
+        If there are several components, when the degree of the lowest term is greater than 1, which is contrary to the condition.
+        Thus, $G$ is a connected graph.
+
+    The second coefficient is $n-1$, thus $G$ has $n-1$ edges and is a tree.
+    \end{proof}
+\end{problem}
+\subsection{Colouring graph}
+\begin{problem}
+    The plane is divided into a finite number of regions by drawing infinite straight lines in an arbitrary manner. Show that 
+    these regions can be 2-coloured.
+\begin{proof}
+We are going to prove this by induction on the number of line.
+
+Since we place the lines in an arbitrary way, we can regard every vertices in the plane as the 
+crossing of two line.
+Therefore, whenever we place a new line in the plane, it will lie on a sequence of face the first and the last of which is infinite 
+region. Thus, the original graph is separate into to part by the added line. If we inverse the colour of the regions in the one side,
+then we can get a new 2-coloured plane.
+\end{proof}
+\end{problem}
+\subsection{Colouring edges}
+\begin{problem}
+    Prove that if $G$ is a cubic Hamiltonian graph, then $\chi'(G)=3$.
+    \begin{proof}
+        By Handshaking theorem, there must be even number of vertices in $G$. Thus 
+        we can 2-colour the Hamiltonian cycle in it and colour the other edges 
+        with the third colour, which is valid since the vertices is of regular 3.
+    \end{proof}
+\end{problem}
+\subsection{Challenge problems}
+\begin{problem}
+    A graph is $k-$critical if $\chi(G)=k$ and if the deletion of any vertex yields a graph with 
+    smaller chromatic number. 
+    Prove that if $G$ is $k-$critical, then 
+    \begin{enumerate}
+        \item every vertex of $G$ has degree at least $k-1$
+        \item $G$ has no cut-vertices.
+    \end{enumerate}
+\end{problem}
+\begin{proof}
+    If there is a vertex, say $v$, with degree less than $k-1$. Then after the deletion of $v$, we could $k-1-$colour the 
+    remaining graph. However, if we reinstate $v$, since $v$ is with degree less than $k-1$, among the $k-1$ colour, there 
+    is at least one colour left for $v$. Thus the original graph can actully $k-1-$coloured, which is contrary to $\chi(G)=k$.
+
+\index{unsolved problem 5.5.1.}
+\end{proof}
+\begin{problem}
+    Give a upperbound for the least degree of vertices in $G$ and the number of colours needed to colour it,
+    if 
+    \begin{enumerate}
+        \item $G$ has girth $r$
+        \item $G$ has thickness $t$
+    \end{enumerate}
+    \begin{proof}
+       Let $\Delta$ be the least degree of vertices in $G$, then 
+       \[\begin{cases}
+        \Delta n\leq 2m\\
+        rf\leq 2m\\
+        n-m+f=2\\
+       \end{cases}\] 
+       It follows that 
+       \[\Delta\leq\frac{n-2}{n}\cdot\frac{r}{r-2}\cdot 2<\frac{2r}{r-2}.\] 
+
+       We are now going to prove that $G$ is $\Delta+1-$colourable by induction.
+       Say $v$ is the vertex in $G$ that is of degree less than or equal $\Delta$.
+       After the deletion of $v$, we can $\Delta+1-$colour the remainging graph by induction hypothesis.
+       However, since $v$ is less then $\Delta +1$ degree, when we reinstate $v$ in the graph, we can always colour it properly. 
+
+       For the second condition, 
+       \[\begin{cases}
+        t\geq \left\lceil m/3n-6\right\rceil \geq m/3n-6\\
+        \Delta n\leq 2m\\
+        n-m+f=2\\
+       \end{cases}\]
+       It follows that 
+       \[2t(3-\frac{6}{n})\geq\Delta\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $G$ be a countable graph, each finite subgraph of which is $k-$colourable.
+    \begin{enumerate}
+        \item Prove that $G$ is $k-$colourable.
+        \item Deduce that every countable planar graph is $4-$colourable.
+    \end{enumerate}
+    \begin{proof}
+        We begin our proof by choosing a vertex from $G$, say $v$, and fix the colour of it in every coloured graph containing it.
+        (We can alway achieve this by switch colours.) Then, we are going to use tree to represent the relation between each graph whose 
+        center is $v$. One of the end-vertex of the tree is $v$, regarded as the zero level. In the $n$th level,  
+        the vertices present the graph consists of all the vertices that can be join with $v$ by a path whose length is less than or equal 
+        $n$, and the edges incident with them. What's more, each graph is corresponding to a unique $k-$colourable colouring, 
+        which is assure by the condition.
+        There is no edges join the two vertices in the same level of tree, and the vertex is adjacent to the vertex in the next level 
+        if it is the subgraph of it.
+        It is obviously that the tree is a countable graph and there is a path whose end-vertex is $v$ and extend to infinite level.
+        The existence of the path show that we can the whole graph $G$ is $k-$colourable.
+        
+        The second follows immediately from the fact that every finite graph is $4-$colourable.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    \begin{enumerate}
+        \item Let $G$ be a simple graph which is not a null graph. Prove that $\chi'(G)=\chi(L(G))$.
+        \item Prove theorem 5.12. in the case $\Delta=3.$
+    \end{enumerate}
+    \begin{proof}
+       If $\chi'(G)=k$, then, the edge of $G$ can be $k-$coloured, but cannot $(k-1)-$coloured.
+       Thus, we can colour the vertices in $L(G)$ the same colour as their corresponding edges in $G$, and get a $k-$coloured 
+       $L(G)$, since the vertices in $L(G)$ are adjacent if and only if their corresponding edges in $G$ are also adjacent, which 
+       follows that they don't have the same colour. The converse is also true, which means that $L(G)$ cannot be $(k-1)-$coloured.
+       Thus we finish the proof.
+
+       We are now going to prove that if $G$ is a simple graph with largest vertex-degree 3, then 
+       \[3\leq\chi'(G) \leq 4\] 
+       By the last statement we have proved, we only need to prove that 
+       \[3\leq\chi(L(G))\leq 4.\]
+       Since $G$ is a simple graph with largest vertex-degree 3, by theorem 5.2.
+\[\chi(L(G))\leq \Delta L(G)\leq 2+2=4\]
+What's more, suppose $v$ is a vertex in $G$ that is of degree 3. Then, $v$ and the edges incident with it correspond to 
+a triangle in $L(G)$, thus 
+\[\chi(L(G))\geq 3.\]
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove that, if a toroidal graph is embeded on the surface of a torus, then its faces can be coloured with seven colours.
+    \index{unsolved problem 5.5.5.}
+\end{problem}
+\begin{problem}
+    Let $G$ be a simple graph with an odd number of vertices. Prove that if $G$ is regular of degree $\Delta$, then $\chi'(G)=\Delta+1$.
+\end{problem}
+\section{Matching, marriage and Menger's theorem}
+\subsection{Hall's `marriage' theorem}
+Let $B$ be a set of boys, and suppose that each boy in $B$ wishes to marry more than one of his girl friends. Find a necessary and sufficient 
+condition for the harem problem to have a solution.
+\begin{proof}
+    If a boy want to marry $k$ gir friends, then, we can replace him with $k$ person who have the same set of girl friends.
+\end{proof}
+\begin{problem}
+    Let $E$ be the set $\{1,2,\cdots,50\}$. How many different transverals has the family $\{\{1,2\},\{2,3\},\{3,4\},\cdots,\{50,1\}\}$?
+\begin{proof}
+   If we pick 1 from $\{1,2\}$, then we can only pick 50 from $\{50,1\}$, and then 49 from $\{49,50\}$ and so on. 
+   If we pick $2$ from $\{1,2\}$, then we can only pick $3$ from $\{2,3\}$, $4$ from $\{3,4\}$ and so on.
+   Therefore, we only have 2 possible transveral.
+\end{proof}
+\end{problem}
+\begin{problem}
+    Write the statement of Corollary 6.1. in marriage terminology.
+    \begin{proof}
+       If there are m girls, each of whom knows several boys, then a necessary and sufficient condition for 
+       only $t$ girls can find proper boys who are different from each other is that any $k$ girls collectively know 
+       at least $k+t-m$ boys.
+    \end{proof}
+\end{problem}
+\subsection{Network flows}
+\begin{problem}
+    Consider a network with several sources and sinks. Show how the analysis of the flows in this network can be reduced to the 
+    standard case by the addition of a new`source vertex' and `sink vertex.'
+\end{problem}
+\begin{proof}
+    By adding a new source vertex as the source of all the original source and a new sink vertex as the sink of all the original sink.
+\end{proof}
+\subsection{Challenge problems}
+\begin{problem}
+    \begin{enumerate}
+        \item Use the marriage condition to show that if each girl has $r(\geq 1)$ boy friends and each boy has $r$ girl friends, then 
+        the marriage problem has a solution.
+        \item Use the result of (1) to prove that, if $G$ is bipartite graph which is regular of degree $r$, then $G$ has a complete matching.
+        Deduce that the chromatic index of $G$ is $r$.
+    \end{enumerate}
+    \begin{proof}
+       For $k\leq m$, if any $k$ girls only collectively know $s(\leq k-1)$ boys. It follows that 
+       \[r\cdot s=k\cdot r\] 
+       or 
+       \[s=k\]
+       which is absurd.
+       Therefore, for any $k$ girls, they must collectively know at least $k$ boys. By theorem 6.1., we have a solution.
+
+       We can colour boys white and girls black, then the solution is the desired complete mathching.
+
+       We only need to provide a $r-$colours drawing.
+       We can index the white vertices with $a_1,a_2,\cdots,a_n$ and black vertices with $b_1,b_2,\cdots,b_n$.
+       Then, we join $a_i$ with $b_i,b_{i+1},b_{i+2},b_{i+3},\cdots,b_{i+r}$ and colour the edges with colour $1,2,\cdot,r$
+       respectively.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Suppose that the marriage condition is satisfied, and that each of the $m$ girls knows at 
+    least $t$ boys. Show that the marriages can be arranged in at least $t!$ ways if $t\leq m$, and 
+    in at least $\frac{t!}{(t-m)!}$ ways if $t>m$. 
+    \begin{proof}
+       When $m=1$, there is only $1$ girl and when she know $t$ boys, there is exactly $t=\frac{t!}{(t-1)!}$ choice.
+       Suppose the statement is true when $m$ is less than $k$. Then, when $m=k$, 
+       \index{unsolved problem 6.3.2.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $E$ and $\mathcal{F}$ have their usual meanings, let $T_1$ and $T_2$ be transverals of $\mathcal{F}$, 
+    and let $x$ be an element of $T_1$. Show that there exists an element $y$ of $T_2$ such that $(T_1-\{x\})\cup\{y\}$
+    is also a transveral of $\mathcal{F}$.
+    \begin{proof}
+       \index{unsolved problem 6.3.3.} 
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $\mathcal{F}$ be a family consisting of $m$ non-empty subsets of $E$, and let $A$ be a subset of $E$.
+    By applying theorem 6.1. to the family consisting of $\mathcal{F}$, together with $\abs{E}-m$ copies of $E-A$,
+    prove that there is a transveral of $\mathcal{F}$ containing $A$ if and only if 
+    \begin{enumerate}
+        \item $\mathcal{F}$ has a transveral
+        \item $A$ is a partial transveral of $\mathcal{F}$
+    \end{enumerate}
+    \index{unsolved problem 6.3.4.}
+\end{problem}
+\begin{problem}
+    The rank $r(A)$ of a subset $A$ of $E$ is the number of elements in the largest partial transveral of $\mathcal{F}$ contained in $A$.
+    Show that 
+    \begin{enumerate}
+        \item $0\leq r(A)\leq\abs{A}$
+        \item if $A\subseteq B\subseteq E$, then $r(A)\leq r(B)$
+        \item if $A,B\subseteq E$, then $r(A\cup B)+r(A\cap B)\leq r(A)+r(B)$.
+    \end{enumerate}
+    \begin{proof}
+            Since a partial transveral is a non-empty set and it is contained in $A$, the first inequility is obvious.
+
+            Whenever a partial transveral is in $A$, it is also in $B$, thus the second inequility is also obvious.
+
+            \index{unsolved problem 6.3.5.}
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Let $E$ be a countable set, and let $\mathcal{F}=(S_1,S_2,\cdots)$ be a countable family of non-empty finite subsets of $E$
+    Defining a transveral of $\mathcal{F}$ in the natural way, show, by theorem 2.7. that $\mathcal{F}$ has a transveral
+    if and only if the union of any $k$ subset $S_i$ contains at least $k$ elements, for all finite $k$.
+    \begin{proof}
+       ($\rightarrow$) is obvious.
+       
+       ($\leftarrow$) we can construct a tree, in which every vertex stand for a transveral of finite family. 
+       According to theorem 2.7., such tree reaches to infinity.
+    \end{proof}
+\end{problem}
+\begin{problem}
+    Prove theorem 6.4.
+\index{unsolved problem 6.3.6.}
+\end{problem}
+\begin{problem}
+    Show how the theorem 6.7.can be used to prove theorem 6.1.
+    \index{unsolved problem 6.3.7.}
+\end{problem}
+\end{document}

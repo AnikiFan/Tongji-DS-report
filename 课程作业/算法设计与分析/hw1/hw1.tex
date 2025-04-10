@@ -1,0 +1,233 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW1}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\begin{problem}{1-1}
+    证明基于键值对比较的排序算法时间复杂性下界是 $n\log n$.
+\end{problem}
+\begin{proof}
+    不妨设参与比较的元素的关键字互异。
+
+    对于参与排列的 $n$个元素，其最终可能的排列个数即全排列数 $n!$.现将键值比较的过程抽象为一棵二叉树，其中的结点有以下性质：
+    \begin{enumerate}
+        \item 每个结点代表着若干个排列
+        \item 若为叶子节点，则只代表一个排列
+        \item 否则，选取两个元素进行比较，该二叉树对应的算法将该结点代表的排列依据比较结果进一步分为两类，分别用左孩子和右孩子代表
+    \end{enumerate}
+    不同排序算法所对应的二叉树形状不同，每个结点所代表的元素以及用于比较的元素都可能不同。但对于一个正确的排序算法，应该能在有限步内对任意合法输入给出正确的排序结果，
+    也就是对于一个给定的输入，从根节点开始，根据节点上的比较操作移动至孩子结点，最终能够在有限步内达到某个叶子结点，其对应的排序就是该算法的输出。
+    因此，一个正确的排序算法对应至少应该保证在足够大的深度内，$n!$个所有的可能排列都至少出现在叶子节点上一次。由于高度为 $h$的二叉树（根节点高度设为0）至多有 $2^{h+1}-1$
+    个结点，所以对于一个正确的排序算法，当输入有 $n$个元素时，对应的二叉树有不等式
+    \[2^{h+1}-1\geq n!\]
+    整颗二叉树的深度便对应着最坏情况下所需要的比较次数，又因为
+    \[h\geq \lg(n!+1)-1 = \Theta(n\lg n)\]
+    所以基于键值对比较的排序算法时间复杂性下界是 $n\log n$.
+\end{proof}
+\begin{problem}{1-2}
+    证明主定理
+
+ 设常数$a\geq 1,b>1$，$f(n)$为一个定义域和值域均为非负实数的函数，并令$T(n)$为一个定义域为正实数的函数，且
+    \[T(n)=\begin{cases}
+        aT(n/b)+f(n)& n>1\\
+        \Theta(1)&n\leq 1
+    \end{cases},\]
+    那么$T(n)$有如下渐进界：
+    \begin{enumerate}
+        \item 如果$f(n)=O(n^{\log_ba-\epsilon})$，其中$\epsilon$为某正数，则$T(n)=\Theta(n^{\log_ba})$。
+        \item 如果存在常数 $k\geq 0$，使得$f(n)=\Theta(n^{\log_ba}\log_b^kn)$，则$T(n)=\Theta(n^{\log_ba}\log_b^{k+1}n)$。
+        \item 如果$f(n)=\Omega(n^{\log_ba+\epsilon})$，其中$\epsilon$为某正数，同时
+当$n$足够大时，对于某个常数$c<1$有$af(n/b)\leq cf(n)$， 则$T(n)=\Theta(f(n))$。
+    \end{enumerate}
+\end{problem}
+\begin{proof}
+   因为 $n = b^{\log_bn}< b^{\lfloor \log_bn\rfloor+1}$，所以$n/b^{\lfloor\log_bn\rfloor+1}<1$，从而当$n$足够大时有
+   \[
+   \begin{array}{rcl}
+   T(n)=aT(n/b)+f(n)=\cdots&=&a^{\lfloor\log_bn\rfloor+1}T(n/b^{\lfloor\log_bn\rfloor+1})+\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)\\
+                           &=&\Theta(a^{\lfloor\log_bn\rfloor+1})+\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)\\
+                           &=&\Theta(a^{\log_bn})+\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)\\
+                           &=&\Theta(n^{\log_ba})+\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)\\
+   \end{array}
+\]
+
+当$f(n)=O(n^{\log_ba-\epsilon})$，其中$\epsilon$为某正数时，为了证明$T(n)=\Theta(n^{\log_ba})$，由于 $n^{\log_ba}=\Theta(n^{\log_ba})$ ，我们只需证明 
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=O(n^{\log_ba}).\]
+而
+     \[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=\sum_{i=0}^{\lfloor\log_bn\rfloor}a^iO((n/b^i)^{\log_ba-\epsilon})=\sum_{i=0}^{\lfloor\log_bn\rfloor}O(a^in^{\log_ba-\epsilon}(b^{\epsilon})^{i}/a^i)=n^{\log_ba-\epsilon}\sum_{i=0}^{\lfloor\log_bn\rfloor}O((b^{\epsilon})^{i})\]
+从而
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=O(n^{\log_ba})\Theta(1)=O(n^{\log_ba}).\]
+
+当存在常数 $k\geq 0$，使得$f(n)=\Theta(n^{\log_ba}\log_b^kn)$时，为了证明$T(n)=\Theta(n^{\log_ba}\log_b^{k+1}n)$，由于 $n^{\log_ba}=o(n^{\log_ba}\log_b^{k+1}n)$ ，我们只需证明
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=\Theta(n^{\log_ba}\log_b^{k+1}n).\]
+而
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=\sum_{i=0}^{\lfloor\log_bn\rfloor}a^i\Theta((n/b^i)^{\log_ba}\log_b^k(n/b^i))=n^{\log_ba}\Theta(\sum_{i=0}^{\lfloor\log_bn\rfloor}\log_b^k(n/b^i)).\]
+又因为
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}\log_b^k(n/b^i)=\sum_{i=0}^{\lfloor\log_bn\rfloor}(\log_b n-i)^k\leq\sum_{i=0}^{\lfloor\log_bn\rfloor}(\log_b n)^k\leq(\log_b n)^k(\log_bn+1)\leq 2(\log_b n)^{k+1}\]
+\[(\log_b n/2)^{k+1}\leq\sum_{i=0}^{\lfloor\log_bn/2\rfloor}(\log_b n-i)^k\leq\sum_{i=0}^{\lfloor\log_bn\rfloor}\log_b^k(n/b^i)=\sum_{i=0}^{\lfloor\log_bn\rfloor}(\log_b n-i)^k\]
+从而
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=n^{\log_ba}\Theta(\sum_{i=0}^{\lfloor\log_bn\rfloor}\log_b^k(n/b^i))=n^{\log_ba}\Theta(\log_b^{k+1}n)=\Theta(n^{\log_ba}\log_b^{k+1}n).\]
+
+当$f(n)=\Omega(n^{\log_ba+\epsilon})$，其中$\epsilon$为某正数，同时当$n$足够大时，对于某个常数$c<1$有$af(n/b)\leq cf(n)$。为了证明$T(n)=\Theta(f(n))$，由于 $\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=\Omega(f(n))$ ，我们只需证明
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=O(f(n))\]
+而当$n$足够大时，
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)\leq \Theta(1)+\Theta(1)\sum_{i=0}^{\infty}c^if(n)=\Theta(1)+O(f(n))=O(f(n))\]
+其中 $\Theta(1)$为无法使用$af(n/b)\leq cf(n)$时产生的项。
+
+从而有
+\[\sum_{i=0}^{\lfloor\log_bn\rfloor}a^if(n/b^i)=O(f(n))\]
+\end{proof}
+\begin{problem}{1-3}
+   求解递归方程（用渐进符号表示）， $c$是常数 
+   \begin{enumerate}
+    \item $T(n)=T(n-1)+cn$
+    \item $T(n)=2T(n/2)+cn$
+    \item $T(n)=T(n/3)+T(2n/3)+cn$
+    \item $T(n)=7T(n/2)+cn$
+    \item $T(n)=9T(n/3)+n\log n$
+   \end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 直接展开可得 $T(n)=c(n+\cdots+2)+T(1)=\Theta(n^2)+\Theta(1)=\Theta(n^2)$ 
+        \item 符合主定理中的第二种情况，解得 $T(n)=\Theta(n\lg n)$
+        \item 下面用归纳法证明存在常数$d>0$使得， $T(n)\leq dn\lg n$。因为由归纳假设可得
+        \[
+        \begin{array}{rcl}
+        T(n)=T(n/3)+T(2n/3)+cn&\leq& \frac{1}{3}dn(\lg n-\lg3)+\frac{2}{3}dn(\lg n-\lg\frac{3}{2})+cn\\
+        &=&dn\lg n-dn(\frac{1}{3}\lg3+\frac{2}{3}\lg\frac{3}{2})+cn\\
+        \end{array}
+        \]
+        所以只需要取足够大的$d$便可以使得$T(n)\leq n\lg n$在$n$足够大时成立。从而有 $T(n)=O(n\lg n)$
+
+        类似地，下面用归纳法证明存在常数$d>0$使得， $T(n)\geq dn\lg n$。因为由归纳假设可得
+        \[
+        \begin{array}{rcl}
+        T(n)=T(n/3)+T(2n/3)+cn&\geq& \frac{1}{3}dn(\lg n-\lg3)+\frac{2}{3}dn(\lg n-\lg\frac{3}{2})+cn\\
+        &=&dn\lg n+cn-dn(\frac{1}{3}\lg3+\frac{2}{3}\lg\frac{3}{2})\\
+        \end{array}
+        \]
+        所以只需要取足够大的$小$便可以使得$T(n)\geq dn\lg n$在$n$足够大时成立。从而有 $T(n)=\Omega(n\lg n)$
+
+        综上，$T(n)=\Theta(n\lg n)$
+        \item 符合主定理的第一种情况，解得 $T(n)=\Theta(n^{\lg7})$
+        \item 符合主定理的第一种情况，解得 $T(n)=\Theta(n^{2})$
+    \end{enumerate}
+\end{solution}
+\end{document}

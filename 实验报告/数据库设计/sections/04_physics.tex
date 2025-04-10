@@ -1,0 +1,578 @@
+\section{物理设计}\label{sec:physics}
+\subsection{索引类型选择}
+对于本次设计的数据库而言，绝大部分数据具有时序性，并且是按照时间顺序进行插入的。同时，在实际应用中很少对这些具有时序性的数据进行更新和
+删除的操作。因此，即使存储的数据量较大，当使用顺序存储时，溢出块的数量能够维持在可控范围内。并且在夜间时，该数据库的输入频率将会处于低位，
+数据库可以利用这一时间对数据进行重新组织。并且，对于具有时序性的数据，在实际应用中常常使用范围查找。综上，对于具有时序性的数据，
+本数据库中主要对其建立顺序索引。
+
+另一方面，对于\textit{bike}等模式，在实际应用中常常需要以坐标为条件进行查询，因此对于这些模式，需要使用k-d树或k-d-B树等专门用于处理
+位置信息的索引类型。对于$bike\_ID$等识别码，在实际应用中常常以等值查询为主，它们的索引以哈希索引为主。
+\subsection{索引设计}
+在创建索引时，主要遵循以下几点：
+\begin{enumerate}
+  \item 对主码建立索引，以提高检查主码约束的效率；
+  \item 对被引用的属性建立索引，以提高检查外码约束的效率；
+  \item 对实际应用中查询频率高或响应时间要求高的属性建立索引。
+\end{enumerate}
+
+本数据库中各个模式中的索引信息如图\ref{tab:indexbike}-\ref{tab:indexfeedbackcomponent}所示。
+
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike}模式索引信息}
+      \label{tab:indexbike}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{bike\_ID}&hash index\\
+       \textit{production\_date}&primary index\\
+       \textit{coordinate}&k-d tree\\
+       \textit{valid}&\makecell[c]{——}\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{collection}模式索引信息}
+      \label{tab:indexollection}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{collection\_ID}&hash index\\
+       \textit{time}&primary index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{reallocation}模式索引信息}
+      \label{tab:indexreallocation}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{reallocation\_ID}&hash index\\
+       \textit{bike\_ID}&hash index\\
+       \textit{start\_time}&primary index\\
+       \textit{start\_coordinate}&k-d tree\\
+       \textit{end\_time}&secondary index\\
+       \textit{end\_coordinate}&k-d tree\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{release}模式索引信息}
+      \label{tab:indexrelease}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{release\_ID}&hash index\\
+       \textit{coordinate}&k-d tree\\
+       \textit{time}&primary index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{trace}模式索引信息}
+      \label{tab:indextrace}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{trace\_ID}&hash index\\
+       \textit{start\_time}&primary index\\
+       \textit{start\_coordinate}&k-d tree\\
+       \textit{end\_time}&secondary index\\
+       \textit{end\_coordinate}&k-d tree\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{type}模式索引信息}
+      \label{tab:indextype}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{type\_ID}&hash index\\
+       \textit{name}&\makecell[c]{——}\\
+       \textit{release\_date}&primary index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{user}模式索引信息}
+      \label{tab:indexuser}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{user\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{warehouse}模式索引信息}
+      \label{tab:indexwarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{warehouse\_ID}&hash index\\
+       \textit{capacity}&secondary key\\
+       \textit{load}&primary key\\
+       \textit{coordinate}&k-d tree\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_collection}模式索引信息}
+      \label{tab:indexbikecollection}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{collection\_ID}&hash index\\
+       \textit{bike\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+ \end{figure}
+  \begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{collection\_warehouse}模式索引信息}
+      \label{tab:indexcollectionwarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{collection\_ID}&hash index\\
+       \textit{warehouse\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_release}模式索引信息}
+      \label{tab:indexbikerelease}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{release\_ID}&hash index\\
+       \textit{bike\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{release\_warehouse}模式索引信息}
+      \label{tab:indexreleasewarehouse}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{release\_ID}&hash index\\
+       \textit{warehouse\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+\begin{figure}[!htp]
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{bike\_type}模式索引信息}
+      \label{tab:indexbiketype}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{bike\_ID}&hash index\\
+       \textit{type\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{stored\_in}模式索引信息}
+      \label{tab:indexstoredin}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{bike\_ID}&hash index\\
+       \textit{warehouse\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.3\textwidth}
+      \centering
+      \caption{\textit{usage}模式索引信息}
+      \label{tab:indexusage}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{trace\_ID}&hash index\\
+       \textit{user\_ID}&hash index\\
+       \textit{bike\_ID}&hash index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+  \begin{figure}
+    \begin{minipage}{0.4\textwidth}
+      \centering
+      \caption{\textit{user\_feedback}模式索引信息}
+      \label{tab:indexuserfeedback}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{user\_ID}&hash index\\
+       \textit{bike\_ID}&hash index\\
+       \textit{time}&primary index\\
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+    \begin{minipage}{0.4\textwidth}
+    \centering
+      \caption{\textit{feedback\_component}模式索引信息}
+      \label{tab:indexfeedbackcomponent}
+      \begin{tabular}{ll}\toprule
+        属性&索引信息\\\midrule
+       \textit{user\_ID}&hash index\\
+       \textit{bike\_ID}&hash index\\
+       \textit{time}&primary index\\
+       \textit{component}&hash index\\
+    %    \bottomrule
+       \bottomrule
+      \end{tabular}
+    \end{minipage}\hfill
+  \end{figure}
+
+  \newpage
+
+  \begin{table}
+    \centering
+  \begin{tabular}{lllll}\toprule
+      特征&数据集&模型训练&参数量(M)&FLOPs(B)\\\midrule
+
+
+
+
+
+
+
+
+     \bottomrule
+    \end{tabular}
+    \end{table}
+  
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&说明\\\midrule
+     optimizer&优化器\\
+     lr0& 初始学习率\\
+     lrf& 结束时的学习率与初始学习率之比\\
+     momentum& 动量\\
+     weight\_decay& L2正则项\\
+     warmup\_epochs& 学习率warnup所用epoch数\\
+     warmup\_momentum&\makecell[l]{warnup阶段的初始动量，\\在warnup阶段逐渐调整为lr0}\\
+     dfl& focalloss所用权重分布\\
+     hsv\_h& 调节图像色调\\
+     hsv\_s& 调节图像饱和度\\
+     hsv\_v& 调节图像像素值\\
+     degrees& 随机旋转角度范围\\
+     translate& 在垂直或水平方向上偏移\\
+     scale& 缩放图像\\
+     shear& 使图像切变\\
+     perspective& 视角变换\\
+     flipud& 垂直翻转\\
+     fliplr& 水平翻转\\
+     bgr& 将图像通道从RGB切换为BGR\\
+     mosaic& 将多张图片合成为一张图片\\
+     mixup& 将两张图片及其标签进行融合\\
+     copy\_paste& 将一张图片黏贴至另外一张图片上\\
+     label\_smoothing& 将真实标签分布与均匀分布融合\\
+     \bottomrule
+    \end{tabular}
+    \caption{模型训练所用参数含义}
+    \end{table}
+  
+  
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&值\\\midrule
+     optimizer&AdamW\\
+     lr0& 0.01\\
+  lrf& 0.01\\
+  momentum& 0.937\\
+  weight\_decay& 0.0005\\
+  warmup\_epochs& 3.0\\
+  warmup\_momentum& 0.8\\
+  warmup\_bias\_lr& 0.1\\
+  dfl& 1.5\\
+  label\_smoothing& 0.0\\
+
+  hsv\_h& 0.015\\
+  hsv\_s& 0.7\\
+  hsv\_v& 0.4\\
+  degrees& 0.0\\
+  translate& 0.1\\
+  scale& 0.5\\
+  shear& 0.0\\
+  perspective& 0.0\\
+  flipud& 0.0\\
+  fliplr& 0.5\\
+  bgr& 0.0\\
+  mosaic& 1.0\\
+  mixup& 0.0\\
+  copy\_paste& 0.0\\
+     \bottomrule
+    \end{tabular}
+    \caption{boundary full模型训练所用参数}
+    \end{table}
+
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&值\\\midrule
+     optimizer&AdamW\\
+     lr0&0.00994\\
+lrf&0.00862\\
+momentum&0.88855\\
+weight\_decay&0.00044\\
+warmup\_epochs&2.40243\\
+warmup\_momentum&0.67926\\
+warmup\_bias\_lr&0.1\\
+
+
+dfl&1.66066\\
+
+kobj&1.0\\
+label\_smoothing&0.1\\
+nbs&64\\
+hsv\_h&0.01526\\
+hsv\_s&0.52092\\
+hsv\_v&0.37127\\
+degrees&0.11779\\
+translate&0.11598\\
+scale&0.46637\\
+shear&0.09759\\
+perspective&0.001\\
+flipud&0.09362\\
+fliplr&0.35147\\
+bgr&0.09387\\
+mosaic&0.98285\\
+mixup&0.11167\\
+copy\_paste&0.08321\\
+     \bottomrule
+    \end{tabular}
+    \caption{boundary cropped模型训练所用参数}
+    \end{table}
+   
+
+
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&值\\\midrule
+     optimizer&AdamW\\
+     lr0& 0.01\\
+     lrf& 0.01\\
+     momentum& 0.937\\
+     weight\_decay& 0.0005\\
+     warmup\_epochs& 3.0\\
+     warmup\_momentum& 0.8\\
+     warmup\_bias\_lr& 0.1\\
+     dfl& 1.5\\
+     label\_smoothing& 0.0\\
+   
+     hsv\_h& 0.015\\
+     hsv\_s& 0.7\\
+     hsv\_v& 0.4\\
+     degrees& 0.0\\
+     translate& 0.1\\
+     scale& 0.5\\
+     shear& 0.0\\
+     perspective& 0.0\\
+     flipud& 0.0\\
+     fliplr& 0.5\\
+     bgr& 0.0\\
+     mosaic& 1.0\\
+     mixup& 0.0\\
+     copy\_paste& 0.0\\
+     \bottomrule
+    \end{tabular}
+    \caption{calcification full模型训练所用参数}
+    \end{table}
+  
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&值\\\midrule
+     optimizer&AdamW\\
+     lr0&0.00965\\
+     lrf&0.01037\\
+     momentum&0.88586\\
+     weight\_decay&0.00058\\
+     warmup\_epochs&2.86055\\
+     warmup\_momentum&0.6243\\
+     warmup\_bias\_lr&0.1\\
+
+
+     dfl&1.63815\\
+
+   
+     label\_smoothing&0.1\\
+   
+     hsv\_h&0.01792\\
+     hsv\_s&0.6875\\
+     hsv\_v&0.41773\\
+     degrees&0.13008\\
+     translate&0.10904\\
+     scale&0.47031\\
+     shear&0.10123\\
+     perspective&0.001\\
+     flipud&0.12443\\
+     fliplr&0.47187\\
+     bgr&0.08305\\
+     mosaic&1.0\\
+     mixup&0.09927\\
+     copy\_paste&0.10738\\
+     \bottomrule
+    \end{tabular}
+    \caption{calcification cropped模型训练所用参数}
+    \end{table}
+ 
+  
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&值\\\midrule
+     optimizer&AdamW\\
+     lr0& 0.01\\
+     lrf& 0.01\\
+     momentum& 0.937\\
+     weight\_decay& 0.0005\\
+     warmup\_epochs& 3.0\\
+     warmup\_momentum& 0.8\\
+     warmup\_bias\_lr& 0.1\\
+     dfl& 1.5\\
+     label\_smoothing& 0.0\\
+   
+     hsv\_h& 0.015\\
+     hsv\_s& 0.7\\
+     hsv\_v& 0.4\\
+     degrees& 0.0\\
+     translate& 0.1\\
+     scale& 0.5\\
+     shear& 0.0\\
+     perspective& 0.0\\
+     flipud& 0.0\\
+     fliplr& 0.5\\
+     bgr& 0.0\\
+     mosaic& 1.0\\
+     mixup& 0.0\\
+     copy\_paste& 0.0\\
+     \bottomrule
+    \end{tabular}
+    \caption{direction full模型训练所用参数}
+    \end{table}
+
+    \begin{table}
+      \centering
+    \begin{tabular}{ll}\toprule
+       参数名&值\\\midrule
+       optimizer&AdamW\\
+       lr0&0.00978\\
+       lrf&0.00926\\
+       momentum&0.89366\\
+       weight\_decay&0.00067\\
+       warmup\_epochs&3.29355\\
+       warmup\_momentum&0.71323\\
+       warmup\_bias\_lr&0.1\\
+
+
+       dfl&0.98704\\
+
+     
+       label\_smoothing&0.1\\
+     
+       hsv\_h&0.01233\\
+       hsv\_s&0.79681\\
+       hsv\_v&0.33085\\
+       degrees&0.09189\\
+       translate&0.07638\\
+       scale&0.51525\\
+       shear&0.10541\\
+       perspective&0.001\\
+       flipud&0.09178\\
+       fliplr&0.59682\\
+       bgr&0.0825\\
+       mosaic&0.89416\\
+       mixup&0.14522\\
+       copy\_paste&0.09174\\
+       \bottomrule
+      \end{tabular}
+      \caption{direction cropped模型训练所用参数}
+      \end{table}
+   
+  
+  \begin{table}
+    \centering
+  \begin{tabular}{ll}\toprule
+     参数名&值\\\midrule
+     optimizer&AdamW\\
+     lr0& 0.01\\
+     lrf& 0.01\\
+     momentum& 0.937\\
+     weight\_decay& 0.0005\\
+     warmup\_epochs& 3.0\\
+     warmup\_momentum& 0.8\\
+     warmup\_bias\_lr& 0.1\\
+     dfl& 1.5\\
+     label\_smoothing& 0.0\\
+   
+     hsv\_h& 0.015\\
+     hsv\_s& 0.7\\
+     hsv\_v& 0.4\\
+     degrees& 0.0\\
+     translate& 0.1\\
+     scale& 0.5\\
+     shear& 0.0\\
+     perspective& 0.0\\
+     flipud& 0.0\\
+     fliplr& 0.5\\
+     bgr& 0.0\\
+     mosaic& 1.0\\
+     mixup& 0.0\\
+     copy\_paste& 0.0\\
+     \bottomrule
+    \end{tabular}
+    \caption{shape full模型训练所用参数}
+    \end{table}
+  
+    \begin{table}
+      \centering
+    \begin{tabular}{ll}\toprule
+       参数名&值\\\midrule
+       optimizer&AdamW\\
+       lr0&0.0074\\
+       lrf&0.01105\\
+       momentum&0.93275\\
+       weight\_decay&0.00037\\
+       warmup\_epochs&3.42205\\
+       warmup\_momentum&0.75414\\
+       warmup\_bias\_lr&0.1\\
+
+
+       dfl&1.30848\\
+
+     
+       label\_smoothing&0.1\\
+     
+       hsv\_h&0.01511\\
+       hsv\_s&0.50101\\
+       hsv\_v&0.49125\\
+       degrees&0.12133\\
+       translate&0.14319\\
+       scale&0.44078\\
+       shear&0.12426\\
+       perspective&0.00087\\
+       flipud&0.087\\
+       fliplr&0.35931\\
+       bgr&0.11186\\
+       mosaic&1.0\\
+       mixup&0.11604\\
+       copy\_paste&0.08407\\
+       \bottomrule
+      \end{tabular}
+      \caption{shape cropped模型训练所用参数}
+      \end{table}

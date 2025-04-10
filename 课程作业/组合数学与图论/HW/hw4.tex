@@ -1,0 +1,304 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{HW4}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\begin{problem}{1}
+在平面上花$n$条直线，每对直线都在不同的点相交，它们构成的无限区间数记为$f(n)$，求$f(n)$满足的递推关系。
+\end{problem}
+\begin{solution}
+    由平面几何知识可知：
+    \[\begin{cases}
+        f(n) = f(n-1) + 2(n\geq 2)\\
+        f(0) = 1,f(1) = 2\\
+    \end{cases}\]
+\end{solution}
+\begin{problem}{3}
+$n$位四进制数中，若：
+\begin{enumerate}
+    \item 有偶数个$0$的序列共有$f(n)$个；
+    \item 有偶数个$0$且有偶数个$1$的序列共有$g(n)$个。
+\end{enumerate}
+求$f(n),g(n)$满足的递推关系。
+\end{problem}
+\begin{solution}
+    显然$f(0)=1,f(1)=3$,（空串视为合法序列）。当$n\geq 2$时，按照第$n$位上是否为$0$进行讨论。如果为0，那么前$n-1$位上只能有奇数个0，由减法法则可知，方案数为$4^{n-1}-f(n-1)$；
+    否则，前$n-1$位上仍有偶数个0，由乘法法则可知，方案数为$3f(n-1)$。综上
+    \[f(n)=\begin{cases}
+       4^{n-1}+2f(n-1),n\geq 2\\
+       1,n=0,1\\ 
+    \end{cases}\]
+\end{solution}
+\begin{problem}{6}
+求解下列递推关系：
+\begin{enumerate}
+    \item\[ \begin{cases}
+        f(n)=f(n-1)+9f(n-2)-9f(n-3)(n\geq3)\\
+        f(0)=0,f(1)=1,f(2)=2\\
+    \end{cases}\]
+    \item \[\begin{cases}
+        f(n)=4f(n-1)-3f(n-2)+3^n\\
+        f(0)=1,f(1)=2\\
+    \end{cases}\]
+\end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+        \item 特征方程为
+        \[(x^2-9)(x-1)=0\]
+        所以设通解为
+        \[f(n)=a_13^n+a_2(-3)^n+a_3\]
+        将初值带入后可解得
+        \[f(n)=3^{n-1}+\frac{(-3)^{n-1}}{4}-\frac{1}{4}\]
+         \item 特征方程为
+        \[(x-3)(x-1)=0\]
+        3为一个根，所以设特解为
+        \[an3^n\]
+        带入递推式解得$a=\frac{3}{2}$.
+
+        设解为
+        \[f(n)=a_13^n+a_2+\frac{n3^{n+1}}{2}\]
+        解得
+        \[f(n)=-\frac{7}{4}3^n+\frac{11}{4}+\frac{n3^{n+1}}{2}\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{7}
+求解下列递推关系：
+\begin{enumerate}
+    \item \[\begin{cases}
+        f^2(n)-2f(n-1)=0(n\geq1)\\
+        f(0)=4\\
+    \end{cases}\]
+    \item \[ 
+    f(n)=nf(n-1)+n!(n\geq 1)\\
+    f(0)=2\\    
+    \]
+\end{enumerate}
+\begin{solution}
+    \begin{enumerate}
+        \item 设$g(n)=\ln f(n)$，则有
+        \[\begin{cases}
+            2g(n)=\ln 2+g(n-1)&n\geq 1\\
+                g(0)=2\ln2\\
+        \end{cases}\]
+        从而
+        \[2(g(n)-\ln2)=g(n-1)-\ln2\]
+        因此
+        \[g(n)=(2^n+1)\ln2\]
+        \[f(n)=2^{2^n+1}\]
+    \item 设$g(n)=f(n)/n!$，则有
+        \[\begin{cases}
+            g(n)=g(n-1)+1&n\geq 1\\
+                g(0)=2\ln2\\
+        \end{cases}\]
+        从而
+        \[g(n)=2+n\]
+        \[f(n)=(2+n)n!\]
+    
+    \end{enumerate}
+\end{solution}
+\end{problem}
+\begin{problem}{8}
+求解下列递推关系：
+\begin{enumerate}
+    \item \[\begin{cases}
+        f(n)=f(n-1)+\frac{1}{n(n+1)}(n\geq1)\\
+        f(0)=1\\
+    \end{cases}\]
+    \item \[
+        \begin{cases}
+            f(n+2)-f(n)=3\cdot2^n+4\cdot(-1)^n\\
+            f(0)=0,f(1)=1\\
+        \end{cases}\]
+\end{enumerate}
+\end{problem}
+\begin{solution}
+    \begin{enumerate}
+     \item 设$g(n)=f(n)+\frac{1}{n+1}$，则有
+     \[g(n)=g(0)=2\]
+        \[f(n)=2-\frac{1}{n+1}\]
+         \item 特征方程为
+        \[x^2-1=0\]
+        根为$x=\pm 1$。因此设$3\cdot 2^n$对应的特解为$a2^n$,$4\cdot(-1)^n$对应的特解为$bn(-1)^n$.
+        令\[f(n)=a2^n+bn(-1)^n\]
+        得
+        \[3a\cdot2^n+2b(-1)^n=3\cdot2^n+4(-1)^n\]
+        比较系数后得$a=1,b=2$。
+        设通解为
+        \[f(n)=2^n+2n(-1)^n+a_1+a_2(-1)^n\]
+        带入初值后可得
+        \[f(n)=2^n+2n(-1)^n+(-1)^{n+1}\]
+    \end{enumerate}
+\end{solution}
+\begin{problem}{11}
+$1\times n$棋盘用红、白、蓝三种颜色着色，不允许相邻两个都着红色，求着色方案数满足的递推关系，并求出着色方案数。
+\end{problem}
+\begin{solution}
+    记方案数为$f(n)$，显然$f(0)=1,f(1)=3$，当$n\geq 2$时，按照第$n$块的颜色进行讨论。若为红色，那么第$n-1$块只能选择白色或蓝色，对应$2f(n-2)$种方案；
+    否则，第$n$块为蓝色或白色，又乘法原理可知，对应$2f(n-1)$种方案。所以得到递推关系
+    \[f(n)=\begin{cases}
+       2f(n-1)+2f(n-2)&n\geq2\\
+       1&n=0\\
+       3&n=1\\ 
+    \end{cases}\]
+        特征方程为
+        \[x^2-2x-2=0\]
+        根为$x=1\pm\sqrt{3}$.
+        令\[f(n)=a(1+\sqrt{3}^n)+b(1-\sqrt{3})^n\]
+        带入初值后可得
+ \[f(n)=(\frac{1}{2}+\frac{\sqrt{3}}{3})(1+\sqrt{3}^n)+(\frac{1}{2}-\frac{\sqrt{3}}{3})(1-\sqrt{3})^n\]
+\end{solution}
+\begin{problem}{14}
+    \[\begin{cases}
+        f(n)=f(n-1)+9f(n-2)-9f(n-3)\\
+        f(0)=0,f(1)=1,f(2)=2\\
+    \end{cases}\]
+\end{problem}
+\begin{solution}
+    令
+    \[G(x)=\sum_{n=0}^{\infty}f(n)x^n\]
+    则
+    \[(1-x-9x^2+9x^3)G(x)=\sum_{n=3}^{\infty}9f(n-3)x^n-\sum_{n=2}^{\infty}2f(n-2)x^n-\sum_{n=1}^{\infty}f(n-1)x^n+\sum_{n=0}^{\infty}f(n)x^n\]
+    \[(9x^2-1)(x-1)G(x)=x^2+x\]
+    \[G(x)=\frac{x^2+x}{(9x^2-1)(x-1)}=(x^2+x)(-\frac{3}{4}\frac{1}{3x-1}+\frac{3}{8}\frac{1}{3x+1}+\frac{1}{8}\frac{1}{x-1})=(x^2+x)(\frac{3}{4}\sum_{n=0}^{\infty}(3x)^n+\frac{3}{8}\sum_{n=0}^{\infty}(-3x)^n-\frac{1}{8}\sum_{n=0}^{\infty}x^n)\]
+    整理后比较系数可得
+        \[f(n)=3^{n-1}+\frac{(-3)^{n-1}}{4}-\frac{1}{4}\]
+\end{solution}
+\begin{problem}{17}
+    在圆周上任取$n$个不相同的点，过每两点作一条弦。假设这些弦中没有三条在圆内相交于一点，令$a_n$表示这些弦将圆分成的区域数。证明
+    \[a_n=\binom{n}{4}+\binom{n}{2}+1\]
+\end{problem}
+\begin{solution}
+    由上一章的第18题可知，
+   令$h_n$表示具有$n+2$条的凸边形区域被其对角线所分成的区域，假设没有三条对角线共点。定义$h_0=0.$
+   则
+   \[h_n=\binom{n+2}{4}+\binom{n+1}{2}\]
+   而$a_n$在$h_{n-2}$的基础上增加了由弦和弧围成的区域，即
+   \[a_n=h_{n-2}+n=\binom{n}{4}+\binom{n-1}{2}+n=\binom{n}{4}+\frac{(n-1)(n-2)}{2}+n=\binom{n}{4}+\frac{n^2-3n+2}{2}+n=\binom{n}{4}+\binom{n}{2}+1\]
+\end{solution}
+\begin{problem}{19}
+   确定$f(n)$的一个递推关系式，$f(n)$是一个平面被$n$个圆划分的区域数量，期中每一对圆正好相交于两点，且没有三个圆相交于一点。 
+\end{problem}
+\begin{solution}
+    对于第$n$个圆，它和前$n-1$个圆产生$2(n-1)$个交点，将其划分为$2(n-1)$条弧，而每对弧又会将原本的一个区域一分为二，从而有
+    \[f(n)=2(n-1)+f(n-1),n\geq2\]
+    显然$f(1)=2$，展开递推关系式后解得
+    \[f(n)=n^2-n+2\]
+\end{solution}
+\end{document}

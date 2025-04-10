@@ -1,0 +1,68 @@
+\documentclass[a4paper]{article}
+
+\input{header.tex}
+
+\title{作业{\hspace{1ex}}HW4}
+\author{姓名：范潇{\quad}学号：2254298{\quad}日期：\today}
+\date{}
+\begin{document}
+\maketitle
+\section{7.1}
+记分解得到的两个关系分别为$R_1,R_2$，则$R_1\cap R_2=A$，因为
+\[A\rightarrow BC\]
+\[A\rightarrow A\]
+所以有
+\[A\rightarrow R_1\]
+即
+\[R_1\cap R_2\rightarrow R_1\]
+所以是无损分解。
+\section{7.6}
+$F^{+}$可以通过枚举所有的$\bm{\alpha}$，计算出$\bm{\alpha}^{+}$，然后将形如$\bm{\alpha}\rightarrow\bm{\beta},\bm{\beta}\subseteq \bm{\alpha}^{+}$的函数依赖添加入$F^+$即可。
+
+$X=\varnothing,Y=\{A,B,C,D,E\},$
+
+第一轮： 
+
+$A^+=R,B^+=\{B,D\},C^+=\varnothing,D^+=\varnothing,E^{+}=R$，所以$A$和$E$为候选码.
+
+第二轮：
+
+$BC^+=R,BD^+=\{B,D\},CD^+=R$，所以$BC$和$CD$为候选码。
+
+综上，候选码有$A,E,BC,CD$.
+% 第一轮：
+
+% 使用自反律推得函数依赖
+% \[A\rightarrow\varnothing,A\rightarrow A\]
+% \[CD\rightarrow\varnothing,CD\rightarrow C,CD\rightarrow D\]
+% \[B\rightarrow\varnothing,B\rightarrow B\]
+% \[E\rightarrow\varnothing,E\rightarrow E\]
+% 使用增广律推得函数依赖
+% \[A\rightarrow ABC,AB\rightarrow BC,AC\rightarrow BC,AD\rightarrow BCD,AE\rightarrow BCE\]
+% \[ACD\rightarrow AE,BCD\rightarrow BE,CD\rightarrow CE,CD\rightarrow DE,CDE\rightarrow E\]
+% \[AB\rightarrow AD,B\rightarrow BD,BC\rightarrow CD,BD\rightarrow D,BE\rightarrow DE\]
+% \[AE\rightarrow A,BE\rightarrow AB,CE\rightarrow AC,DE\rightarrow AD,E\rightarrow AE\]
+% 使用传递律推得函数依赖
+% \[AC\rightarrow CD\]
+% \[AD\rightarrow BE\]
+% \[BCD\rightarrow DE\]
+% \[CD\rightarrow AC\]
+% \[CDE\rightarrow AE\]
+% \[B\rightarrow D\]
+% \[AE\rightarrow ABC\]
+% \[BE\rightarrow BC,BE\rightarrow AD\]
+% \[CE\rightarrow BC\]
+% \[DE\rightarrow BCD\]
+% \[E\rightarrow BCE,E\rightarrow A\]
+\section{7.30(a,b,c,d)}
+\begin{enumerate}
+    \item $B^+=\{A,B,C,D,E\}$
+    \item 因为 $BC\rightarrow DE$，由增广律可得$ABCD\rightarrow ABCDE$。又因为$A\rightarrow BCD$，由增广律可得$A\rightarrow ABCD$。从而由
+    传递律可得$A\rightarrow ABCDE$，再由增广律可得$AG\rightarrow ABCDEG$，从而$AG$为超码。
+    \item 一个正则覆盖为 $\{A\rightarrow BC,BC\rightarrow E,B\rightarrow D,D\rightarrow A\}$，这是通过把$A\rightarrow BCD$改为$A\rightarrow BC$，把 
+    $BC\rightarrow DE$改为$BC\rightarrow E$得到的。因为$A\rightarrow BC,B\rightarrow D$能够推出$A\rightarrow BCD$，同时$BC\rightarrow E$和$B\rightarrow D$能够推出$BC\rightarrow DE$.
+    \item 一个第三范式分解为$(ABC,BCE,BD,AD,AG)$，其中只有$AG$包含候选码。
+\end{enumerate}
+\section{Quiz}
+\includegraphics[width=\textwidth]{quiz.pdf}
+\end{document}

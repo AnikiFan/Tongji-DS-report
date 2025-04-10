@@ -1,0 +1,43 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+
+\title{\textbf{HW3}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+
+\maketitle
+
+\begin{problem}{2.2.9}
+    证明
+    \[[\mathbf{a},\mathbf{b},\mathbf{c}\times \mathbf{d}]+[\mathbf{b},\mathbf{c},\mathbf{a}\times \mathbf{d}]+[\mathbf{c},\mathbf{a},\mathbf{b}\times \mathbf{d}]=\mathbf{0}\]
+\end{problem}
+\begin{solution}
+    因为对于任意三维空间向量 $\mathbf{a},\mathbf{b},\mathbf{c},\mathbf{d}$有：
+    \[
+    \begin{array}[H]{rcl}
+       (\mathbf{a}\times \mathbf{b})\cdot(\mathbf{c}\times \mathbf{d})&=&\mathbf{a}\cdot \mathbf{b}\times(\mathbf{c}\times \mathbf{d})\\
+       &=&\mathbf{a}\cdot((\mathbf{b}\cdot \mathbf{d})\mathbf{c}-(\mathbf{b}\cdot \mathbf{c})\mathbf{d}) \\
+       &=&(\mathbf{b}\cdot \mathbf{d})(\mathbf{a}\cdot \mathbf{c})-(\mathbf{b}\cdot \mathbf{c})(\mathbf{a}\cdot \mathbf{d})\\
+    \end{array}    
+    \]
+    所以
+    \[
+    \begin{array}[H]{rl}
+    &[\mathbf{a},\mathbf{b},\mathbf{c}\times \mathbf{d}]+[\mathbf{b},\mathbf{c},\mathbf{a}\times \mathbf{d}]+[\mathbf{c},\mathbf{a},\mathbf{b}\times \mathbf{d}]\\
+    =& (\mathbf{a}\times \mathbf{b})\cdot(\mathbf{c}\times \mathbf{d})+(\mathbf{b}\times \mathbf{c})\cdot(\mathbf{a}\times \mathbf{d})+(\mathbf{c}\times \mathbf{a})\cdot(\mathbf{b}\times \mathbf{d}) \\
+    =& (\mathbf{b}\cdot \mathbf{d})(\mathbf{a}\cdot \mathbf{c})-(\mathbf{b}\cdot \mathbf{c})(\mathbf{a}\cdot \mathbf{d})+\\
+    & (\mathbf{c}\cdot \mathbf{d})(\mathbf{b}\cdot \mathbf{a})-(\mathbf{c}\cdot \mathbf{a})(\mathbf{b}\cdot \mathbf{d})+\\
+    & (\mathbf{a}\cdot \mathbf{d})(\mathbf{c}\cdot \mathbf{b})-(\mathbf{a}\cdot \mathbf{b})(\mathbf{c}\cdot \mathbf{d})\\
+    =&\mathbf{0}\\ 
+    \end{array}    
+    \]
+    \qed
+\end{solution}
+\end{document}

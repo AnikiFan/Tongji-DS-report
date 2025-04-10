@@ -1,0 +1,74 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage[all]{xy}
+
+
+\usepackage{amsmath,amsthm,amssymb,color,latexsym}
+\usepackage{geometry}        
+\geometry{letterpaper}    
+\usepackage{graphicx}
+
+\newtheorem{problem}{Problem}
+
+\newenvironment{solution}[1][\it{Solution}]{\textbf{#1. } }{$\square$}
+
+
+\begin{document}
+\noindent DataBase System Concept \hfill Homework \# 1\\
+Student ID : 2254298
+
+\hrulefill
+
+
+\begin{problem}[2.7]
+    Consider the bank database of Figure 2.18. Give an expression in the relational algebra for each of the following queries:
+    \begin{enumerate}
+        \item Find the name of each branch located in “Chicago”.
+        \item Find the ID of each borrower who has a loan in branch “Downtown”.
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    The information we need for the first question are in the table \emph{branch}.
+    \[\Pi_{branch\_name}(\sigma_{branch\_city="Chicago"}(branch))\]
+
+    For the second question, we need to use the table \emph{borrower} and \emph{loan}.
+    Since they share the attribute \emph{loan\_number}, I choose to use natural join.
+    \[\Pi_{ID}((\sigma_{branch\_name="Downtown"}(loan))\Join borrower)\]
+\end{solution} 
+
+\begin{problem}[2.14]
+    Consider the employee database of Figure 2.17. Give an expression in the relational algebra to express each of the following queries:
+    \begin{enumerate}
+        \item Find the ID and name of each employee who works for “BigBank”.
+        \item Find the ID, name, and city of residence of each employee who works for “BigBank”.
+        \item Find the ID, name, street address, and city of residence of each employee who works for “BigBank” and earns more than \$10000.
+        \item Find the ID and name of each employee in this database who lives in the same city as the company for which she or he works.
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \[\Pi_{person\_name}(employee\Join\sigma_{company\_name="BigBank"}(works))\]
+    \[\Pi_{person\_name,city}(employee\Join\sigma_{company\_name="BigBank"}(works))\]
+    \[\Pi_{person\_name,street,city}(employee\Join\sigma_{company\_name="BigBank"\land salary>10000}(works))\]
+    \[\Pi_{person\_name}((employee\Join works)\Join company)\]
+    where the second natural join guarentee that the selected employee live in the same city as the compnany she or he works for.
+\end{solution}
+\begin{problem}[2.15]
+    Consider the bank database of Figure 2.18. Give an expression in the relational algebra for each of the following queries:
+    \begin{enumerate}
+        \item Find each loan number with a loan amount greater than \$10000.
+        \item Find the ID of each depositor who has an account with a balance greater than \$6000.
+        \item Find the ID of each depositor who has an account with a balance greater than \$6000 at the “Uptown” branch.
+    \end{enumerate}
+\end{problem}
+\begin{solution}
+    \[\Pi_{loan\_number}(\sigma_{amount>10000}(loan))\]
+    \[\Pi_{ID}(\sigma_{account\_balance>6000}(account)\Join depositor)\]
+    \[\Pi_{ID}(\sigma_{account\_balance>6000\land branch\_name="Downtown"}(account)\Join depositor)\]
+    to keep the relation relatively small given by the join operations, I use the select operation first.
+\end{solution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%Continue with this pattern if there are more%%%%%%%
+%%%%%%%%%%%%%%%%%homework problems%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ 
+\end{document}

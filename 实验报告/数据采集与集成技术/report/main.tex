@@ -1,0 +1,32 @@
+\documentclass[oneside]{tongjithesis} % 双面模式请将 oneside 改为 twoside
+\usepackage{tongjithesis}
+\usepackage{ulem}
+\usepackage{makecell}
+\usepackage{hyperref}
+\begin{document}
+
+\input{sections/frontcover.tex}
+\cleardoublepage
+
+% \pagestyle{firststyle}
+% \input{sections/00_abstract.tex}
+
+\clearpage
+\pagestyle{firststyle}
+\tableofcontents   %放置目录
+\cleardoublepage
+
+\pagestyle{mainstyle}
+\input{sections/1background.tex}
+\input{sections/2requirement.tex}
+\input{sections/3overall.tex}
+\input{sections/4detail.tex}
+\input{sections/5implementation.tex}
+\input{sections/6data.tex}
+\input{sections/7collaboration.tex}
+\input{sections/8summary.tex}
+\input{sections/9reflect.tex}
+
+% \input{sections/thanks}
+
+\end{document}

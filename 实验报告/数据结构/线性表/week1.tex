@@ -1,0 +1,832 @@
+\documentclass[a4paper,11pt]{article}%必须以此为开头,可以在[]内设置栏数,单双面,横竖向
+\usepackage{ctex}%提供中文支持
+\usepackage{graphicx}%用于插入图片
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{makecell}%允许表格的单元格内换行
+%伪代码
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{amsmath}
+%伪代码
+%代码块
+\usepackage{ listings}
+\usepackage[x11names]{xcolor}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+	backgroundcolor=\color{white},      % choose the background color
+	basicstyle=\footnotesize\ttfamily,  % size of fonts used for the code
+	columns=fullflexible,
+	tabsize=4,
+	breaklines=true,               % automatic line breaking only at whitespace
+	captionpos=b,                  % sets the caption-position to bottom
+	commentstyle=\color{mygreen},  % comment style
+	escapeinside={\%*}{*)},        % if you want to add LaTeX within your code
+	keywordstyle=\color{blue},     % keyword style
+	stringstyle=\color{mymauve}\ttfamily,  % string literal style
+	frame=single,
+	rulesepcolor=\color{red!20!green!20!blue!20},
+	% identifierstyle=\color{red},
+	language=c,
+}
+%代码块
+%引用
+\usepackage{framed}
+\usepackage{quoting}
+ \colorlet{shadecolor}{Turquoise1!20}
+\newenvironment{shadedquotation}
+ {\begin{shaded*}
+  \quoting[leftmargin=0pt, vskip=0pt]
+ }
+ {\endquoting
+ \end{shaded*}
+}
+%引用
+%跨页伪代码
+\makeatletter
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+   \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+       {\raggedright\textbf{\ALG@name~\thealgorithm} ##2\par}%
+       \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+       \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+       \fi
+       \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
+%跨页伪代码
+\newcommand*{\abs}[1]{\lvert #1 \rvert}
+\floatname{algorithm}{算法}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+\author{姓名: 范潇\phantom{11}学号: 2254298}
+\title{作业 HW1 试验报告}
+\date{2023年 10月 15日}
+\begin{document}
+\maketitle
+\lstset{breaklines}%这条命令可以让LaTeX自动将长的代码行换行排版
+		\lstset{extendedchars=false}%这一条命令可以解决代码跨页时，章节标题，页眉等汉字不显
+		%示的问题
+		\lstset{numbers=left,numberstyle=\tiny,keywordstyle=\color{blue!70},
+			commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+			rulesepcolor=\color{red!20!green!20!blue!20},escapeinside=``,
+			%xleftmargin=-10em,xrightmargin=-23em,
+            aboveskip=1em} 
+\pagestyle{plain}%页面风格,plain为中下方有页码.heading是页眉中间有页数,同时有章节名,empty是空页眉页尾
+%\thispagestyle{pagestyle}%本页页面风格
+% 实验报告格式要求按照模板（使用Markdown等也请保证报告内包含模板中的要素）
+% 对字体大小、缩进、颜色等不做强制要求（但尽量代码部分和文字内容有一定区分，可参考vscode配色）
+% 实验报告要求在文字简洁的同时将内容表示清楚
+% 报告内不要大段贴代码，尽量控制在20页以内
+\section{涉及数据结构和相关背景}
+本次实验涉及到的数据结构为线性表的顺序存储结构，即顺序表，以及链表。
+
+在计算机内存中,顺序表的存储结构为一段连续的存储单元.
+
+顺序表的基本操作有：
+\begin{itemize}
+    \item 顺序表的创建
+    \item 在第i个位置插入元素
+    \item 删除第i个位置的元素
+    \item 查找某个元素
+    \item 顺序表的销毁
+\end{itemize}
+
+顺序表的特点在于用物理位置的相邻及前后关系来表示数据元素之间的逻辑关系.
+
+其优势有:
+\begin{itemize}
+    \item 结构简单
+    \item 存储效率高,是紧凑结构
+    \item 为随机存储结构,即如果每个元素占用的存储单位固定,只需要知道顺序表的起始位置(或称为基地址)
+    以及元素的位序,便可以直接算出该元素所在位置.
+\end{itemize}
+缺点有:
+\begin{itemize}
+    \item 进行插入和删除操作时,需要移动数据元素,算法效率较低
+    \item 对于长度变化较大的线性表,或者要预先分配较大空间或者要经常扩充线性表,给操作带来不方便.
+\end{itemize}
+
+链表则定义为在内存中用一组任意的存储单元来存储线性表的数据元素，
+用每个数据元素所带的指针来确定其后继元素的存储位置。这两部分信息组成数据元素的存储映像，称作结点。
+即每个结点由数据域与指针域(链域),n个结点链接成一个链表.
+
+链表又可以进一步分为单链表、循环链表和双向链表。其中单链表也称为线性链表，含有头结点的单链表较为常用；
+循环链表则是首尾相接的链表，通常在循环链表中加入表头结点；
+双向链表则是能够从前驱和后继两个方向遍历的线性链表，常采用带特殊结点的循环链表形式。
+
+% 题目或实验涉及数据结构的相关背景
+\section{实验内容}
+\subsection{轮转数组}
+% 题目名字
+\subsubsection{问题描述}
+\begin{shadedquotation}
+\noindent\emph{题目：}
+ 给定一个整数顺序表nums，将顺序表中的元素向右轮转 k 个位置，其中 k 是非负数。   
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{数据范围：}
+    \begin{itemize}
+        \item $1 \leq $nums.length$ \leq 10^5$
+        \item $-2^{31} \leq $nums[i]$ \leq 2^{31}-1$
+        \item $0 \leq $k$ \leq 10^5$
+    \end{itemize}
+\end{shadedquotation}
+% 简短地描述题目（可复制题目要求）
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+     第一行两个整数n和k，分别表示nums的元素个数n，和向右轮转k个位置；
+第二行包括n个整数，为顺序表nums中的元素。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    轮转后的顺序表中的元素,用空格隔开。
+\end{shadedquotation}
+
+% 简短地描述题目要求
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct{
+	ElemType *elem;
+	int length;//current length
+	int listsize;//current allocated size
+}SqList;//顺序表
+SqList ans;
+\end{lstlisting}
+% 图、描述均可
+% 贴出数据结构定义代码（变量、结构体或类）并使用注释辅助说明
+% 例如
+
+%// Definition for a binary tree node.
+%struct TreeNode {
+%    int data;           // 节点元素
+%    TreeNode *lchild;   // 左孩子节点指针
+%    TreeNode *rchild;   // 有孩子指针
+%    TreeNode(int x = 0, TreeNode *left = nullptr, TreeNode *right = nullptr);
+%    ~TreeNode();
+%};
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{初始化顺序表}
+    \begin{algorithmic}[1]
+        \Require SqList\,\&L待初始化的顺序表， int\,n置零长度
+        \Ensure void 
+        \Function{InitList\_SqList}{SqList \&L,int n}
+        \State 申请内存空间并判断是否成功
+        \State 将前 $n$个元素置零
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{将数据写入顺序表中的指定位置}
+    \begin{algorithmic}[1]
+        \Require SqList\,\&L已初始化的顺序表， int\,i写入位序， ElemType\,e写入值
+        \Ensure void 
+        \Function{InitList\_SqList}{SqList \&L,int n}
+        \State 判断写入位序 $i$是否合法
+        \State 将 $e$写入该位序对应的数据中//*(L.elem+i-1)=e;
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{读取顺序表中指定位置的数据}
+    \begin{algorithmic}[1]
+        \Require SqList\,\&L已初始化的顺序表， int\,i读取位序， ElemType\,e用于存储值的变量
+        \Ensure void 
+        \Function{InitList\_SqList}{SqList \&L,int n}
+        \State 判断读取位序 $i$是否合法
+        \State 将该位序对应的数据写入 $e$中
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+    InitList_SqList(ans,n);
+		for(int i = 0;i<n;i++){
+			scanf("%d",&temp);
+		  ListWrite_sq(ans,(i+k)%n+1,temp);//在写入时体现“向右轮转”
+		}
+		for(int i =0;i<n;i++){
+			GetElem(ans,i+1,temp);//在读取时从第一个元素开始顺序读取
+			printf("%d ",temp);
+		}
+\end{lstlisting}
+
+%函数,类
+% 推荐使用代码+注释的形式，清晰描述函数功能、输入内容和输出/返回内容
+% 不要直接贴函数实现代码，请选择关键代码/伪代码展示并用注释辅助说明
+% 例如
+%/**
+% * @brief           二叉树指令构造
+% * @param   order   构造指令列表
+% * @param   index   当前节点序号
+% * @return          子树根节点指针
+% */
+%TreeNode *buildTreeDFS(const std::vector<int> &order, int &index) {
+%    if (子树为空) {
+%        返回空指针 // 返回空指针给父节点
+%}
+%// 构造以当前节点为根节点的子树并返回
+%    return new TreeNode(order[index ++], buildTreeDFS(order, index), buildTreeDFS(order, index));
+%}
+\subsubsection{调试分析}
+一开始尝试着使用在写入时从第一个元素开始，而在读取时体现“向右轮转”，但是这样实现的程序能够通过后面6个测试样例，
+却没办法通过前4个测试样例，最后我改变策略，使用了上述的程序逻辑，并成功通过所有测试样例。
+%遇到的问题和解决方法
+%简要描述调试过程
+%可以使用图片辅助说明
+\subsubsection{总结和体会}
+在确定元素在顺序中的位序时，可以利用模运算将位序限定在合法范围内，从而避免了条件语句的使用。
+
+顺序表可以用于模拟数组。本题中我利用了线性表随机存取的特性，提高了算法的效率。
+% 可以说说做此题的收获、分析这道题目的难点和易错点（数据边界、对算法效率的要求等）
+\subsection{学生信息管理}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{题目：}
+    设计一个学生信息管理系统，要求能够实现以下功能：
+    \begin{itemize}
+        \item 根据指定学生个数，逐个输入学生信息
+        \item 给定一个学生信息，插入到表中指定的位置
+        \item 删除指定位置的学生记录
+        \item 分别根据学生和学号进行查找，返回此学生的信息
+        \item 统计表中学生个数
+    \end{itemize}
+\end{shadedquotation}    
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第1行是学生总数n,接下来n行是对学生信息的描述，每行是一名学生的学号、姓名，用空格分割；(学号、姓名均用字符串表示,字符串长度 $<$100)
+接下来是若干行对顺序表的操作：(每行内容之间用空格分隔)
+\begin{itemize}
+    \item insert i：表示在第i个位置插入学生信息, 若i位置不合法，输出-1，否则输出0
+    \item remove j：表示删除第j个位置的学生信息, 若j位置不合法，输出-1，否则输出0
+    \item check name 姓名y：查找姓名y在顺序表中是否存在，若存在，输出其位置序号及学号、姓名，若不存在，输出-1
+    \item check no 学号x：查找学号x在顺序表中是否存在，若存在，输出其位置序号及学号、姓名，若不存在，输出-1
+    \item end：表示操作结束，输出学生总人数，退出程序。
+\end{itemize}
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    输出每次操作的结果，每个结果占一行。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct{
+	char no[INFO_MAX_LENGTH];
+	char name[INFO_MAX_LENGTH];
+} ElemType;
+typedef struct{
+	ElemType *elem;
+	int length;//current length
+	int listsize;//current allocated size
+}SqList;
+SqList L;//学生信息列表
+char opt[OPT_MAX_LENGTH];//用于存储输入操作
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{插入学生信息}
+    \begin{algorithmic}[1]
+        \Require SqList\,\&L学生信息列表， int\,i插入位序， ElemType待插入学生信息
+        \Ensure 操作状态 $Status$
+        \Function{ListInsert\_sq}{SqList \&L,int i,ElemType e}
+                \State 判断插入位序是否合法
+                \State 判断是否需要扩容
+                \State 从表末尾至插入位置依次向后平移一位
+                \State 在指定位序上插入学生信息
+            \State \Return{OK}
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{删除学生信息}
+    \begin{algorithmic}[1]
+        \Require SqList\,\&L学生信息列表， int\,i删除位序 
+        \Ensure 操作状态 $Status$
+        \Function{ListDelete\_sq}{SqList\,\&L,int\,i}
+            \State 判断删除位序是否合法
+            \State 从删除元素的后一位至表末依次向前平移一位
+            \State \Return{OK}
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{查询学生信息}
+    \begin{algorithmic}[1]
+    \Require SqList\,L学生信息列表，char\,info[\,]指定信息 
+    \Ensure void
+    \Function{Locate\_By\_info}{SqList\,L,char\,info[\,]}
+        \State 指针遍历顺序表，直到超出范围或所指学生信息符合要求
+        \If{所指学生信息不符合要求}
+            \State 打印错误信息
+        \EndIf 
+        \State 打印所指学生信息
+    \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{创建学生信息列表}
+    \begin{algorithmic}[1]
+    \Require  $SqList\,\&L$空学生信息列表，$int\,n$学生数量
+    \Ensure 操作状态
+    \Function{CreateList\_Sq}{SqList\,L,int\,n}
+    \State 申请内存空间，并判断是否成功
+    \State 循环判断是否要增加申请的空间，直至超过学生数量
+    \State 设置表长
+    \State 循环读取学生信息，并依次写入顺序表中
+
+    \State \Return{OK}
+    \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+
+\subsubsection{调试分析}
+在一开始调试该程序时，后面几个测试点显示runtime error，因此推断是因为存储信息的数组大小不够导致的。
+于是把存储信息的数组行数加至10010，但是仍然显示runtime error，后来老师说题目所给的信息有误，
+最后将行数加至20000便成功通过了。
+\subsubsection{总结和体会}
+在顺序表中插入数据时，应从后往前遍历并后移，这样可以避免数据的覆盖；
+删除数据时，应从前往后遍历并前移，这样可以避免数据的覆盖。
+
+在解答这类信息存储和比较的题目时，要给存储信息的数组以适当的冗余。
+同时，像在这道题中，学号可以有几十位，此时应该将它视为字符串来处理，尽管它是一串数字。
+
+为了避免由于申请的内存空间不足而导致的运行时错误，可以利用reallloc函数来解决，不过这样可能会导致时间增加，
+对于单个题目而言，可以事先通过数据范围来确定需要申请的内存空间大小。
+\subsection{一元多项式的相加和相乘}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{题目：}
+    一元多项式是有序线性表的典型应用，用一个长度为m且每个元素有两个数据项
+    （系数项和指数项）的线性表((p1,e1),(p2,e2),...,(pm,em))可以唯一地表示一个多项式。 
+    
+    本题实现多项式的相加和相乘运算。本题输入保证是按照指数项递增有序的。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    \begin{itemize}
+        \item 第1行一个整数m，表示第一个一元多项式的长度
+        \item 第2行有2m项，p1 e1 p2 e2 ...，中间以空格分割,表示第1个多项式系数和指数
+        \item 第3行一个整数n,表示第二个一元多项式的项数
+        \item 第4行有2n项，p1 e1 p2 e2 ...，中间以空格分割,表示第2个多项式系数和指数
+        \item 第5行一个整数，若为0,执行加法运算并输出结果，若为1，执行乘法运算并输出结果；若为2，输出一行加法结果和一行乘法的结果。
+    \end{itemize}
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    运算后的多项式链表，要求按指数从小到大排列。当运算结果为0 0时，不输出。
+\end{shadedquotation}    
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct {
+	int co;
+	int deg;
+}ElemType,term;
+typedef int Status;
+//因为这里结构体内部包含自身，LNode无法省去
+typedef struct LNode{//普通结点
+	ElemType data;
+	struct LNode *next;
+}LNode;
+typedef struct {//特殊结点
+	LNode* front;//指向头结点
+	LNode* rear;//因为要采用尾插法，所以增加了指向表尾的指针
+}LinkList,Poly;
+Poly poly1,poly2,ans;//分别存储两个给定的多项式以及答案多项式
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{创建多项式}
+    \begin{algorithmic}[1]
+        \Require LinkList\&L多项式，int\,n 非零项个数
+        \Ensure 操作状态
+        \Function{CreateList\_L}{LinkList\&L,int\,n}
+        \State 为特殊结点申请内存空间并判断是否成功
+        \While{读入个数小于 $n$ }
+        \State 为普通结点申请内存空间并判断是否成功
+        \State 将新结点连接至链表尾部
+        \State//L.rear$->$next=node;L.rear=node;node$->$next=NULL
+        \State 将读取数据写入新结点中
+        \EndWhile
+        \State \Return{OK};
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{初始化多项式}
+    \begin{algorithmic}[1]
+        \Require LinkList\&L多项式
+        \Ensure 操作状态
+        \Function{InitList}{LinkList\,\&L}
+        \State为特殊结点申请内存空间并判断是否成功
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{尾插法}
+    \begin{algorithmic}[1]
+        \Require LinkList\&L多项式，ElemType\,e待插入项
+        \Ensure 操作状态
+        \Function{ListInsert}{LinkList\,\&L,ElemType\,e}
+           \State 为普通结点申请内存空间，并判断是否成功
+           \State 将待插入项写入新结点 
+           \State 将新结点连接至链表尾部//为了保证存储的多项式的次数递增
+            \State//L.rear$->$next=node;L.rear=node;node$->$next=NULL
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{遍历多项式}
+    \begin{algorithmic}[1]
+        \Require LinkList\&L多项式
+        \Ensure 操作状态
+        \Function{TraversePoly}{LinkList\,L}
+        \State 判断是否多项式是否为空
+        \State 将工作指针指向开始结点
+        \While{工作指针不指向表尾}
+        \State 打印所指项
+        \State 指向下一个结点
+        \EndWhile
+        \State 打印当前所指元素
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{销毁多项式}
+    \begin{algorithmic}[1]
+        \Require LinkList\&L多项式
+        \Ensure 操作状态
+        \Function{DestroyPoly}{LinkList\,L}
+        \State 工作指针 $p,q$同时指向头结点
+        \State 将工作指针指向开始结点
+        \While{工作指针不指向表尾}
+        \State 释放当前项所在空间
+        \State 指向下一项
+        \EndWhile
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{多项式相加}
+    \begin{algorithmic}[1]
+        \Require LinkList\,La多项式a，LinkList\,Lb多项式b，\&Lc多项式c
+        \Ensure 操作状态
+        \Function{AddPoly}{LinkList\,La,LinkList\,Lb,LinkList\,\&Lc}
+        \State 将两个工作指针分别指向相加的两个多项式的开始元素
+        \While{两个工作指针都不指向NULL}
+        \If{指向的非零项的次数相同并且系数相加不为零}
+        \State{将指向的两个项相加并添加进Lc}
+        \State{两个指针同时指向下一项}
+        \Else 
+        \State{将两个指针指向的次数更大的那一项添加进Lc}
+        \State{将那个指针指向下一项}
+        \EndIf
+        \EndWhile
+        \State{遍历多项式}
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{非零项乘以多项式}
+    \begin{algorithmic}[1]
+        \Require Poly\,L被乘多项式，Poly\,\&ans答案多项式，term\,operand非零项
+        \Ensure 操作状态
+        \Function{AddPoly}{Poly\,L,Poly\&ans,term\,operand}
+        \State{工作指针指向被乘多项式开始结点}
+        \While{工作指针不为NULL}
+        \State{工作指针所指项与非零项operand系数相乘，次数相加，然后加入答案多项式}
+        \State{工作指针指向下一项}
+        \EndWhile
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{多项式乘法}
+    \begin{algorithmic}[1]
+        \Require Poly\,La多项式，Poly\,Lb多项式
+        \Ensure 操作状态
+        \Function{MultiPoly}{Linklist\,La,LinkList\,Lb}
+        \State{初始化答案多项式}
+        \State{工作指针指向第一个多项式的开始结点}
+        \While{工作指针不为NULL}
+        \State{工作指针指向的非零项与第二个多项式相乘，然后加至答案多项式}
+        \State{工作指针指向下一项}
+        \EndWhile
+        \State{遍历答案多项式}
+        \State \Return{OK}
+        \EndFunction
+        \end{algorithmic}
+\end{breakablealgorithm}
+
+\subsubsection{调试分析}
+通过打印中间变量来进行调试。
+\subsubsection{总结和体会}
+为了使得保存的多项式的系数是递增的，需要使用尾插法来创建链表。链表的优势在多项式的次数分布较为稀疏时体现出来，
+能够减少内存空间的浪费。
+\subsection{求级数}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{题目：}
+    求级数
+    \[\sum_{i=1}^{N}iA^i\]
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    若干行，在每一行中给出整数 $N$和 $A$的值
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    对每一行输入，在一行中输出结果。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+在该题中，我用一维数组来模拟高精度运算，最终的结果也用一维数组来存储，其中
+第1个元素是个位数，第2个元素是十位数，以此类推。
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef struct{
+	ElemType elem[LIST_SIZE];
+	int listsize;
+	int length;
+}num;
+num sum,temp;//分别用于存储求和值和中间值
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+    //转换为高精度数
+Status CreateNum(num &L,int num){
+	L.length = 0;
+	L.listsize = LIST_SIZE;
+	if(num<10)
+	L.elem[L.length++]=num;
+	if(num>=10){//利用了题目中所给的数据范围
+		L.length =2;
+		L.elem[0]=num-10;
+		L.elem[1]=1;
+	}
+	return OK;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+    //打印高精度数
+Status PrintNum(num La){
+	for(int i =La.length-1;i>=0;i--)//从后向前打印
+	  printf("%d",La.elem[i]);
+	printf("\n");
+	return OK;
+}
+\end{lstlisting}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+    //高精度相加
+Status Add(num src,num &dst){
+	int i = 0;
+	int remainder=0;
+	while(i<dst.length){//遍历所有目标高精度中的项
+		dst.elem[i]+=remainder;
+		if(i<src.length)//当起始高精度还有剩余元素时，将其加至目标高精度中
+		  dst.elem[i]+=src.elem[i];
+		remainder= dst.elem[i]/10;//求余数
+		dst.elem[i]%=10;//模运算
+		i++;
+	}
+	while(i<src.length||remainder){
+        //当余数不为零或者起始高精度还有剩余项时，继续添加至目标高精度中
+		dst.elem[dst.length++]=remainder;
+		if(i<src.length)
+		  dst.elem[i]+=src.elem[i];
+		remainder=dst.elem[i]/10;//求余数
+		dst.elem[i]%=10;//模运算
+		i++;
+	}
+	return OK;
+}
+\end{lstlisting}
+\begin{breakablealgorithm}
+    \caption{常数与高精度数相乘}
+    \begin{algorithmic}[1]
+        \Require int\,n,常数，num\,\&operand高精度数
+        \Ensure 操作状态
+        \Function{Multi}{int\,c,num\,\&operand}
+        \If{c>=10}
+        \State{通过高精度数中所有元素后移一位来得到高精度数乘以10}
+        \State{求c-10乘以高精度数}
+        \State{两个高精度数相加得到所求高精度数}
+        \Else 
+        \While{遍历高精度数}
+        \State{当前项乘以常数，再加上余数}
+        \State{除以十得到余数}
+        \State{模10得到最终值}
+        \EndWhile
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+//求和
+CreateNum(sum,0);
+		for(int i =1;i<=N;i++){
+			CreateNum(temp,i);	
+			for(int j =1;j<=i;j++)
+			  Multi(A,temp);//求幂
+			Add(temp,sum);//累加
+		}
+		PrintNum(sum,visit);
+\end{lstlisting}
+\subsubsection{调试分析}
+一开始进行测试时，发现程序会返回一些绝对值很大的正数或者负数，并且同样的输入输入不一样，推断
+是出现了内存非法访问，于是对程序进行了针对性的检查，最后调试成功。
+\subsubsection{总结和体会}
+尽管这个级数求和能够给出准确的求和公式，但是由于数值很大，只能用高精度来求解。
+
+利用顺序表的来模拟高精度时，可以选择像用数组一样，先将元素全部置零，每次进行加法和乘法时都是遍历整个表。
+但是这样会导致效率降低。如果选择只遍历必要的元素，则需要注意边界值的处理，避免表的长度比实际的要大，这
+会导致打印高精度数时出错。
+\subsection{扑克牌游戏}
+\subsubsection{问题描述}
+\begin{shadedquotation}
+    \emph{题目：}
+     扑克牌有4种花色：黑桃（Spade）、红心（Heart）、梅花（Club）、方块（Diamond）。每种花色有13张牌，编号从小到大为：A,2,3,4,5,6,7,8,9,10,J,Q,K。
+
+     对于一个扑克牌堆，定义以下4种操作命令：
+     \begin{enumerate}
+        \item 添加（Append）：添加一张扑克牌到牌堆的底部。如命令“Append Club Q”表示添加一张梅花Q到牌堆的底部。
+        \item 抽取（Extract）：从牌堆中抽取某种花色的所有牌，按照编号从小到大进行排序，并放到牌堆的顶部。
+        \item 反转（Revert）：使整个牌堆逆序。
+        \item 弹出（Pop）：如果牌堆非空，则除去牌堆顶部的第一张牌，并打印该牌的花色和数字；如果牌堆为空，则打印NULL。
+     \end{enumerate}
+     初始时牌堆为空。输入n个操作命令（1 ≤ n ≤200），执行对应指令。所有指令执行完毕后打印牌堆中所有牌花色和数字（从牌堆顶到牌堆底），如果牌堆为空，则打印NULL。
+\end{shadedquotation}
+\subsubsection{基本要求}
+\begin{shadedquotation}
+    \emph{输入要求：}
+    第1行一个整数n，表示操作命令的个数。
+    接下来n行，每行一个操作命令。
+\end{shadedquotation}
+\begin{shadedquotation}
+    \emph{输出要求：}
+    输出若干行，每次收到Pop指令后输出一行（花色和数子或NULL），最后将牌堆中的牌从牌堆顶到牌堆底逐一输出（花色和数字），若牌堆为空则输出NULL。
+\end{shadedquotation}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+typedef int Status;
+typedef struct{//普通结点
+	int suit;
+	int point;
+}card,ElemType;
+typedef struct Card{//双向链表,特殊结点
+	Card* prior;//从底部指向顶部
+	Card* next;//从顶部指向底部
+	ElemType card;
+}Card,*Deck;//因为Extract操作涉及大量的删除和添加操作，所以选用链表
+Deck deck;//又因为Revert操作，所以选择使用双向链表
+//-------------------------------------------
+//   prior  <-  bottom   Head top -> next
+//-------------------------------------------
+const char *suits[]={"Spade","Heart","Club","Diamond","ERROR"};
+const char *points[]={"ERROR","A","2","3","4","5","6","7","8","9","10","J","Q","K"};
+\end{lstlisting}
+\subsubsection{功能说明}
+\begin{breakablealgorithm}
+    \caption{创建排队}
+    \begin{algorithmic}[1]
+        \Require Deck\&L牌堆 
+        \Ensure 操作状态
+        \Function{InitDeck}{Deck\,\&L}
+        \State{为特殊结点申请内存空间并判断是否成功}
+        \State \Return{OK}
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{breakablealgorithm}
+    \caption{打印牌堆}
+    \begin{algorithmic}[1]
+        \Require Deck\,\&L牌堆
+        \Ensure 操作状态
+        \Function{PrintDeck}{Deck\,L}
+        \State{判断牌堆是否为空}
+        \State{工作指针指向开始元素}
+        \While{工作指针不指向头结点}
+        \State{打印所指数据}
+        \State{工作指针指向下一个结点}
+        \EndWhile
+        \State\Return{OK}
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+//从底部插入
+Status AppendCard(Deck &L,card in){
+	Card * p = (Card*)malloc(sizeof(Card));
+	if(!p){
+printf("OVERFLOW\n");
+	  return OVERFLOW;
+	}
+	p->card=in;
+	p->next = L;
+	p->prior = L->prior;
+	L->prior->next=p;
+	L->prior=p;
+	return OK;
+}
+\end{lstlisting}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+Status PopCard(Deck &L){//从顶部删除
+	if(L->next==L){
+		printf("NULL\n");
+		return ERROR;
+	}
+	Card*p = L->next;//记录待删除的结点
+	L->next=L->next->next;
+	L->next->prior=L;
+	printf("%s %s\n",suits[p->card.suit],points[p->card.point]);
+	free(p);
+	return OK;
+}
+\end{lstlisting}
+\begin{lstlisting}[language={[ANSI]C},keywordstyle=\color{blue!70},commentstyle=\color{red!50!green!50!blue!50},frame=shadowbox,
+    rulesepcolor=\color{red!20!green!20!blue!20}]
+    //反转
+Status RevertDeck(Deck &L){
+	Card* p = L,*temp;
+	temp=p->next;//将头结点的两个指针互换
+	p->next = p->prior;
+	p->prior=temp;
+	p=p->prior;//按照原来的从顶到底的方向移动，由于之前已经互换，所以是p=p->prior
+	while(p!=L){//遍历其他结点，并将它们的两个指针互换
+		temp=p->next;
+		p->next = p->prior;
+		p->prior=temp;
+		p=p->prior;
+	}
+	//PrintDeck(deck);
+	return OK;
+}
+\end{lstlisting}
+\begin{breakablealgorithm}
+    \caption{抽出指定花色的牌，排序后再放回牌堆顶部}
+    \begin{algorithmic}[1]
+        \Require Deck\&L牌堆，int\,suit指定花色
+        \Function{Extract}{Deck\&L,int\,suit}
+        \State{$Sort(suit\_list,pt\_list,suit,top)$}
+        \State{检查牌堆是否为空}
+        \State{初始化备用牌堆}
+        \While{i遍历1到13}
+        \While{工作指针遍历L}
+        \If{所指牌花色为指定花色，且点数为i}
+        \State{将该牌从原牌堆删去，尾插至备用牌堆}//确保点数递增
+        \EndIf 
+        \EndWhile
+        \EndWhile
+        \If{备用牌堆不为空}
+        \State{将备用牌堆插入原牌堆顶}
+        \EndIf
+        \EndFunction
+    \end{algorithmic}
+\end{breakablealgorithm}
+\subsubsection{调试分析}
+在调试本程序时，我输出了大量的中间变量来辅助判断错误。同时我还将测试成功的输入与测试失败的相比较，
+来找出是什么输出导致了错误。
+\subsubsection{总结和体会}
+本题的易错点之一在于点数的比较，不能够简单地用ASCII码来来比较。我的处理方法是将格式不统一的点数以及花色统一
+转化为数字。这种处理一是能够方便比较，二是配合数组便于输出打印。
+
+这道题的数据结构的设计也十分重要，如果选择顺序表，则Extract函数的效率将会大大减少。同时，
+双向链表的使用也使得Revert函数的实现变得简单。
+\section{实验总结}
+在编写程序时，不仅仅要确保其正确性，还要确保其可读性，因为这样能够大大增加程序的可维护性，
+并且减少了调试程序所需要的时间。通过这次实验，我体会到选取合适的数据结构不仅仅能够提高程序运行的效率，
+对于功能实现的难易程度也有很大的影响。在设计数据结构时，要综合考虑数据的形态，例如大小、分布情况等等，
+以及对于数据的操作。
+\end{document}

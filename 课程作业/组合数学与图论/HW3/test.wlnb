@@ -1,0 +1,12 @@
+{
+ "cells": [
+  {
+   "kind": 2,
+   "value": "f[x_] = x^2",
+   "languageId": "wolfram",
+   "outputs": [],
+   "metadata": {},
+   "executionSummary": {}
+  }
+ ]
+}

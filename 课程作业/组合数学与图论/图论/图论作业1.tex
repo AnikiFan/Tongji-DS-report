@@ -1,0 +1,246 @@
+\documentclass[12pt, a4paper, oneside]{article}
+\usepackage{amsmath, amsthm, amssymb, bm, graphicx, hyperref, mathrsfs}
+\makeatletter
+\newcommand{\mytitle}{\@title}
+\makeatother
+
+\usepackage[
+    fontset=none,%设置中文支持，并自定义字体
+    zihao=5,%默认字号为五号
+    heading=true,%允许后续自定义标题样式
+    scheme=chinese,%自动将文档样式中文化，例如图标标题
+    punct=quanjiao,%全角式标点符号
+    space=auto,%中文后接换行不会添加空格，但是英文会添加空格，需要用%手动取消
+    linespread=1.3,%行距倍数是1.3
+    autoindent=true,%自动缩进两个中文宽度
+    ]{ctex}
+\ctexset{
+    today=small,%小写样式的日期
+    contentsname={目录},
+    % contentsname={\hspace{-\ccwd}目录},
+    listfigurename={插图},
+    listtablename={表格},
+    figurename={图},
+    tablename={表},
+    abstractname={简{\quad}介},
+    indexname={索引},
+    appendixname={附录},
+    bibname={参考文献},
+    proofname={证明},
+    % refname={参考文献},%只适用于beamer
+    % algorithmname={算法},
+    % continuation={（续）},%beamer续页的标识
+    section={
+        format+ = \Large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsection={
+        format+ = \large\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    subsubsection={
+        format+ = \normalsize\heiti\raggedright,
+        name = {,\num\textbf{.}\hspace{1ex}},
+        number={\num\thesubsubsection},
+        nameformat={},
+        numberformat={},
+        aftername={},
+        titleformat={},
+        aftertitle={},
+        runin=false,%对section级以下有用，标题是否和正文在同一段上
+        beforeskip={3.5ex plus 1ex minus .2ex},%标题前垂直间距
+        afterskip={2.3ex plus .2ex}%标题后垂直间距
+    },
+    }
+
+\title{\textbf{图论作业1}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{}
+\usepackage{amsfonts}
+\usepackage{lmodern}%解决报错
+% 中文默认字体： 思源宋体，粗体为思源宋体半粗体，斜体为方正楷体_GBK
+\setCJKmainfont{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}, ItalicFont=FZKai-Z03S]
+% 中文无衬线字体：思源黑体，粗体为思源黑体粗体
+\setCJKsansfont{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+% 中文等宽字体：微软雅黑light
+\setCJKmonofont{Microsoft YaHei}[ItalicFont={Microsoft YaHei Light}]
+
+\newCJKfontfamily\songti{Source Han Serif SC}[BoldFont={Source Han Serif SC Heavy}]
+\newCJKfontfamily\xbsong{Source Han Serif SC SemiBold} % 小标宋
+\newCJKfontfamily\dbsong{Source Han Serif SC Bold} % 大标宋
+\newCJKfontfamily\cusong{Source Han Serif SC Heavy} % 粗宋
+\newCJKfontfamily\heiti{Source Han Sans CN}[BoldFont={Source Han Sans CN Heavy}]
+\newCJKfontfamily\dahei{Source Han Sans CN Medium} % 大黑
+\newCJKfontfamily\cuhei{Source Han Sans CN Heavy} % 粗黑
+\newCJKfontfamily\fangsong{FZFangSong-Z02S}
+\newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={Microsoft YaHei Light}]%这个斜体只是用于lstlisting环境中的中文注释
+% \newCJKfontfamily\kaiti{FZKai-Z03S}[ItalicFont={FZZJ-LZXTFSJW}]%这个斜体只是用于lstlisting环境中的中文注释
+\setsansfont{Arial}
+\setmonofont{Consolas}%设置西文等宽字体
+\newfontfamily\code{Consolas}
+\newfontfamily\num{Arial}
+
+\usepackage{geometry}%设置整体页面布局
+\geometry{a4paper}
+\geometry{left=2cm,right=2cm,top=2.54cm,bottom=2.54cm}%word常规页边距
+% \geometry{left=1.27cm,right=1.27cm,top=1.27cm,bottom=1.27cm}%word窄页边距
+\setlength{\headheight}{13pt}%避免warning
+\usepackage{fancyhdr}%必须在geometry包之后使用
+\fancyhf{}
+\makeatletter
+\lhead{\sffamily\bfseries{2254298 范潇}}%可以使用thepage,CTEXthechapter,CTEXthesection
+\makeatother
+\chead{\sffamily\bfseries{\mytitle}}
+\rhead{\sffamily\bfseries{- \thepage{} -}}
+\renewcommand\headrulewidth{2pt}%设置眉头宽度
+\pagestyle{fancy}
+\begin{document}
+\maketitle
+\begin{problem}{1}
+    （1）共7个顶点，若能简单图化，则度为6的两个顶点均分别与其他所有顶点相邻。特别地，它们与度为2的顶点相邻。此时对于两个度为5的顶点，它们必须分别再与
+    对方和两个度为3的顶点相连。但是这会使得两个度数为3的顶点与4条边邻接（其中两条与度为6的点邻接），从而矛盾。
+
+    （2）
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q11.png}
+        \caption{(2)第一种简单图}
+    \end{figure}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q12.png}
+        \caption{(2)第一种简单图}
+    \end{figure}
+
+    第一张图中，两个度为3的顶点相邻，而在第二张图中则不相邻。所以这两张图非同构。
+
+    （3）
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q13.png}
+        \caption{(3)第一种简单图}
+    \end{figure}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q14.png}
+        \caption{(3)第一种简单图}
+    \end{figure}
+\end{problem}
+\newpage
+\begin{problem}{2}
+    \[\sum_{i=1}^kd_i\]
+    可以视为由两部分组成，一部分由边$d_id_j,(i<j\leq k)$贡献，另一部分由$d_id_j(i\leq k<j)$贡献。前者
+    最多贡献$k(k-1)$，此时$\{d_1,\cdots,d_k\}$对应的诱导子图为完全图，其中的每一条边都对它的两个端点分别贡献了1。
+
+    另一部分，将$d_id_j(i\leq k<j)$按照
+    $j$的取值划分为集合$A_k+1,\cdot,A_n$。对于$A_r(k+1\leq r\leq n)$，因为以$v_r$为
+    一端的边的个数小于$d_r$，所以$\lvert A_r\rvert\leq d_r$。又因为另一端互异，且下标小于等于$k$，所以$\lvert A_r\rvert\leq k$。
+    因此$\lvert A_r\rvert \leq\min\{d_r,k\}$。而$A_r$中的每一条边，都因为它的一段的下标小于$k$，所以对合式贡献了1，所以
+    合在一起第二部分为
+    \[\sum_{i=k+1}^n\lvert A_i\rvert=\min\{k,d_i\}\]
+
+    综上
+    \[\sum_{i=1}^k\leq k(k-1)+\sum_{i=k+1}^n\min\{k,d_i\}\]
+\end{problem}
+\begin{problem}{3}
+因为$G$为自补图，所以它和它的补图的边数相同。又因为它和它的补图之并为完全图，且两者的边集交集为空，所以
+\[\frac{\lvert V\rvert(\lvert V\rvert-1)}{2}=2\lvert E\rvert\]
+有
+\[\lvert V\rvert(\lvert V\rvert-1)\equiv 0(\mod 4)\]
+所以$\lvert V\rvert = 4k$或$\lvert V\rvert=4k+1$，其中$k$为正整数。
+\end{problem}
+\begin{problem}{4}
+   $K_n$有$\frac{n(n-1)}{2}$条边，所以$G$是在$K_n$的基础上至多删去$\frac{n(n-1)}{2}-\frac{(n-1)(n-2)}{2}-2=n-3$条边得到的图。
+   假设有两个不相邻的顶点$u,v$，满足$d(u)+d(v)<n$，则以$u$或$v$为一端的边至多有$n-1$条，而在$K_n$中，这样的边有$2n-3$条，
+   所以需要至少删掉$n-2$条边，与“至多删去$n-3$条边”产生矛盾。所以对任意两个不相邻的顶点$u,v$有$d(u)+d(v)\geq n$，从而$G$有哈密顿圈，为哈密顿图。
+   
+   显然，$K_{n-1}$加上另外一个叶子顶点组成的$n$阶图为非哈密顿图，且满足$\lvert E\rvert =\binom{n-1}{2}+1$。
+\end{problem}
+\begin{problem}{5}
+   设$T$有$n$个顶点，则有$n-1$条边，顶点度数之和由握手定理可知为$2(n-1)$。因此 
+   \[8+6+4(n-10)=2(n-1)\]
+   解得 $n=12$，从而有$2$个$4$度点。
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q51.png}
+    \end{figure}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q52.png}
+    \end{figure}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q53.png}
+    \end{figure}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics*[scale = 0.7]{q53.png}
+    \end{figure}
+\end{problem}
+\newpage
+\begin{problem}{6}
+   任取一个顶点$A$，有鸽笼原理可知，在$G$或其补图中，有$3$条边与其关联。不妨设在$G$中，有边$AB,AC,AD$。若$\bar{G}$中有三角形$BCD$，则命题成立，
+   否则，在$G$中，缺失的边与$A$一起组成了一个圈，从而命题也成立。 
+\end{problem}
+\begin{problem}{7}
+   显然，树的中心一定存在。
+   
+   下面先证明，如果树的中心中至少有两个顶点，则任意两个顶点均相邻。假设$u,v$为树的中心中的两个互异顶点，若它们不相邻，
+   则以$u,v$为两端的路径中至少还有另外一点$w$。设$x$为树中距离$w$最远的点，即$d(x,w)$为$w$对应的$r$值。下面考察以$x,w$为两端的路径，
+   如果$u,v$均不在该路径上，则说明以$x,u$和以$x,v$为两端的路径上都有$w$，否则会在树上形成圈。此时$u,v$对应的$r$值均大于$d(x,w)$，
+   即大于$w$对应的$r$值，而这与$u,v$在树的中心内矛盾；当$u$或$v$在这条路径上时，不妨设$u$在这条路径上，此时$v$必不可能也在这条路径上，
+   否则会在树上形成圈。此时$d(v,x)>d(w,x)$，与$v$在树的中心内矛盾。
+
+   因此，如果树的中心中至少有两个顶点，则任意两个顶点均相邻。当树的中心有两个顶点时，它们相邻，即树的中心为一条边。若
+   树的中心有三个或以上个顶点，则它们之间会有圈，产生矛盾。所以树的中心内不可能有两个以上顶点。即树的中心为一个顶点或一条边。
+\end{problem}
+\begin{problem}{9}
+    由定义可知，$\forall v,\chi{G-v}\leq \chi(G)-1$。若$\exists v,\chi{G-v}\leq \chi(G)-2$，则将$\chi{G-v}$用至多$\chi(G)-2$
+    种颜色
+    着色后，
+    再将$v$及其相邻接的边添加回去，得到$G$。因为与其相邻的点的颜色至多只有$\chi(G)-2$个，所以可以将它染为一种新颜色，这样得到的$G$的染色方案
+    只用了$\chi(G)-1$种颜色，与定义产生矛盾。所以$\chi{G-v}=\chi(G)-1$。
+
+    若$G$不为连通图，则它至少有两个联通分量。若$\exists v,\chi{G-v}=\chi(G)-1$，设$v$在联通分量$C_i$内，则$G-v$中，其他连通分量$C_j(j\neq i)$
+    并未发生改变，说明$\chi{C_j}\leq \chi(G),(j\neq i)$。显然，$\chi{C_i}=\chi(G)$，否则可以用至多$\chi(G)-1$中颜色对$G$着色。此时，如果选择
+    $u\in C_j(j\neq i)$，则$\chi(G-u)=\chi(G)$，因为$\chi(C_i)=\chi(G)$。从而与$G$为色临界图产生矛盾。
+
+    若$\exists v\in V,d(v)\leq \chi(G)-2$，则至多$\chi(G)-1$中颜色将$G-v$着色后，再将其复原未$G$。由于$d(v)\leq \chi(G)-2$，
+    所以可以将它着色，使它的颜色与其相邻的顶点都不同，同时总共使用的颜色至多为$\chi(G)-1$种，而这与$\chi(G)$的定义矛盾。
+\end{problem}
+\begin{problem}{10}
+    \begin{align*}
+    \lvert E\rvert & = \lvert V\rvert +\lvert F\rvert -2\\
+   2\lvert E\rvert & = 3f_3+4f_4+\cdots\\
+   2\lvert E\rvert & = \sum_{u\in V}d(u)\geq\delta(G)\lvert V\rvert\geq 3\lvert V\rvert
+    \end{align*}
+    可得
+    \[2\lvert E\rvert\geq 3\lvert E\rvert-3\lvert F\rvert +6\]
+    若不存在边数小于等于4的面，即$f_3=0,f_4=0$
+    \[6\lvert F\rvert\geq 2\lvert E\rvert +12\geq 12+3f_3+4f_4+\cdots\geq 5\lvert F\rvert+12\]
+    所以$\lvert F\rvert \geq 12$，与面数小于12产生矛盾。所以存在边数小于等于4的面。
+\end{problem}
+\end{document}

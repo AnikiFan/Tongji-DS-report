@@ -1,0 +1,107 @@
+\subsection{求逆序对数}
+\begin{formal}
+    {\cuhei 问题描述：}
+请求出整数序列$A$的所有逆序对个数。
+\end{formal}
+\begin{formal}
+    {\cuhei 输入要求：}
+
+    输入包含多组测试数据，每组测试数据有两行。
+第一行为整数$N(1 \leq N \leq 20000)$，当输入0时结束；
+第二行为$N$个整数，表示长为$N$的整数序列。
+\end{formal}
+\begin{formal}
+    {\cuhei 输出要求：}
+
+    每组数据对应一行，输出逆序对的个数。
+\end{formal}
+\subsubsection{数据结构设计}
+\begin{lstlisting}[name=Q1]
+typedef struct {
+    int data[MAXN] ;//整数序列
+    int length ;//整数序列长度
+}array ;
+\end{lstlisting}
+\subsubsection{功能描述}
+
+% 在直接插入排序中，一次位置调整便能消去一对逆序对，而当排序结束时，逆序对数为零。
+% 逆序对数等于直接插入排序中位置交换的次数。为了降低时间复杂度，使用折半插入排序，并
+% 直接利用插入位置计算出交换次数。
+% \begin{procedure}
+%     \tcp*[h]{A为给定整数序列，i为待排序元素下标}\;
+%     \tcp*[h]{返回待插入位置}\;
+%     l = 0\;
+%     h = i-1\;
+%     \While(\tcp*[h]{确保mid+1合法}){l<h}
+%     {
+%         mid = $\lfloor$(l+h)/2$\rfloor$\;
+%         \lIf(\tcp*[h]{确保稳定性}){A.data[mid]$\leq$A.data[i]<A.data[mid+1]}{\KwRet{mid+1}}
+%         \leIf{A.data[mid]>A.data[i]}{h=mid}{l=mid+1}
+%     }
+%     \leIf{A.data[l]$\leq$A.data[i]}{\KwRet{l+1}}{\KwRet{l}}
+%     \caption{BinarySearch(A,i)}
+% \end{procedure}
+% \begin{algorithm}
+%     \tcp*[h]{A为给定整数序列}\;
+%     \For{j = 2 \KwTo A.length}
+%     {
+%         key = A.data[j]\;
+%         dest = \BinarySearch(A,j)\;
+%         \For{i = j-1 \downto dest}
+%         {
+%             A.data[i + 1] = A.data[i]\;
+%             i = i - 1\;
+%         }
+%         A.data[dest] = key\;
+%         A.counter = A.counter + j - dest\;
+%     }
+%     \KwRet{A.counter}
+%     \caption{Count-Inversion}
+% \end{algorithm}
+
+\begin{function}[H]
+    mid = $\lfloor$(r+l)/2$\rfloor$\;
+    $n_1$ = mid - l + 1 \;
+    $n_2$ = r - mid\;
+    创建大小分别为 $n_1,n_2$的数组 $L,R$\;
+    \lFor{i=0 \KwTo $n_1$-1}{L[i]=A[l+i]}
+    \lFor{i=0 \KwTo $n_2$-1}{R[i]=A[mid+1+i]}
+    m = 0\;
+    n = 0\;
+    counter = 0\;
+    \For(\tcp*[h]{合并子序列}){i=0 \KwTo $n_1+n_2-1$}
+    {
+        \eIf{(L[m] $\leq$R[n] and m <$n_1$) or (n $\geq n_2$)}
+        {
+            A[l+i] = L[m]\;
+            m = m + 1\;
+        }
+        {
+            A[l+i] = R[n]\;
+            counter = counter + $n_1$ + n - i\tcp*[h]{需要移动的“步数”}\;
+            n = n + 1\;
+        }
+    }
+    \KwRet{counter}
+    \caption{Merge(A,r,l)}
+\end{function}
+\begin{function}
+    \SetKwFunction{CountInversion}{CountInversion}
+    \tcp*[h]{A为给定整数序列}\;
+    \tcp*[h]{最终解答调用\CountInversion(A,0,A.length-1)}\;
+    \lIf{r == l}{\KwRet{0}}
+    mid = $\lfloor$(r+l)/2$\rfloor$\;
+    \KwRet{\CountInversion(A,l,mid) + \CountInversion(A,mid+1,r) + \Merge(A,l,r)}\;
+    \caption{CountInversion(A,r,l)}
+\end{function}
+\subsubsection{调试分析}
+本题采用输出关键变量进行调试。选用的关键变量是\Merge()中涉及到的数组部分以及对应的\emph{counter}。
+
+在调试的过程中，遇到了多次相同输入，但是输出不同的情况，因此判断是内存出现问题。查看数组部分的输出信息，
+发现在运行过程中数组内部出现了异常元素。经过排查后发现是“合并子序列”步骤中，当一个子序列以及全部转移完毕时，
+仍有可能继续转移，从而产生内存溢出，加上 $m<n_1,n\geq n_2$条件后便恢复正常。
+\subsubsection{总结和体会}
+我一开始使用折半插入排序，但是最终有两个样例由于超时而无法通过，这是因为折半插入排序移动元素的平均时间复杂度仍为 $O(n^2)$。
+最后我在归并排序的基础上进行调整，时间复杂度维持在了 $\Theta(n\lg n)$。使用该方法时，我仍然有两个样例没有通过，原因是
+内存使用过多，经过排查，是因为只申请了内存，而没有释放。在调试的过程中，我也体会到了处理边界情况的重要性，如果能够
+合理设置哨兵，例如在数组 $L,R$结尾设置两个哨兵，便可以在保持程序简洁的同时确保正确性。

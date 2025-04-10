@@ -1,0 +1,47 @@
+% this is a template for papers or notes written in Chinese
+\documentclass[a4paper]{report}
+
+\input{body.tex}
+\input{algosupport.tex}
+\input{inlinecodeSupport.tex}
+% \input{theoremenv.tex}
+\usepackage{tikz}
+\usepackage{forest}
+
+
+\author{\Large{范潇\quad2254298}}
+\title{\sffamily\Huge\bfseries{人工智能课程Project5}}
+\date{\Large{\today}}
+\begin{document}
+\begin{titlepage}
+    \heiti
+    \vspace*{64pt}
+    \begin{center}
+        \includegraphics{./pic/tongji-logo-purple.pdf}
+        % \fontsize{72pt}{0} 南华大学\\
+
+        \vspace*{36pt}
+        \fontsize{48pt}{0}{实\quad 验\quad 报\quad 告}\\
+        \vspace*{48pt}
+        \LARGE（2023\~{}2024学年第二学期）\\
+        \vspace*{48pt}
+    
+        \LARGE 课程名称\ \ \underline{\makebox[200pt]{人工智能课程设计}}\\
+        \LARGE 实验名称\ \ \underline{\makebox[200pt]{课程设计作业Project5}}\\
+        \vspace*{36pt}
+    
+        \Large 姓名\ \ \underline{\makebox[108pt]{范潇}}\ \ 学号\ \ \underline{\makebox[108pt]{2254298}}\\
+        % \Large 学院\ \ \underline{\makebox[108pt]{}}\ \ 班级\ \ \underline{\makebox[108pt]{}}\\
+        % \Large 地点\ \ \underline{\makebox[108pt]{}}\ \ 教师\ \ \underline{\makebox[108pt]{}}\\
+    \end{center}
+\end{titlepage}
+% \maketitle
+% \thispagestyle{fancy}%用于单独设置某页的样式，此处用于设置标题页的格式
+\include{project_info}
+\include{Q1}
+\include{Q2}
+\include{Q3}
+\include{Q4}
+% \include{Q5}
+\include{summary}
+\end{document}

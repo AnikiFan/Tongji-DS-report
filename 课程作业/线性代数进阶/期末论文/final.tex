@@ -1,0 +1,191 @@
+\documentclass[12pt, a4paper, oneside]{ctexart}
+\usepackage{latexsym}%符号字体
+\usepackage{makeidx}%制作索引
+\makeindex
+\usepackage{ifthen}%提供分支语句
+\usepackage{ctex}%提供中文支持
+\usepackage{graphicx}%用于插入图片
+\usepackage{amsmath}%用于数学公式
+\usepackage{IEEEtrantools}%用于使用IEEE数学公式排版工具
+\usepackage{amsfonts}%用于其他字体的数学符号
+\usepackage{amsthm}%提供证明,定理等环境
+\usepackage{amssymb}%用于提供各种数学符号
+\usepackage{mathrsfs}%用于提供花体字母
+\usepackage{verbatim}%使用\verbatiminput{filename}来直接导入文件中的文本内容
+\usepackage{layouts}%用于设置页面布局
+\usepackage{calc}%允许一些常量参量用算术表达式代替
+\usepackage{hyperref}
+\usepackage{makecell}%允许表格的单元格内换行
+\usepackage{bm}%使用bm来对希腊字母加粗
+\usepackage{longtable}
+\theoremstyle{remark}
+\newtheorem*{remark}{注}
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}[section]
+\theoremstyle{definition}
+\newtheorem*{definition}{定义}
+\theoremstyle{plain}
+\newtheorem*{property}{性质}
+\title{\textbf{从两个视角来看奇异值分解}}
+\author{范潇\quad2254298}
+\date{\today}
+\linespread{1.5}
+\newcounter{problemname}
+\newenvironment{problem}[1]{\stepcounter{problemname}\par\noindent\textbf{题目\arabic{problemname}. (#1)}}{}
+\newenvironment{solution}{\par\noindent\textbf{解答. }}{\\\par}
+\newenvironment{note}{\par\noindent\textbf{题目\arabic{problemname}的注记. }}{\\\par}
+
+\begin{document}
+\maketitle
+\section{引言}
+奇异值分解是一种功能强大，且适用面广的矩阵分解方法，它能将任意矩阵$\bm{A}$分解为$\bm{U\Sigma V^{T}}$，其中$\bm{U,V}$为正交矩阵，$\bm{\Sigma}$为$r$阶对角矩阵($r =\text{Rank}(\bm{A})$)。
+
+本文将分别从代数视角和几何视角来
+理解奇异值分解。通过代数视角，我们能够理解奇异值分解过程的背后动机。通过几何视角，我们能够从奇异值分解的本质延申开来，得到矩阵的模、矩阵的广义逆、矩阵的极分解这三个概念。
+\section{代数视角}
+任给一个矩阵$\bm{A}$，我们可以立即得到4个子空间。
+\begin{definition}
+    设$\bm{A}_{m\times n}$的行向量为$r_1,\cdots,r_m$，列向量为$c_1,\cdots,c_n$。则
+    \begin{enumerate}
+        \item $\bm{A}$的行空间为$span\{r_1,\cdots,r_m\}$；
+        \item $\bm{A}$的零空间为$\bm{A}$的行空间的正交补；
+        \item $\bm{A}$的列空间为$span\{c_1,\cdots,c_n\}$；
+        \item $\bm{A}$的左零空间为$\bm{A}$的列空间的正交补。
+    \end{enumerate}
+\end{definition}
+
+显然，$\bm{A}$的行空间与列空间的维数均为$r = \text{Rank}(\bm{A})$。奇异值分解便试图分别从$\bm{A}$的行空间和列空间中取出两组标准正交基
+$\{\bm{v}_1,\cdots,\bm{v}_r\}$，$\{\bm{u}_1,\cdots,\bm{u}_r\}$，使得行空间的基经过$\bm{A}$的转换后，能够变为列空间的基。即
+\[\bm{A_{m\times n}}\bm{V_{n\times r}}=\bm{U_{m\times r}}\]
+当然，想要求出这样的分解式要求过于苛刻，我们可以将其修改为
+\[\bm{A_{m\times n}}\bm{V_{n\times r}}=\bm{U_{m\times r}}\bm{\Sigma_{r\times r}}\]
+其中$\bm{\Sigma}$是一个对角矩阵，添加了这一矩阵后我们允许两组基的变换过程中额外经过一次伸缩变换。
+
+更进一步，我们想要让$V,U$成为两个正交矩阵。此时，我们便需要利用$\bm{A}$的零空间和左零空间。
+从零空间取一组基$\bm{v}_{r+1},\cdots,\bm{v}_n$，并将其附加在$V$的右侧；
+从左零空间取一组基$\bm{u}_{r+1},\cdots,\bm{u}_m$，并将其附加在$U$的右侧。由于$\bm{v}_{r+1},\cdots,\bm{v}_n$经$\bm{A}$转换后得到的是零向量，
+所以用于伸缩变换的矩阵$\bm{\Sigma}$中对应的对角元素$\bm{\sigma}_{r+1},\bm{\sigma}_2,\cdots,\bm{\sigma}_{\min\{m,n\}}$为0。
+最终我们有分解式
+\[\bm{A_{m\times n}}\bm{V_{n\times n}}=\bm{U_{m\times m}}\bm{\Sigma_{m\times n}}\]
+
+在确定了分解式的组成后，便可以利用其组成的特性来反推分解的过程。对于奇异值分解而言，我们需要利用$\bm{V},\bm{U}$均为正交矩阵这一特点。有
+\[\bm{A^TA}=\bm{(U\Sigma V^T)^T(U\Sigma V^T)}=\bm{V\Sigma^T\Sigma V^T},\]
+其中$\bm{\Sigma^T\Sigma}$是$r$阶对角矩阵$diag\{\sigma_1^2,\cdots,\sigma_r^2\}$，实际上$\sigma_1^2,\cdots,\sigma_r^2$便是$\bm{A^TA}$的特征值，而
+$\bm{V}$便是由对应的特征向量组成的矩阵。这样，我们便确定下来$\bm{V},\bm{\Sigma}$的获取方式，剩余的$\bm{U}$的获取方式便水到渠成。由矩阵乘法可知，
+\[u_i=\bm{A}v_i/\sigma_i(i=1,\cdots,r),\]
+对于$u_i(i=r+1,\cdots,m)$，则取$span\{u_1,\cdots,u_r\}^{\perp}$的基。
+
+
+综上，通过代数视角，我们自然而然地得到了奇异值分解的过程：
+\begin{enumerate}
+    \item 求$\bm{A^TA}$的特征值$\lambda_1,\cdots,\lambda_n$，以及对应的特征向量$\bm{v}_1,\cdots,\bm{v}_n$；
+    \item 令$\bm{\Sigma} = \begin{bmatrix}
+        \bm{D}&\bm{0}\\
+        \bm{0}&\bm{0}\\
+    \end{bmatrix}$，其中$\bm{D}=diag\{\sqrt{\lambda_1},\cdots,\sqrt{\lambda_r}\}$；
+    \item 记$\sigma_1=\sqrt{\lambda_1},\cdots,\sigma_r=\sqrt{\lambda_r}$，令$u_i=\bm{A}v_i/\sigma_i,(i=1,\cdots,r)$；
+    \item 将$u_i=\bm{A}v_i/\sigma_i,(i=1,\cdots,r)$扩充为标准正交基，得到$u_{r+1},\cdots,u_m$。
+    \item 令$\bm{V}=(\bm{v}_1,\bm{v}_2,\cdots,\bm{v}_n),\bm{U}=(\bm{u}_1,\bm{u}_2,\cdots,\bm{u}_m)$，有分解式$\bm{A}=\bm{U\Sigma V^T}$。
+\end{enumerate}
+事实上，由上述的讨论中可以得出$\lambda_{i}=0,i\geq r+1$。
+\section{几何视角}
+有两类正交矩阵，分别对应的是旋转变换和镜像变换，它们的区别在于：前者的行列式值为1，后者为-1。
+
+对于奇异值分解
+\[\bm{A}=\bm{U\Sigma V^T}\]
+我们并不能够保证$\bm{U},\bm{V}$是哪一类正交矩阵。例如分解式
+\[\begin{bmatrix}
+    3\\
+    4\\
+\end{bmatrix}=\begin{bmatrix}
+    \frac{3}{5}&\frac{4}{5}\\
+    \frac{4}{5}&-\frac{3}{5}\\
+\end{bmatrix}\begin{bmatrix}
+    5\\0\\
+\end{bmatrix}\begin{bmatrix}
+    1
+\end{bmatrix},\]
+其中，$\bm{U},\bm{V}$分别为第二类正交矩阵和第一类正交矩阵。又例如分解式
+\[\begin{bmatrix}
+    3\\
+    4\\
+\end{bmatrix}=\begin{bmatrix}
+    \frac{3}{5}&-\frac{4}{5}\\
+    \frac{4}{5}&\frac{3}{5}\\
+\end{bmatrix}\begin{bmatrix}
+    5\\0\\
+\end{bmatrix}\begin{bmatrix}
+    1
+\end{bmatrix},\]
+其中，$\bm{U},\bm{V}$均为第一类正交矩阵。在本节的讨论重点关注两个正交矩阵都是第一类正交矩阵的情况。
+
+此时，$\bm{A}$的变换效果可以视为$\bm{V^T},\bm{\Sigma},\bm{U}$三个矩阵的变换效果的依次叠加。$\bm{V^T}=\bm{V^{-1}}$便是$\bm{V}$的逆变换，是一个旋转变换；
+$\bm{\Sigma}$是一个伸缩变换；$\bm{U}$是一个旋转变换。因此，$\bm{A}$的变换效果便是“先旋转，后伸缩，再旋转”，如图\ref*{geo}所示。
+\begin{figure}[h]
+    \centering
+    \includegraphics*[width = 0.7\textwidth]{geopre.jpg}
+    \caption{几何视角}\label{geo}
+\end{figure}
+\subsection{矩阵的模}
+任何矩阵$\bm{A}$都能进行奇异值分解，无论得到的两个正交矩阵是否都是第一类正交矩阵，$\bm{A}$对于向量的长度的改变始终是由$\bm{\Sigma}$决定的，
+而变化的比例则是由$\bm{\Sigma}$对角线上的元素值决定的。特别地，变化的最大比例即$\bm{\Sigma}$对角线上的最大元素值。矩阵$\bm{A}$的模便是从这一角度定义的。
+\begin{definition}
+    对于任意矩阵$\bm{A}$，定义它的模长为
+    \[\Vert \bm{A}\Vert=\max_{\bm{x}\neq 0}\frac{\Vert \bm{Ax}\Vert}{\Vert\bm{x}\Vert}.\]
+\end{definition}
+\begin{theorem}
+   矩阵的模满足正定性，即
+   \[\Vert \bm{A}\Vert\geq 0,\Vert \bm{A}=\bm{0}\Vert\text{当且仅当}\bm{A}=\bm{0}\] 
+\end{theorem}
+\begin{proof}
+    当$\bm{A}\neq\bm{0}$时，$\text{Rank}(\bm{A})\neq0$，从而$\text{Rank}(\bm{A^TA})\neq0$，因此$\bm{A^TA}$至少有一个正特征值，从而$\Vert \bm{A}\Vert=\max_{\bm{x}\neq 0}\frac{\Vert \bm{Ax}\Vert}{\Vert\bm{x}\Vert}>0$。
+
+    当$\bm{A}=\bm{0}$时，显然$\Vert \bm{A}\Vert=\max_{\bm{x}\neq 0}\frac{\Vert \bm{Ax}\Vert}{\Vert\bm{x}\Vert}=0$。
+\end{proof}
+\begin{theorem}
+    矩阵的模满足三角不等式
+    \[\Vert\bm{A}+\bm{B}\Vert\leq \Vert\bm{A}\Vert+\Vert\bm{B}\Vert.\]
+\end{theorem}
+\begin{proof}
+    \begin{align*}
+   \Vert\bm{A}+\bm{B}\Vert=\max_{\bm{x}\neq 0}\frac{\Vert \bm{Ax+Bx}\Vert}{\Vert\bm{x}\Vert}&\leq \max_{\bm{x}\neq 0}\frac{\Vert \bm{Ax}\Vert+\Vert\bm{Bx}\Vert}{\Vert\bm{x}\Vert}\\
+                                                                                            &\leq \max_{\bm{x}\neq 0}\frac{\Vert \bm{Ax}\Vert}{\Vert\bm{x}\Vert}+\max_{\bm{x}\neq 0}\frac{\Vert \bm{Bx}\Vert}{\Vert\bm{x}\Vert}\\
+                                                                                            &=\Vert\bm{A}\Vert+\Vert\bm{B}\Vert\\
+    \end{align*}
+\end{proof}
+\begin{theorem}
+    矩阵的模满足乘积不等式
+    \[\Vert\bm{A}\bm{B}\Vert\leq \Vert\bm{A}\Vert\Vert\bm{B}\Vert.\]
+\end{theorem}
+\begin{proof}
+    \[\Vert\bm{A}\bm{B}\Vert=\max_{\bm{x}\neq 0}\frac{\Vert \bm{ABx}\Vert}{\Vert\bm{x}\Vert}\leq \max_{\bm{x}\neq 0}\frac{\Vert \bm{A}\Vert\Vert\bm{Bx}\Vert}{\Vert\bm{x}\Vert}=\Vert\bm{A}\Vert\Vert\bm{B}\Vert.\]
+\end{proof}
+\subsection{矩阵的广义逆}
+由于任何矩阵都可以进行奇异值分解，该矩阵的变换效果可以视为三个矩阵$\bm{V^T},\bm{\Sigma},\bm{U}$的变换效果的依次叠加。自然地，我们可以把逆变换对应的矩阵定义为$\bm{A}$的逆矩阵。
+因为$\bm{V^T},\bm{U}$均可逆，所以如此定义的广义逆便是
+\[\bm{A}^+=\bm{V}\bm{\Sigma^{+}U^T},\]
+其中
+\[\bm{\Sigma^{+}}=\begin{bmatrix}
+    \bm{D}^{-1}&\bm{0}\\
+    \bm{0}&\bm{0}
+\end{bmatrix},\bm{D}=diag\{\sigma_1,\cdots,\sigma_r\}.\]
+事实上，这样得到的广义逆与Moore-Penrose广义逆是一致的。但是通过借助几何视角下的奇异值分解，这样的广义逆的定义变得更加自然。
+\subsection{矩阵的极分解}
+奇异值分解将矩阵$\bm{A}$分解为三个矩阵的乘积，同时也将其变换效果分解为三个矩阵的变换效果的叠加。但理论上，这三次变换的叠加等价于一次旋转变换和一次伸缩变化的叠加。
+事实上，这就像任一负数$x+iy$，都可以写为极坐标的形式$re^{i\theta}$，可以视为$(1,0)$先经旋转变化旋转了$\theta$，然后再以比例$r$进行伸缩。对于矩阵，我们有如下定理：
+\begin{theorem}
+    对于任意实方阵$\bm{A}$，可以将其分解为$\bm{A}=\bm{QS}$，其中$\bm{Q}$是正交矩阵，$\bm{S}$是对称半正定矩阵。当$\bm{A}$可逆时，$\bm{S}$是正定矩阵。
+\end{theorem}
+\begin{proof}
+    先对$\bm{A}$进行奇异值分解得到
+    \[\bm{A}=\bm{U\Sigma V^T}\]
+    利用等式$\bm{V^TV}=\bm{E}$，得到
+    \[\bm{A}=\bm{UV^TV\Sigma V^T}=(\bm{UV^T})(\bm{V\Sigma V^T})=\bm{Q}\bm{S}.\]
+    因为正交矩阵的乘积仍是正交矩阵，所以$\bm{Q}$是正交矩阵。
+    当$\bm{A}$不可逆时，由于$\text{Rank}(\bm{A^TA})=\text{Rank}(\bm{A})$，所以$\bm{A^TA}$也不可逆。
+     由于$\lvert A^TA\rvert=\prod_i\sigma_i= 0$，所以$\bm{\Sigma}$对角线上有零值，从而$\bm{S}$为半正定矩阵；
+    当$\bm{A}$可逆时，由于$\text{Rank}(\bm{A^TA})=\text{Rank}(A)$，所以$\bm{A^TA}$也可逆。
+     由于$\lvert A^TA\rvert=\prod_i\sigma_i\neq 0$，所以$\bm{\Sigma}$对角线上均为正值，从而$\bm{S}$为正定矩阵；
+\end{proof}
+从证明的过程可以看出，极分解中的$\bm{Q}$实际上便是奇异值分解中$\bm{U}\bm{V^T}$两次旋转变换的叠加。
+\end{document}
