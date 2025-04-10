@@ -49,3 +49,6 @@ latexmkrc
 # output folder (optional: if you compile into a subfolder)
 output/
 build/
+
+*.docx
+*.doc
